@@ -2,7 +2,8 @@
 
 @layer base {
   body {
-    background-color: var(--color-slate-950);
+    background-color: #020617;
+    /* slate-950 hex fallback */
     color: #e2e8f0;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;

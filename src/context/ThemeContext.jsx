@@ -3,34 +3,25 @@ import { createContext, useContext, useEffect, useState } from 'react'
 const ThemeContext = createContext()
 
 export function ThemeProvider({ children }) {
-    const [theme, setTheme] = useState(() => {
-        // Initialize from localStorage or default to 'dark'
-        const storedTheme = localStorage.getItem('theme')
-        return storedTheme || 'dark'
-    })
+    // Always true
+    const theme = 'dark'
 
     useEffect(() => {
+        // FORCE DARK MODE
         const root = window.document.documentElement
-        const body = window.document.body
+        root.classList.remove('light')
+        root.classList.add('dark')
 
-        // 1. Gestionar la clase para Tailwind
-        root.classList.remove('light', 'dark')
-        root.classList.add(theme)
+        // Force body background
+        document.body.style.backgroundColor = '#020617' // slate-950
+        document.body.style.color = '#ffffff'
 
-        // 2. FUERZA BRUTA: Pintar el body directamente (Bypasseando CSS)
-        if (theme === 'dark') {
-            body.style.backgroundColor = '#111827'; // gray-900 force
-            body.style.color = '#ffffff';
-        } else {
-            body.style.backgroundColor = '#f9fafb'; // gray-50 force
-            body.style.color = '#111827';
-        }
-
-        localStorage.setItem('theme', theme)
-    }, [theme])
+        localStorage.setItem('theme', 'dark')
+    }, [])
 
     const toggleTheme = () => {
-        setTheme(prev => prev === 'dark' ? 'light' : 'dark')
+        // Disabled
+        console.log('Dark mode enforced')
     }
 
     return (
