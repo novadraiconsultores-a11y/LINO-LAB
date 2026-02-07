@@ -1,0 +1,137 @@
+@import "tailwindcss";
+
+@layer base {
+  body {
+    background-color: var(--color-slate-950);
+    color: #e2e8f0;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+}
+
+/* Custom Scrollbar for Catalog */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 6px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: rgba(15, 23, 42, 0.5);
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: #334155;
+  border-radius: 4px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #475569;
+}
+
+/* Print Styles for Thermal Receipt */
+@media print {
+
+  /* Hide everything by default */
+  body * {
+    visibility: hidden;
+  }
+
+  /* Reset background and text colors for printing */
+  body {
+    background-color: white !important;
+    color: black !important;
+  }
+
+  /* Only show the receipt container and its children */
+  .printable-receipt,
+  .printable-receipt * {
+    visibility: visible;
+  }
+
+  /* Position the receipt at the top-left */
+  .printable-receipt {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    max-width: 80mm;
+    /* Standard thermal paper width */
+    margin: 0;
+    padding: 0;
+    background: white;
+    color: black;
+    font-family: monospace;
+    /* Monospaced font for receipt look */
+    font-size: 12px;
+  }
+
+  /* Remove shadows, borders, and extra styling */
+  .printable-receipt div {
+    box-shadow: none !important;
+    border: none !important;
+  }
+
+  /* Ensure text is black */
+  .printable-receipt h1,
+  .printable-receipt h2,
+  .printable-receipt p,
+  .printable-receipt span,
+  .printable-receipt div {
+    color: black !important;
+  }
+}
+
+/* === REACT DATEPICKER DARK MODE OVERRIDES === */
+.react-datepicker {
+  font-family: inherit !important;
+  background-color: #0f172a !important;
+  /* slate-900 */
+  border: 1px solid #334155 !important;
+  color: #e2e8f0 !important;
+  border-radius: 0.75rem !important;
+}
+
+.react-datepicker__header {
+  background-color: #1e293b !important;
+  /* slate-800 */
+  border-bottom: 1px solid #334155 !important;
+  border-top-left-radius: 0.75rem !important;
+  border-top-right-radius: 0.75rem !important;
+}
+
+.react-datepicker__current-month,
+.react-datepicker-time__header,
+.react-datepicker-year-header,
+.react-datepicker__day-name {
+  color: #e2e8f0 !important;
+}
+
+.react-datepicker__day {
+  color: #e2e8f0 !important;
+}
+
+.react-datepicker__day:hover {
+  background-color: #334155 !important;
+  border-radius: 0.3rem !important;
+}
+
+.react-datepicker__day--selected,
+.react-datepicker__day--in-selecting-range,
+.react-datepicker__day--in-range {
+  background-color: #2563eb !important;
+  /* blue-600 */
+  color: white !important;
+}
+
+.react-datepicker__day--keyboard-selected {
+  background-color: #1d4ed8 !important;
+  /* blue-700 */
+}
+
+.react-datepicker__day--disabled {
+  color: #475569 !important;
+}
+
+/* Input Wrapper Styling if needed */
+.custom-datepicker-wrapper .react-datepicker-wrapper {
+  width: 100%;
+}
