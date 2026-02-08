@@ -16,3 +16,5 @@ createRoot(document.getElementById('root')).render(
     </ThemeProvider>
   </StrictMode>,
 )
+
+import './force-dark-button.css'

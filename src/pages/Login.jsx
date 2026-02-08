@@ -79,14 +79,15 @@ export default function Login() {
                 <form onSubmit={handleLogin} className="space-y-6">
                     <div>
                         <label className="block text-xs font-bold text-slate-500 uppercase mb-2 ml-1">Correo Electrónico</label>
-                        <div className="relative">
-                            <Mail className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500" size={20} />
+                        <div className="relative group">
+                            <div className={`absolute inset-y-0 left-0 w-12 flex items-center justify-center pointer-events-none z-10 transition-opacity duration-200 ${email ? 'opacity-0' : 'opacity-100'}`}>
+                                <Mail className="text-slate-500 group-focus-within:text-blue-500 transition-colors" size={20} />
+                            </div>
                             <input
                                 type="email"
                                 value={email}
                                 onChange={e => setEmail(e.target.value)}
-                                style={{ paddingLeft: '60px' }}
-                                className="w-full bg-slate-950 border border-slate-800 text-white pr-4 py-3 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all"
+                                className={`w-full bg-slate-950 border border-slate-800 text-white pr-4 py-3 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all placeholder:text-slate-600 shadow-sm ${!email ? 'force-icon-padding' : ''}`}
                                 placeholder="usuario@linolab.com"
                                 required
                             />
@@ -95,14 +96,15 @@ export default function Login() {
 
                     <div>
                         <label className="block text-xs font-bold text-slate-500 uppercase mb-2 ml-1">Contraseña</label>
-                        <div className="relative">
-                            <Lock className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500" size={20} />
+                        <div className="relative group">
+                            <div className={`absolute inset-y-0 left-0 w-12 flex items-center justify-center pointer-events-none z-10 transition-opacity duration-200 ${password ? 'opacity-0' : 'opacity-100'}`}>
+                                <Lock className="text-slate-500 group-focus-within:text-blue-500 transition-colors" size={20} />
+                            </div>
                             <input
                                 type="password"
                                 value={password}
                                 onChange={e => setPassword(e.target.value)}
-                                style={{ paddingLeft: '60px' }}
-                                className="w-full bg-slate-950 border border-slate-800 text-white pr-4 py-3 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all"
+                                className={`w-full bg-slate-950 border border-slate-800 text-white pr-4 py-3 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all placeholder:text-slate-600 shadow-sm ${!password ? 'force-icon-padding' : ''}`}
                                 placeholder="••••••••"
                                 required
                             />

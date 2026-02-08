@@ -361,3 +361,124 @@ button.bg-emerald-600:hover {
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
+
+/* Alert Button Override - Force Dark Red */
+button[style*='#1a0a0a'] {
+  background-color: #1a0a0a !important;
+  color: #fca5a5 !important;
+  border: 1px solid #3d1a1a !important;
+}
+
+/* Force Dark Red Alert Button - Override ALL browser themes */
+.force-dark-red,
+.force-dark-red:link,
+.force-dark-red:visited,
+.force-dark-red:active {
+  background-color: #1a0a0a !important;
+  color: #fca5a5 !important;
+  border: 1px solid #3d1a1a !important;
+  -webkit-appearance: none !important;
+  -moz-appearance: none !important;
+  appearance: none !important;
+  color-scheme: dark !important;
+}
+
+.force-dark-red:hover {
+  background-color: #2d1010 !important;
+}
+
+/* NUCLEAR OVERRIDE - Force Dark Red Button */
+.force-dark-red * {
+  color: #f87171 !important;
+}
+
+button.force-dark-red,
+button.force-dark-red:link,
+button.force-dark-red:visited,
+button.force-dark-red:active,
+button.force-dark-red:focus {
+  background-color: #1a0a0a !important;
+  background-image: none !important;
+  color: #fca5a5 !important;
+  border: 1px solid #3d1a1a !important;
+  -webkit-appearance: none !important;
+  -moz-appearance: none !important;
+  appearance: none !important;
+  color-scheme: only dark !important;
+}
+
+button.force-dark-red:hover {
+  background-color: #2d1010 !important;
+}
+
+@media (prefers-color-scheme: light) {
+  button.force-dark-red {
+    background-color: #1a0a0a !important;
+    color: #fca5a5 !important;
+    border: 1px solid #3d1a1a !important;
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  button.force-dark-red {
+    background-color: #1a0a0a !important;
+    color: #fca5a5 !important;
+    border: 1px solid #3d1a1a !important;
+  }
+}
+
+/* 
+   FORCE DARK RED ALERT BUTTON - MAXIMUM SPECIFICITY OVERRIDE
+    */
+
+html body button.force-dark-red,
+html body button.force-dark-red:link,
+html body button.force-dark-red:visited,
+html body button.force-dark-red:active,
+html body button.force-dark-red:focus,
+html body button.force-dark-red:hover {
+  background-color: #1a0a0a !important;
+  background-image: none !important;
+  color: #fca5a5 !important;
+  border: 1px solid #3d1a1a !important;
+  border-radius: 9999px !important;
+  padding: 0.25rem 0.75rem !important;
+  font-size: 0.75rem !important;
+  font-weight: bold !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 0.5rem !important;
+  margin-top: 0.5rem !important;
+  cursor: pointer !important;
+  transition: all 0.2s !important;
+  outline: none !important;
+  box-shadow: none !important;
+  -webkit-appearance: none !important;
+  -moz-appearance: none !important;
+  appearance: none !important;
+}
+
+html body button.force-dark-red:hover {
+  background-color: #2d1010 !important;
+}
+
+html body button.force-dark-red svg,
+html body button.force-dark-red span {
+  color: #f87171 !important;
+  fill: currentColor !important;
+}
+
+@media (prefers-color-scheme: light) {
+  html body button.force-dark-red {
+    background-color: #1a0a0a !important;
+    color: #fca5a5 !important;
+    border-color: #3d1a1a !important;
+  }
+}
+
+
+/* Login Icon Padding Override - Fix for overlap */
+#root input.force-icon-padding {
+  padding-left: 4rem !important;
+  /* Increased to 4rem for guaranteed clearance */
+}

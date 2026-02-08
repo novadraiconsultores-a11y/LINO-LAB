@@ -301,30 +301,10 @@ export default function InventoryDashboard() {
                         {filterMode === 'alerts' && (
                             <button
                                 onClick={() => setFilterMode('all')}
-                                style={{
-                                    backgroundColor: '#1a0a0a',
-                                    color: '#fca5a5',
-                                    border: '1px solid #3d1a1a',
-                                    borderRadius: '9999px',
-                                    padding: '0.25rem 0.75rem',
-                                    fontSize: '0.75rem',
-                                    fontWeight: 'bold',
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                    gap: '0.5rem',
-                                    marginTop: '0.5rem',
-                                    cursor: 'pointer',
-                                    transition: 'all 0.2s',
-                                    outline: 'none',
-                                    WebkitAppearance: 'none',
-                                    MozAppearance: 'none',
-                                    appearance: 'none'
-                                }}
-                                onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#2d1010'}
-                                onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#1a0a0a'}
+                                className="force-dark-red"
                             >
-                                <AlertTriangle size={12} style={{ color: '#f87171', flexShrink: 0 }} />
-                                <span style={{ color: '#f87171' }}>Filtro Activo: Alertas de Stock</span> (Click para ver todo)
+                                <AlertTriangle size={12} />
+                                <span>Filtro Activo: Alertas de Stock</span> (Click para ver todo)
                             </button>
                         )}
                     </div>

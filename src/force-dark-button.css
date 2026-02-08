@@ -1,0 +1,29 @@
+﻿/* NUCLEAR ALERT BUTTON - FORCE DARK RED ALWAYS */
+button.force-dark-red {
+  background-color: #1a0a0a !important;
+  color: #fca5a5 !important;
+  border: 1px solid #3d1a1a !important;
+  border-radius: 9999px !important;
+  padding: 0.25rem 0.75rem !important;
+  font-size: 0.75rem !important;
+  font-weight: bold !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 0.5rem !important;
+  margin-top: 0.5rem !important;
+  cursor: pointer !important;
+  transition: all 0.2s !important;
+  outline: none !important;
+  -webkit-appearance: none !important;
+  -moz-appearance: none !important;
+  appearance: none !important;
+}
+
+button.force-dark-red:hover {
+  background-color: #2d1010 !important;
+}
+
+button.force-dark-red svg,
+button.force-dark-red span {
+  color: #f87171 !important;
+}
