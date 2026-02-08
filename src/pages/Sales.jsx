@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Search, ShoppingCart, Plus, Minus, Trash2, CreditCard, Eye, EyeOff } from 'lucide-react'
+import { Search, ShoppingCart, Plus, Minus, Trash2, CreditCard, Eye, EyeOff, Mail } from 'lucide-react'
 import { supabase } from '../supabaseClient'
 import PaymentModal from '../components/PaymentModal'
 import { sendEmailNotification } from '../utils/emailService'
@@ -12,6 +12,7 @@ export default function Sales() {
     const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false)
     const [showOutOfStock, setShowOutOfStock] = useState(false)
     const [activeBranchName, setActiveBranchName] = useState('')
+    const [clientEmail, setClientEmail] = useState('') // New state for email
 
     // New state to hold receipt data after cart is cleared
     const [lastSaleDetails, setLastSaleDetails] = useState(null)
@@ -395,6 +396,7 @@ export default function Sales() {
 
             {/* Right: Virtual Ticket (30-40%) */}
             <div className="w-full md:w-[400px] xl:w-[450px] bg-white dark:bg-slate-900 border-l border-gray-200 dark:border-slate-800 flex flex-col shadow-2xl relative z-10 h-full">
+                {/* Header Fijo */}
                 <div className="p-6 bg-white dark:bg-slate-900 border-b border-gray-200 dark:border-slate-800 shrink-0">
                     <h2 className="text-xl font-bold flex items-center gap-2 text-white">
                         <ShoppingCart size={24} className="text-blue-600 dark:text-blue-500" />
@@ -405,8 +407,8 @@ export default function Sales() {
                     </p>
                 </div>
 
-                {/* Cart Items - Scrollable & Max Height Constrained */}
-                <div className="flex-1 overflow-y-auto p-4 space-y-3 bg-slate-950/50 custom-scrollbar max-h-[60vh]">
+                {/* Cuerpo Scrollable */}
+                <div className="flex-1 overflow-y-auto p-4 space-y-3 bg-slate-950/50 custom-scrollbar">
                     {cart.length === 0 ? (
                         <div className="h-full flex flex-col items-center justify-center text-gray-400 dark:text-slate-600 opacity-60">
                             <ShoppingCart size={48} className="mb-2" />
@@ -461,9 +463,9 @@ export default function Sales() {
                     )}
                 </div>
 
-                {/* Totals Section - Fixed Bottom */}
-                <div className="p-6 bg-white dark:bg-slate-900 border-t border-gray-200 dark:border-slate-800 shadow-[0_-4px_20px_rgba(0,0,0,0.1)] dark:shadow-[0_-4px_20px_rgba(0,0,0,0.4)] relative z-20 mt-auto shrink-0">
-                    <div className="space-y-2 mb-6">
+                {/* Footer Fijo (Totales + Email + Botón) */}
+                <div className="p-6 bg-white dark:bg-slate-900 border-t border-gray-200 dark:border-slate-800 shadow-[0_-4px_20px_rgba(0,0,0,0.1)] dark:shadow-[0_-4px_20px_rgba(0,0,0,0.4)] relative z-20 shrink-0">
+                    <div className="space-y-2 mb-4">
                         <div className="flex justify-between text-gray-500 dark:text-slate-400 text-sm">
                             <span>Subtotal (Base)</span>
                             <span>${subtotal.toFixed(2)}</span>
@@ -478,6 +480,24 @@ export default function Sales() {
                                 ${cartTotal.toFixed(2)}
                             </span>
                         </div>
+                    </div>
+
+                    {/* Input Email con FIX de Icono */}
+                    <div className="relative mb-4">
+                        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                            <Mail className="h-5 w-5 text-slate-400" />
+                        </div>
+                        <input
+                            type="email"
+                            placeholder="cliente@email.com (Opcional)"
+                            className="w-full bg-slate-800 border border-slate-600 rounded-lg py-2 pl-10 pr-4 text-white placeholder-slate-500 focus:outline-none focus:border-blue-500"
+                            // Logic to handle email state would go here if we were hoisting state, 
+                            // but since PaymentModal handles it, we might need to sync or remove it from there.
+                            // For now, I will add a local state for it in the next step or assume PaymentModal is the source of truth?
+                            // User asked to put it HERE. So I will add `clientEmail` state to Sales.jsx.
+                            onChange={(e) => setClientEmail(e.target.value)}
+                            value={clientEmail}
+                        />
                     </div>
 
                     <button
@@ -497,6 +517,7 @@ export default function Sales() {
                 total={cartTotal}
                 onConfirm={handlePaymentConfirm}
                 saleDetails={lastSaleDetails}
+                initialEmail={clientEmail} // Pass the email
             />
         </div>
     )

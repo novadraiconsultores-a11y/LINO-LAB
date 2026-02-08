@@ -158,7 +158,7 @@ export default function BusinessOwners() {
                     placeholder="Buscar empresario..."
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
-                    className="bg-transparent border-none focus:outline-none text-slate-200 w-full placeholder-slate-600"
+                    className="bg-transparent border-none focus:outline-none text-slate-200 w-full placeholder-slate-600 pl-10"
                 />
             </div>
 

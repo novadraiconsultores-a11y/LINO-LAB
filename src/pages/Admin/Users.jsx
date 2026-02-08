@@ -207,7 +207,9 @@ export default function Users() {
                     </div>
 
                     {/* Users List */}
-                    {filteredUsers.map(user => (
+                    {(!filteredUsers || filteredUsers.length === 0) ? (
+                        <div className="p-6 text-slate-400 text-center">Cargando equipo o no hay datos...</div>
+                    ) : (filteredUsers.map(user => (
                         <div key={user.id_perfil} className="bg-slate-900 border border-slate-800 rounded-xl p-4 md:px-6 md:py-4 flex flex-col md:grid md:grid-cols-12 gap-4 items-start md:items-center hover:border-slate-700 transition-colors group">
 
                             {/* User Info */}
@@ -265,7 +267,7 @@ export default function Users() {
                                 </button>
                             </div>
                         </div>
-                    ))}
+                    )))}
                 </div>
             )}
 

@@ -547,7 +547,7 @@ export default function InventoryDashboard() {
                         <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 dark:text-slate-500" size={14} />
                         <input
                             placeholder="Buscar producto..."
-                            className={`${inputClass} pl-9`}
+                            className={`${inputClass} pl-10`}
                             value={filters.search}
                             onChange={(e) => handleFilterChange('search', e.target.value)}
                         />
