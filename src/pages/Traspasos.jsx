@@ -506,8 +506,8 @@ export default function Traspasos() {
                                         <td className="p-4 text-slate-400">{new Date(t.fecha_envio).toLocaleDateString()} {new Date(t.fecha_envio).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</td>
                                         <td className="p-4">
                                             <span className={`px-2 py-1 rounded text-xs font-bold border ${t.estado === 'COMPLETADO'
-                                                    ? 'bg-emerald-900/30 text-emerald-400 border-emerald-500/30'
-                                                    : 'bg-amber-900/30 text-amber-400 border-amber-500/30'
+                                                ? 'bg-emerald-900/30 text-emerald-400 border-emerald-500/30'
+                                                : 'bg-amber-900/30 text-amber-400 border-amber-500/30'
                                                 }`}>
                                                 {t.estado}
                                             </span>
@@ -584,8 +584,8 @@ export default function Traspasos() {
                                             </td>
                                             <td className="p-4">
                                                 <span className={`px-2 py-1 rounded text-xs font-bold border ${t.estado === 'COMPLETADO'
-                                                        ? 'bg-emerald-900/30 text-emerald-400 border-emerald-500/30'
-                                                        : 'bg-red-900/30 text-red-400 border-red-500/30'
+                                                    ? 'bg-emerald-900/30 text-emerald-400 border-emerald-500/30'
+                                                    : 'bg-red-900/30 text-red-400 border-red-500/30'
                                                     }`}>
                                                     {t.estado}
                                                 </span>
@@ -618,7 +618,7 @@ export default function Traspasos() {
                                     <FileText className="text-emerald-500" /> Auditoría de Recepción
                                 </h3>
                                 <p className="text-slate-400 text-sm mt-1">
-                                    Traspaso #{selectedTransfer.id_traspaso.slice(0, 8)} • De: <span className="text-white font-bold">{selectedTransfer.origin?.nombre}</span>
+                                    Traspaso #{String(selectedTransfer.id_traspaso || '').slice(0, 8)} • De: <span className="text-white font-bold">{selectedTransfer.origin?.nombre}</span>
                                 </p>
                             </div>
                             <button onClick={() => setShowTransferDetails(false)} className="text-slate-500 hover:text-white p-2 hover:bg-slate-800 rounded-lg transition-colors">
