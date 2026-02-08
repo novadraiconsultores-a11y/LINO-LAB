@@ -1,10 +1,11 @@
 import { Link, Outlet, useLocation, useNavigate } from 'react-router-dom'
-import { Home, Package, ShoppingCart, Users, Settings, Menu, ClipboardList, BarChart3, Tag, Building2, Truck, LogOut, Sun, Moon } from 'lucide-react'
+import { Home, Package, ShoppingCart, Users, Settings, Menu, ClipboardList, BarChart3, Tag, Building2, Truck, LogOut, Sun, Moon, User } from 'lucide-react'
 import { useState, useEffect } from 'react'
 import { supabase } from '../supabaseClient'
 import { useAuth } from '../context/AuthProvider'
 import { useTheme } from '../context/ThemeContext'
 import { useIdleTimer } from '../hooks/useIdleTimer'
+import NotificationBell from './NotificationBell'
 
 export default function Layout() {
     const location = useLocation()
@@ -23,8 +24,10 @@ export default function Layout() {
     }
 
     useIdleTimer({
+        timeout: 1000 * 60 * 14, // 14 Minutes
+        promptBeforeIdle: 1000 * 60 * 1, // 1 Minute
         onIdle: handleIdleLogout,
-        isEnabled: !!user // Only run if user is logged in
+        isEnabled: !!user
     })
 
     useEffect(() => {
@@ -196,6 +199,11 @@ export default function Layout() {
 
 
                 <div className="p-4 border-t border-gray-200 dark:border-slate-800 mt-auto">
+                    {/* Notifications (Desktop) */}
+                    <div className="mb-4 flex justify-center w-full">
+                        <NotificationBell />
+                    </div>
+
                     {/* User Profile Info */}
                     {profile && (
                         <div className="flex items-center gap-3 mb-4 p-2 bg-slate-800/50 rounded-lg border border-slate-700/50">
