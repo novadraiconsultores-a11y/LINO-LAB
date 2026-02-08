@@ -11,8 +11,8 @@ const EVENTS = [
 ]
 
 export const useIdleTimer = ({
-    timeout = 1000 * 10, // Default 10 seconds for testing (Silent)
-    promptBeforeIdle = 1000 * 10, // Default 10 seconds for warning (Prompt)
+    timeout = 1000 * 60 * 14, // 14 Minutes (Silent)
+    promptBeforeIdle = 1000 * 60 * 1, // 1 Minute (Warning)
     onIdle,
     isEnabled = true
 }) => {
