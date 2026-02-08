@@ -2,16 +2,18 @@
 
 @layer base {
 
-  /* 🔥 NUCLEAR DARK MODE - Root Level Enforcement */
+  /* 🔥 RADICAL DARK MODE OVERRIDE - ABSOLUTE ENFORCEMENT */
+  /* NO media queries, NO conditions, ONLY dark mode */
   :root,
   html,
-  body {
+  body,
+  #root {
     background-color: #020617 !important;
-    /* Slate 950 */
+    /* Slate 950 - PURE BLACK */
     color: #f8fafc !important;
-    /* Slate 50 */
-    color-scheme: dark;
-    /* Tell browser this site is natively dark */
+    /* Slate 50 - WHITE TEXT */
+    color-scheme: dark !important;
+    /* Tell browser: "This site is ONLY dark" */
   }
 
   html,
