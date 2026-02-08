@@ -1,31 +1,32 @@
-import { createContext, useContext, useEffect, useState } from 'react'
+import { createContext, useContext, useEffect } from 'react'
 
 const ThemeContext = createContext()
 
 export function ThemeProvider({ children }) {
-    // FORCE DARK MODE: Always 'dark', ignoring localStorage/system
-    const [theme] = useState('dark')
-
     useEffect(() => {
-        const root = window.document.documentElement
-        root.classList.remove('light')
-        root.classList.add('dark')
+        // 🔥 HARDCORE FIX: Solo existe la oscuridad
+        document.documentElement.classList.add('dark')
 
-        // Force body background as safety net
-        document.body.style.backgroundColor = '#020617'
-        document.body.style.color = '#ffffff'
+        // MutationObserver: Si alguna extensión o código intenta quitar 'dark', lo restauramos
+        const observer = new MutationObserver(() => {
+            if (!document.documentElement.classList.contains('dark')) {
+                document.documentElement.classList.add('dark')
+                console.warn('⚠️ Dark mode protection: Restored dark class')
+            }
+        })
 
-        // Optionally update text in storage but NEVER read from it
-        localStorage.setItem('theme', 'dark')
+        observer.observe(document.documentElement, {
+            attributes: true,
+            attributeFilter: ['class']
+        })
+
+        // Cleanup
+        return () => observer.disconnect()
     }, [])
 
-    const toggleTheme = () => {
-        // Disabled
-        console.log('Dark mode enforced')
-    }
-
+    // No theme state, no toggle function - just a shell
     return (
-        <ThemeContext.Provider value={{ theme, toggleTheme }}>
+        <ThemeContext.Provider value={{ theme: 'dark' }}>
             {children}
         </ThemeContext.Provider>
     )

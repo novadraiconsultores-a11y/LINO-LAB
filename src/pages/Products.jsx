@@ -224,7 +224,7 @@ export default function Products() {
                                 </tr>
                             ) : (
                                 filteredProducts.map((product) => (
-                                    <tr key={product.id_producto} className="hover:bg-gray-50 dark:hover:bg-slate-800/30 transition-colors border-b border-gray-100 dark:border-slate-800/50 last:border-0">
+                                    <tr key={product.id_producto} className="hover:bg-slate-800/30 transition-colors border-b border-slate-800/50 last:border-0">
                                         <td className="px-6 py-4 font-medium text-gray-900 dark:text-white">
                                             <div className="flex items-center gap-3">
                                                 {/* Thumbnail */}

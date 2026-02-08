@@ -436,7 +436,7 @@ export default function Home() {
     const PAYMENT_COLORS = ['#10B981', '#3B82F6', '#F59E0B', '#6366F1', '#EC4899']
 
     return (
-        <div className="min-h-screen bg-gray-50 dark:bg-slate-950 text-gray-900 dark:text-white p-3 sm:p-4 md:p-6 overflow-y-auto custom-scrollbar transition-colors duration-200">
+        <div className="min-h-screen bg-slate-950 text-white p-3 sm:p-4 md:p-6 overflow-y-auto custom-scrollbar transition-colors duration-200">
 
             {/* TOP NAVIGATION */}
             <div className="flex flex-col md:flex-row justify-between items-center mb-8 gap-4">

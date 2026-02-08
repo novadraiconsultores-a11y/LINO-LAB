@@ -342,7 +342,7 @@ export default function Sales() {
                 </div>
 
                 {/* Cart Items */}
-                <div className="flex-1 overflow-y-auto p-4 space-y-3 bg-gray-50 dark:bg-slate-950/50">
+                <div className="flex-1 overflow-y-auto p-4 space-y-3 bg-slate-950/50">
                     {cart.length === 0 ? (
                         <div className="h-full flex flex-col items-center justify-center text-gray-400 dark:text-slate-600 opacity-60">
                             <ShoppingCart size={48} className="mb-2" />

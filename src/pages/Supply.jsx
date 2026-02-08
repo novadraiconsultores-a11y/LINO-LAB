@@ -611,7 +611,7 @@ export default function Supply() {
                                     <select
                                         value={header.ref_empresario_id}
                                         onChange={e => setHeader({ ...header, ref_empresario_id: e.target.value })}
-                                        className="w-full bg-gray-50 dark:bg-slate-800 border border-gray-300 dark:border-slate-600 rounded-lg px-3 py-2 focus:border-emerald-500 outline-none text-gray-900 dark:text-white"
+                                        className="w-full bg-slate-800 border border-slate-600 rounded-lg px-3 py-2 focus:border-emerald-500 outline-none text-white"
                                     >
                                         <option value="">-- Seleccionar --</option>
                                         {providers.map(p => (
@@ -625,7 +625,7 @@ export default function Supply() {
                                         type="text"
                                         value={header.referencia_folio}
                                         onChange={e => setHeader({ ...header, referencia_folio: e.target.value })}
-                                        className="w-full bg-gray-50 dark:bg-slate-800 border border-gray-300 dark:border-slate-600 rounded-lg px-3 py-2 focus:border-emerald-500 outline-none text-gray-900 dark:text-white"
+                                        className="w-full bg-slate-800 border border-slate-600 rounded-lg px-3 py-2 focus:border-emerald-500 outline-none text-white"
                                         placeholder="Ej. FACT-001"
                                     />
                                 </div>
@@ -640,10 +640,10 @@ export default function Supply() {
                                 type="text"
                                 value={search}
                                 onChange={e => setSearch(e.target.value)}
-                                className="w-full bg-gray-50 dark:bg-slate-800 border border-gray-300 dark:border-slate-600 rounded-lg px-3 py-2 text-sm mb-4 outline-none focus:border-blue-500 text-gray-900 dark:text-white"
+                                className="w-full bg-slate-800 border border-slate-600 rounded-lg px-3 py-2 text-sm mb-4 outline-none focus:border-blue-500 text-white"
                                 placeholder="Escribe nombre o SKU..."
                             />
-                            <div className="h-60 overflow-y-auto space-y-2 pr-2 custom-scrollbar bg-gray-50 dark:bg-slate-950/50 p-2 rounded-lg border border-gray-200 dark:border-slate-800">
+                            <div className="h-60 overflow-y-auto space-y-2 pr-2 custom-scrollbar bg-slate-950/50 p-2 rounded-lg border border-slate-800">
                                 {loadingProducts ? (
                                     <p className="text-center text-xs text-slate-500">Cargando...</p>
                                 ) : filteredProducts.map(p => (
@@ -686,7 +686,7 @@ export default function Supply() {
                                         type="number" min="1" required
                                         value={lineItem.cantidad}
                                         onChange={e => setLineItem({ ...lineItem, cantidad: e.target.value })}
-                                        className="w-full bg-gray-50 dark:bg-slate-800 border border-gray-300 dark:border-slate-600 rounded-lg px-3 py-2 font-bold text-lg outline-none focus:border-blue-500 text-gray-900 dark:text-white"
+                                        className="w-full bg-slate-800 border border-slate-600 rounded-lg px-3 py-2 font-bold text-lg outline-none focus:border-blue-500 text-white"
                                     />
                                 </div>
                                 <div>
@@ -695,7 +695,7 @@ export default function Supply() {
                                         type="number" min="0" step="0.01" required
                                         value={lineItem.costo_unitario}
                                         onChange={e => setLineItem({ ...lineItem, costo_unitario: e.target.value })}
-                                        className="w-full bg-gray-50 dark:bg-slate-800 border border-gray-300 dark:border-slate-600 rounded-lg px-3 py-2 font-bold text-lg outline-none focus:border-blue-500 text-gray-900 dark:text-white"
+                                        className="w-full bg-slate-800 border border-slate-600 rounded-lg px-3 py-2 font-bold text-lg outline-none focus:border-blue-500 text-white"
                                     />
                                     {/* Cost Analysis */}
                                     {selectedProduct && lineItem.costo_unitario && (
@@ -738,7 +738,7 @@ export default function Supply() {
                                     </thead>
                                     <tbody>
                                         {cart.map(item => (
-                                            <tr key={item.id} className="border-b border-gray-100 dark:border-slate-800 hover:bg-gray-50 dark:hover:bg-slate-800/50">
+                                            <tr key={item.id} className="border-b border-slate-800 hover:bg-slate-800/50">
                                                 <td className="p-2">
                                                     <div className="font-bold text-gray-900 dark:text-gray-100">{item.product.nombre_producto}</div>
                                                     <div className="text-[10px] text-gray-400 dark:text-slate-400 font-mono">{item.product.sku_producto}</div>
@@ -791,7 +791,7 @@ export default function Supply() {
                             placeholder="Buscar por proveedor o folio..."
                             value={historySearch}
                             onChange={e => setHistorySearch(e.target.value)}
-                            className="bg-gray-50 dark:bg-slate-800 border border-gray-300 dark:border-slate-600 rounded-lg px-4 py-2 text-sm w-64 outline-none focus:border-blue-500 text-gray-900 dark:text-white"
+                            className="bg-slate-800 border border-slate-600 rounded-lg px-4 py-2 text-sm w-64 outline-none focus:border-blue-500 text-white"
                         />
                     </div>
 

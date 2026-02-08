@@ -369,7 +369,7 @@ export default function InventoryDashboard() {
                         </div>
                         <span className={`text-xs font-bold uppercase tracking-widest border px-2 py-1 rounded ${lowStockCount > 0
                             ? 'text-orange-600 dark:text-orange-400/80 border-orange-200 dark:border-orange-500/20 bg-orange-50 dark:bg-orange-900/20'
-                            : 'text-gray-500 dark:text-slate-600 border-gray-200 dark:border-slate-800 bg-gray-50 dark:bg-slate-900'
+                            : 'text-slate-600 border-slate-800 bg-slate-900'
                             }`}>Alertas</span>
                     </div>
                     <div className="relative z-10">
@@ -609,7 +609,7 @@ export default function InventoryDashboard() {
                                 <tr><td colSpan="5" className="p-8 text-center">No hay datos.</td></tr>
                             ) : (
                                 filteredProducts.map(p => (
-                                    <tr key={p.id_producto} className="hover:bg-gray-50 dark:hover:bg-slate-800/30 transition-colors">
+                                    <tr key={p.id_producto} className="hover:bg-slate-800/30 transition-colors">
                                         <td className="px-6 py-4 text-gray-900 dark:text-white">
                                             <div className="flex items-center gap-3">
                                                 <div className="w-8 h-8 rounded bg-gray-100 dark:bg-slate-700 overflow-hidden border border-gray-200 dark:border-slate-600">
