@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { Search, ShoppingCart, Plus, Minus, Trash2, CreditCard, Eye, EyeOff } from 'lucide-react'
 import { supabase } from '../supabaseClient'
 import PaymentModal from '../components/PaymentModal'
+import { sendEmailNotification } from '../utils/emailService'
 
 export default function Sales() {
     const [products, setProducts] = useState([])
@@ -202,6 +203,64 @@ export default function Sales() {
             // 6. Reset & Refresh
             setCart([])
             fetchProducts() // Refresh catalog stock
+
+            // 7. Send Email Receipt (Silent/Async)
+            if (paymentDetails.clientEmail) {
+                const emailHtml = `
+                    <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #e2e8f0; border-radius: 10px; background-color: #f8fafc;">
+                        <div style="text-align: center; margin-bottom: 20px;">
+                            <h1 style="color: #0f172a; margin: 0;">LinoLab</h1>
+                            <p style="color: #64748b; margin: 5px 0 0;">Ticket de Compra Digital</p>
+                        </div>
+                        
+                        <div style="background-color: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
+                            <div style="border-bottom: 1px solid #f1f5f9; padding-bottom: 15px; margin-bottom: 15px;">
+                                <p style="margin: 5px 0; color: #334155;"><strong>Fecha:</strong> ${new Date().toLocaleString()}</p>
+                                <p style="margin: 5px 0; color: #334155;"><strong>Folio de Venta:</strong> ${saleId}</p>
+                                <p style="margin: 5px 0; color: #334155;"><strong>Método de Pago:</strong> ${paymentDetails.method}</p>
+                            </div>
+
+                            <table style="width: 100%; border-collapse: collapse; margin-bottom: 20px;">
+                                <thead>
+                                    <tr style="background-color: #f1f5f9; color: #475569; text-align: left;">
+                                        <th style="padding: 10px; font-size: 12px; text-transform: uppercase;">Producto</th>
+                                        <th style="padding: 10px; font-size: 12px; text-transform: uppercase; text-align: right;">Cant</th>
+                                        <th style="padding: 10px; font-size: 12px; text-transform: uppercase; text-align: right;">Total</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    ${cart.map(item => `
+                                        <tr style="border-bottom: 1px solid #f1f5f9;">
+                                            <td style="padding: 10px; color: #334155;">${item.nombre_producto}</td>
+                                            <td style="padding: 10px; text-align: right; color: #64748b;">${item.qty}</td>
+                                            <td style="padding: 10px; text-align: right; color: #334155; font-weight: bold;">$${(item.precio_venta * item.qty).toFixed(2)}</td>
+                                        </tr>
+                                    `).join('')}
+                                </tbody>
+                            </table>
+
+                            <div style="text-align: right; margin-top: 20px;">
+                                <p style="margin: 5px 0; font-size: 14px; color: #64748b;">Subtotal: $${subtotal.toFixed(2)}</p>
+                                <p style="margin: 5px 0; font-size: 14px; color: #64748b;">IVA (16%): $${tax.toFixed(2)}</p>
+                                <h2 style="margin: 10px 0 0; color: #0f172a; font-size: 24px;">Total: $${cartTotal.toFixed(2)}</h2>
+                            </div>
+                        </div>
+
+                        <div style="text-align: center; margin-top: 30px; color: #94a3b8; font-size: 12px;">
+                            <p>Gracias por tu compra en LinoLab</p>
+                            <p>Este es un comprobante digital generado automáticamente.</p>
+                        </div>
+                    </div>
+                `
+
+                sendEmailNotification(
+                    paymentDetails.clientEmail,
+                    `Ticket de Compra - LinoLab #${saleId.slice(0, 8)}`,
+                    emailHtml
+                ).catch(err => console.error('Error enviando ticket por correo (Silencioso):', err))
+            } else {
+                console.log('No se envió ticket: Cliente sin email registrado')
+            }
 
         } catch (error) {
             console.error('Error al procesar venta:', error.message)
