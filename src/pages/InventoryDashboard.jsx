@@ -175,7 +175,7 @@ export default function InventoryDashboard() {
             const percent = ((data.value / totalValue) * 100).toFixed(1)
             return (
                 <div className="bg-white dark:bg-[#0f172a] border border-gray-200 dark:border-slate-800 p-3 rounded-lg shadow-xl">
-                    <p className="text-gray-900 dark:text-white font-bold mb-1">{data.name}</p>
+                    <p className="text-white font-bold mb-1">{data.name}</p>
                     <p className="text-emerald-600 dark:text-emerald-400 font-mono text-sm">
                         {data.value.toLocaleString('es-MX', { style: 'currency', currency: 'MXN' })}
                     </p>
@@ -228,7 +228,7 @@ export default function InventoryDashboard() {
     const COLORS_GENDER = ['#3B82F6', '#EC4899', '#8B5CF6', '#F59E0B'] // Blue, Pink, Violet, Amber
     const COLORS_QUALITY = ['#10B981', '#F59E0B', '#F43F5E', '#64748B'] // Emerald, Amber, Rose, Slate
 
-    const inputClass = "bg-white dark:bg-[#0f172a] border border-gray-200 dark:border-slate-800 text-gray-900 dark:text-white text-xs rounded-lg px-3 py-2 outline-none focus:border-blue-500 w-full transition-all hover:border-slate-500"
+    const inputClass = "bg-[#0f172a] border border-slate-800 text-white text-xs rounded-lg px-3 py-2 outline-none focus:border-blue-500 w-full transition-all hover:border-slate-500"
 
     const handleExportExcel = () => {
         const dataToExport = filteredProducts.map(p => {
@@ -285,7 +285,7 @@ export default function InventoryDashboard() {
             <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8">
                 <div>
                     <div>
-                        <h1 className="text-3xl font-bold text-gray-900 dark:text-white flex items-center gap-3">
+                        <h1 className="text-3xl font-bold text-white flex items-center gap-3">
                             <BarChart3 className="text-purple-600 dark:text-purple-500" />
                             <div>
                                 Tablero de Inventario
@@ -326,7 +326,7 @@ export default function InventoryDashboard() {
                         <span className="text-xs font-bold uppercase text-emerald-600 dark:text-emerald-400/80 tracking-widest border border-emerald-200 dark:border-emerald-500/20 px-2 py-1 rounded bg-emerald-50 dark:bg-emerald-900/20">Valor Estimado</span>
                     </div>
                     <div className="relative z-10">
-                        <div className="text-4xl lg:text-5xl font-extrabold text-gray-900 dark:text-white tracking-tight drop-shadow-md">
+                        <div className="text-4xl lg:text-5xl font-extrabold text-white tracking-tight drop-shadow-md">
                             {totalValue.toLocaleString('es-MX', { style: 'currency', currency: 'MXN', maximumFractionDigits: 0 })}
                         </div>
                         <p className="text-emerald-600/80 dark:text-emerald-400/60 text-sm mt-2 font-medium flex items-center gap-2">
@@ -345,7 +345,7 @@ export default function InventoryDashboard() {
                         <span className="text-xs font-bold uppercase text-blue-600 dark:text-blue-400/80 tracking-widest border border-blue-200 dark:border-blue-500/20 px-2 py-1 rounded bg-blue-50 dark:bg-blue-900/20">Prendas</span>
                     </div>
                     <div className="relative z-10">
-                        <div className="text-4xl lg:text-5xl font-extrabold text-gray-900 dark:text-white tracking-tight drop-shadow-md">
+                        <div className="text-4xl lg:text-5xl font-extrabold text-white tracking-tight drop-shadow-md">
                             {totalStock.toLocaleString()}
                         </div>
                         <p className="text-blue-600/80 dark:text-blue-400/60 text-sm mt-2 font-medium flex items-center gap-2">
@@ -373,7 +373,7 @@ export default function InventoryDashboard() {
                             }`}>Alertas</span>
                     </div>
                     <div className="relative z-10">
-                        <div className={`text-4xl lg:text-5xl font-extrabold tracking-tight drop-shadow-md transition-colors ${lowStockCount > 0 ? 'text-gray-900 dark:text-white' : 'text-gray-400 dark:text-slate-600'
+                        <div className={`text-4xl lg:text-5xl font-extrabold tracking-tight drop-shadow-md transition-colors ${lowStockCount > 0 ? 'text-white' : 'text-slate-600'
                             }`}>
                             {lowStockCount}
                         </div>
@@ -388,7 +388,7 @@ export default function InventoryDashboard() {
             <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6 mb-8 animate-in fade-in slide-in-from-bottom-8 duration-700 delay-150">
                 {/* CHART A: Inventory Value by Provider (Pie) */}
                 <div className="bg-white dark:bg-[#0f172a] border border-gray-200 dark:border-slate-800 p-4 rounded-2xl shadow-sm relative group min-h-[320px]">
-                    <h3 className="text-sm font-bold text-gray-900 dark:text-white mb-2 flex items-center gap-2 self-start w-full border-b border-gray-100 dark:border-slate-800 pb-2">
+                    <h3 className="text-sm font-bold text-white mb-2 flex items-center gap-2 self-start w-full border-b border-slate-800 pb-2">
                         <DollarSign size={16} className="text-emerald-600 dark:text-emerald-400" />
                         Valor por Proveedor
                     </h3>
@@ -418,7 +418,7 @@ export default function InventoryDashboard() {
 
                 {/* CHART C: Value by Quality (Pie) */}
                 <div className="bg-white dark:bg-[#0f172a] border border-gray-200 dark:border-slate-800 p-4 rounded-2xl shadow-sm relative group min-h-[320px]">
-                    <h3 className="text-sm font-bold text-gray-900 dark:text-white mb-2 flex items-center gap-2 self-start w-full border-b border-gray-100 dark:border-slate-800 pb-2">
+                    <h3 className="text-sm font-bold text-white mb-2 flex items-center gap-2 self-start w-full border-b border-slate-800 pb-2">
                         <DollarSign size={16} className="text-emerald-600 dark:text-emerald-400" />
                         Valor por Calidad
                     </h3>
@@ -448,7 +448,7 @@ export default function InventoryDashboard() {
 
                 {/* CHART D: Distribution by Gender (Pie) */}
                 <div className="bg-white dark:bg-[#0f172a] border border-gray-200 dark:border-slate-800 p-4 rounded-2xl shadow-sm relative group min-h-[320px]">
-                    <h3 className="text-sm font-bold text-gray-900 dark:text-white mb-2 flex items-center gap-2 self-start w-full border-b border-gray-100 dark:border-slate-800 pb-2">
+                    <h3 className="text-sm font-bold text-white mb-2 flex items-center gap-2 self-start w-full border-b border-slate-800 pb-2">
                         <Shirt size={16} className="text-pink-600 dark:text-pink-400" />
                         Distribución por Género
                     </h3>
@@ -482,7 +482,7 @@ export default function InventoryDashboard() {
 
                 {/* CHART B: Distribution by Category (Horizontal Bar) */}
                 <div className="bg-white dark:bg-[#0f172a] border border-gray-200 dark:border-slate-800 p-4 rounded-2xl shadow-sm relative group min-h-[320px]">
-                    <h3 className="text-sm font-bold text-gray-900 dark:text-white mb-2 flex items-center gap-2 self-start w-full border-b border-gray-100 dark:border-slate-800 pb-2">
+                    <h3 className="text-sm font-bold text-white mb-2 flex items-center gap-2 self-start w-full border-b border-slate-800 pb-2">
                         <BarChart3 size={16} className="text-purple-600 dark:text-purple-400" />
                         Stock por Categoría
                     </h3>
@@ -610,7 +610,7 @@ export default function InventoryDashboard() {
                             ) : (
                                 filteredProducts.map(p => (
                                     <tr key={p.id_producto} className="hover:bg-slate-800/30 transition-colors">
-                                        <td className="px-6 py-4 text-gray-900 dark:text-white">
+                                        <td className="px-6 py-4 text-white">
                                             <div className="flex items-center gap-3">
                                                 <div className="w-8 h-8 rounded bg-gray-100 dark:bg-slate-700 overflow-hidden border border-gray-200 dark:border-slate-600">
                                                     {p.imagen_producto_url && <img src={p.imagen_producto_url} className="w-full h-full object-cover" />}

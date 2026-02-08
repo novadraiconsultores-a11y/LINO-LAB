@@ -176,7 +176,7 @@ export default function Layout() {
                   flex items-center gap-3 px-4 py-3 rounded-lg transition-colors duration-200
                   ${isActive
                                         ? 'bg-blue-600 text-white shadow-lg shadow-blue-500/30'
-                                        : 'text-gray-600 dark:text-slate-400 hover:bg-gray-100 dark:hover:bg-slate-800 hover:text-gray-900 dark:hover:text-white'}
+                                        : 'text-slate-300 hover:bg-slate-800 hover:text-white'}
                 `}
                             >
                                 <Icon size={20} />
@@ -218,8 +218,8 @@ export default function Layout() {
 
                     {/* Version Marker - Visual Deployment Confirmation */}
                     <div className="mt-3 text-center">
-                        <span className="text-[10px] text-slate-600 font-mono">
-                            v1.1.0 (Dark Fix)
+                        <span className="text-[10px] text-slate-500 font-mono">
+                            LinoLab v8
                         </span>
                     </div>
                 </div>

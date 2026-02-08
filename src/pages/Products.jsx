@@ -225,7 +225,7 @@ export default function Products() {
                             ) : (
                                 filteredProducts.map((product) => (
                                     <tr key={product.id_producto} className="hover:bg-slate-800/30 transition-colors border-b border-slate-800/50 last:border-0">
-                                        <td className="px-6 py-4 font-medium text-gray-900 dark:text-white">
+                                        <td className="px-6 py-4 font-medium text-white">
                                             <div className="flex items-center gap-3">
                                                 {/* Thumbnail */}
                                                 <div className="w-10 h-10 rounded-lg bg-gray-100 dark:bg-slate-700 overflow-hidden flex-shrink-0 border border-gray-200 dark:border-slate-600">
@@ -260,7 +260,7 @@ export default function Products() {
                                                 </div>
                                             </div>
                                         </td>
-                                        <td className="px-6 py-4 text-right text-gray-900 dark:text-slate-200 font-medium">
+                                        <td className="px-6 py-4 text-right text-slate-200 font-medium">
                                             ${product.precio_venta?.toFixed(2)}
                                         </td>
                                         <td className="px-6 py-4 text-right">

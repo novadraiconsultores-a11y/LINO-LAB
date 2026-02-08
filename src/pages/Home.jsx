@@ -948,7 +948,7 @@ function KPICard({ title, value, icon, trend, color }) {
             </div>
             <div className="relative z-10">
                 <h4 className="text-gray-500 dark:text-slate-400 text-xs font-bold uppercase tracking-wider mb-1">{title}</h4>
-                <div className="text-3xl font-bold text-gray-900 dark:text-white tracking-tight mb-2">
+                <div className="text-3xl font-bold text-white tracking-tight mb-2">
                     {value}
                 </div>
                 <p className={`text-xs font-medium opacity-80 ${textStyles[color]}`}>

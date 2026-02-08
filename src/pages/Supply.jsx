@@ -552,7 +552,7 @@ export default function Supply() {
     )
 
     return (
-        <div className="p-8 max-w-7xl mx-auto min-h-screen text-gray-900 dark:text-slate-100 relative">
+        <div className="p-8 max-w-7xl mx-auto min-h-screen text-slate-100 relative">
 
             {/* Header Area */}
             <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 mb-8">
@@ -561,7 +561,7 @@ export default function Supply() {
                         <Package size={32} className="text-emerald-400" />
                     </div>
                     <div>
-                        <h1 className="text-3xl font-bold text-gray-900 dark:text-white flex items-center gap-3">
+                        <h1 className="text-3xl font-bold text-white flex items-center gap-3">
                             Abastecimiento
                             {activeBranchName && (
                                 <span className="bg-emerald-100 dark:bg-emerald-950/50 text-emerald-600 dark:text-emerald-400 text-sm px-3 py-1 rounded-full border border-emerald-500/20 shadow-sm">
@@ -659,7 +659,7 @@ export default function Supply() {
                                             }`}
                                     >
                                         <div className="truncate">
-                                            <div className="font-bold text-sm truncate text-gray-900 dark:text-gray-100">{p.nombre_producto}</div>
+                                            <div className="font-bold text-sm truncate text-gray-100">{p.nombre_producto}</div>
                                             <div className="text-xs text-gray-500 dark:text-slate-500 font-mono">{p.sku_producto}</div>
                                         </div>
                                         <div className="text-right">
@@ -676,7 +676,7 @@ export default function Supply() {
                     <div className="lg:col-span-7 space-y-6">
                         {/* Entry Form */}
                         <div className={`bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-700 rounded-xl p-6 shadow-sm dark:shadow-lg ${!selectedProduct ? 'opacity-50 pointer-events-none' : ''}`}>
-                            <h2 className="text-sm font-bold text-gray-900 dark:text-white uppercase mb-4 flex justify-between">
+                            <h2 className="text-sm font-bold text-white uppercase mb-4 flex justify-between">
                                 <span>Agregando: {selectedProduct?.nombre_producto}</span>
                             </h2>
                             <form onSubmit={handleAddToCart} className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -740,7 +740,7 @@ export default function Supply() {
                                         {cart.map(item => (
                                             <tr key={item.id} className="border-b border-slate-800 hover:bg-slate-800/50">
                                                 <td className="p-2">
-                                                    <div className="font-bold text-gray-900 dark:text-gray-100">{item.product.nombre_producto}</div>
+                                                    <div className="font-bold text-gray-100">{item.product.nombre_producto}</div>
                                                     <div className="text-[10px] text-gray-400 dark:text-slate-400 font-mono">{item.product.sku_producto}</div>
                                                 </td>
                                                 <td className="p-2 text-center text-gray-700 dark:text-slate-300">{item.cantidad}</td>
@@ -783,7 +783,7 @@ export default function Supply() {
             {activeTab === 'history' && (
                 <div className="bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-700 rounded-xl p-6 shadow-sm dark:shadow-lg animate-in fade-in slide-in-from-bottom-4 duration-500">
                     <div className="flex justify-between items-center mb-6">
-                        <h2 className="text-lg font-bold text-gray-900 dark:text-white flex items-center gap-2">
+                        <h2 className="text-lg font-bold text-white flex items-center gap-2">
                             <History className="text-blue-500 dark:text-blue-400" /> Historial de Recepciones
                         </h2>
                         <input

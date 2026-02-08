@@ -173,3 +173,31 @@
 .custom-datepicker-wrapper .react-datepicker-wrapper {
   width: 100%;
 }
+
+/* 🔥 GLOBAL DARK MODE ENFORCEMENT FOR FORM ELEMENTS */
+/* Prevent white backgrounds on inputs, selects, textareas */
+input:not([type="checkbox"]):not([type="radio"]):not([type="range"]),
+select,
+textarea {
+  background-color: #1e293b !important;
+  /* slate-800 */
+  color: #f8fafc !important;
+  /* slate-50 */
+  border-color: #475569 !important;
+  /* slate-600 */
+}
+
+/* Force dark backgrounds on common white containers */
+.bg-white,
+.bg-gray-50,
+.bg-gray-100 {
+  background-color: #1e293b !important;
+  /* slate-800 forced override */
+  color: #f8fafc !important;
+}
+
+/* Ensure cards always have dark background */
+.card {
+  background-color: #1e293b !important;
+  color: #f8fafc !important;
+}

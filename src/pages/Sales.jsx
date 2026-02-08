@@ -303,7 +303,7 @@ export default function Sales() {
                                         {product.stock_actual === 0 && (
                                             <div className="absolute inset-0 bg-white/60 dark:bg-slate-950/60 z-10 cursor-not-allowed"></div>
                                         )}
-                                        <h3 className="text-gray-900 dark:text-white font-medium leading-tight text-sm mb-auto group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors line-clamp-2">
+                                        <h3 className="text-white font-medium leading-tight text-sm mb-auto group-hover:text-blue-400 transition-colors line-clamp-2">
                                             {product.nombre_producto}
                                         </h3>
 
@@ -332,7 +332,7 @@ export default function Sales() {
             {/* Right: Virtual Ticket (30-40%) */}
             <div className="w-full md:w-[400px] xl:w-[450px] bg-white dark:bg-slate-900 border-l border-gray-200 dark:border-slate-800 flex flex-col shadow-2xl relative z-10">
                 <div className="p-6 bg-white dark:bg-slate-900 border-b border-gray-200 dark:border-slate-800">
-                    <h2 className="text-xl font-bold flex items-center gap-2 text-gray-900 dark:text-white">
+                    <h2 className="text-xl font-bold flex items-center gap-2 text-white">
                         <ShoppingCart size={24} className="text-blue-600 dark:text-blue-500" />
                         Ticket de Venta
                     </h2>
@@ -354,7 +354,7 @@ export default function Sales() {
                             return (
                                 <div key={item.id_producto} className="bg-white dark:bg-slate-800 p-3 rounded-lg shadow-sm border border-gray-200 dark:border-slate-700 flex gap-3 group hover:border-gray-300 dark:hover:border-slate-600 transition-colors">
                                     <div className="flex-1">
-                                        <h4 className="font-medium text-gray-900 dark:text-white text-sm leading-tight mb-1">
+                                        <h4 className="font-medium text-white text-sm leading-tight mb-1">
                                             {item.nombre_producto}
                                         </h4>
                                         <div className="flex items-center gap-2 text-xs font-mono text-gray-500 dark:text-slate-400">
@@ -375,7 +375,7 @@ export default function Sales() {
                                             >
                                                 <Minus size={14} />
                                             </button>
-                                            <span className="text-xs font-bold w-6 text-center text-gray-900 dark:text-white">{item.qty}</span>
+                                            <span className="text-xs font-bold w-6 text-center text-white">{item.qty}</span>
                                             <button
                                                 onClick={(e) => { e.stopPropagation(); updateQty(item.id_producto, 1); }}
                                                 className="p-1 hover:bg-white dark:hover:bg-slate-800 rounded text-gray-500 dark:text-slate-400 hover:text-gray-900 dark:hover:text-white transition-colors"
@@ -409,7 +409,7 @@ export default function Sales() {
                             <span>${tax.toFixed(2)}</span>
                         </div>
                         <div className="flex justify-between items-end border-t border-dashed border-gray-300 dark:border-slate-700 pt-3 mt-2">
-                            <span className="text-xl font-bold text-gray-900 dark:text-white">Total</span>
+                            <span className="text-xl font-bold text-white">Total</span>
                             <span className="text-3xl font-bold text-blue-600 dark:text-emerald-400 font-mono drop-shadow-sm">
                                 ${cartTotal.toFixed(2)}
                             </span>
