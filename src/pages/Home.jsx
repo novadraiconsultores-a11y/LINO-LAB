@@ -933,16 +933,16 @@ function KPICard({ title, value, icon, trend, color }) {
     }
 
     const iconBgStyles = {
-        emerald: "bg-emerald-50 dark:bg-emerald-900/20 border-emerald-100 dark:border-emerald-500/30 text-emerald-600 dark:text-emerald-400",
-        blue: "bg-blue-50 dark:bg-blue-900/20 border-blue-100 dark:border-blue-500/30 text-blue-600 dark:text-blue-400",
-        purple: "bg-purple-50 dark:bg-purple-900/20 border-purple-100 dark:border-purple-500/30 text-purple-600 dark:text-purple-400",
-        orange: "bg-orange-50 dark:bg-orange-900/20 border-orange-100 dark:border-orange-500/30 text-orange-600 dark:text-orange-400",
+        emerald: "bg-emerald-500/5 border border-emerald-500/20 text-emerald-400 shadow-sm shadow-emerald-900/20",
+        blue: "bg-blue-500/5 border border-blue-500/20 text-blue-400 shadow-sm shadow-blue-900/20",
+        purple: "bg-purple-500/5 border border-purple-500/20 text-purple-400 shadow-sm shadow-purple-900/20",
+        orange: "bg-orange-500/5 border border-orange-500/20 text-orange-400 shadow-sm shadow-orange-900/20",
     }
 
     return (
-        <div className={`bg-white dark:bg-[#0f172a] rounded-xl p-6 relative overflow-hidden group shadow-sm border border-gray-200 dark:border-gray-800 transition-all duration-300 ${hoverStyles[color]}`}>
+        <div className={`bg-[#0f172a] rounded-xl p-6 relative overflow-hidden group shadow-sm border border-slate-800 transition-all duration-300 hover:border-cyan-500/30 hover:shadow-lg ${hoverStyles[color]}`}>
             <div className="flex justify-between items-start mb-4 relative z-10">
-                <div className={`p-3 rounded-xl border shadow-inner ${iconBgStyles[color]}`}>
+                <div className={`p-3 rounded-lg ${iconBgStyles[color]}`}>
                     {icon}
                 </div>
             </div>

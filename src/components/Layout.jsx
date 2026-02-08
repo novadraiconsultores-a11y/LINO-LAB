@@ -126,7 +126,8 @@ export default function Layout() {
                                     <select
                                         value={activeBranch || 'global'}
                                         onChange={handleBranchChange}
-                                        className="w-full appearance-none rounded-xl border border-gray-200 bg-white px-4 py-3 pl-10 text-sm font-medium text-gray-700 shadow-sm transition-all focus:border-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-500 dark:border-gray-800 dark:bg-[#0b1120] dark:text-gray-200"
+                                        style={{ paddingLeft: '48px' }}
+                                        className="w-full appearance-none rounded-xl border border-slate-800 bg-[#0b1120] px-4 py-3 text-sm font-medium text-slate-200 shadow-sm transition-all focus:border-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-500"
                                     >
                                         <option value="global">🌍 Vista Global</option>
                                         {branches.map(branch => (

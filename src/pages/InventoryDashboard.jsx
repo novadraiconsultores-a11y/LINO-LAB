@@ -301,10 +301,26 @@ export default function InventoryDashboard() {
                         {filterMode === 'alerts' && (
                             <button
                                 onClick={() => setFilterMode('all')}
-                                className="mt-2 text-xs font-bold text-orange-600 dark:text-orange-400 bg-orange-100 dark:bg-orange-900/20 px-3 py-1 rounded-full border border-orange-200 dark:border-orange-500/30 hover:bg-orange-200 dark:hover:bg-orange-900/40 transition-colors flex items-center gap-2"
+                                style={{
+                                    backgroundColor: 'rgba(239, 68, 68, 0.1)',
+                                    color: '#fca5a5',
+                                    border: '1px solid rgba(239, 68, 68, 0.2)',
+                                    borderRadius: '9999px',
+                                    padding: '0.25rem 0.75rem',
+                                    fontSize: '0.75rem',
+                                    fontWeight: 'bold',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    gap: '0.5rem',
+                                    marginTop: '0.5rem',
+                                    cursor: 'pointer',
+                                    transition: 'all 0.2s'
+                                }}
+                                onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'rgba(239, 68, 68, 0.2)'}
+                                onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'rgba(239, 68, 68, 0.1)'}
                             >
-                                <AlertTriangle size={12} />
-                                Filtro Activo: Alertas de Stock (Click para ver todo)
+                                <AlertTriangle size={12} style={{ color: '#f87171' }} />
+                                <span style={{ color: '#f87171' }}>Filtro Activo: Alertas de Stock</span> (Click para ver todo)
                             </button>
                         )}
                     </div>
@@ -318,12 +334,12 @@ export default function InventoryDashboard() {
             {/* KPI CARDS SECTION (Neon Void Style) */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
                 {/* 1. TOTAL VALUE (Subtle Glow Style) */}
-                <div className="bg-white dark:bg-[#0f172a] border border-gray-200 dark:border-gray-800 p-6 rounded-2xl shadow-sm relative overflow-hidden group transition-all duration-300 hover:border-emerald-500/50 hover:shadow-[0_0_15px_rgba(16,185,129,0.1)]">
+                <div className="bg-[#0f172a] border border-slate-800 p-6 rounded-2xl shadow-sm relative overflow-hidden group transition-all duration-300 hover:border-emerald-500/30 hover:shadow-lg">
                     <div className="flex justify-between items-start mb-6 relative z-10">
-                        <div className="p-3 bg-emerald-50 dark:bg-emerald-900/20 rounded-2xl border border-emerald-100 dark:border-emerald-500/30 shadow-inner">
-                            <DollarSign className="text-emerald-600 dark:text-emerald-400 drop-shadow-sm" size={28} />
+                        <div className="p-3 bg-emerald-500/5 border border-emerald-500/20 text-emerald-400 shadow-sm shadow-emerald-900/20 rounded-lg">
+                            <DollarSign size={28} />
                         </div>
-                        <span className="text-xs font-bold uppercase text-emerald-600 dark:text-emerald-400/80 tracking-widest border border-emerald-200 dark:border-emerald-500/20 px-2 py-1 rounded bg-emerald-50 dark:bg-emerald-900/20">Valor Estimado</span>
+                        <span className="text-xs font-bold uppercase text-emerald-400/80 tracking-widest border border-emerald-500/20 px-2 py-1 rounded bg-emerald-900/20">Valor Estimado</span>
                     </div>
                     <div className="relative z-10">
                         <div className="text-4xl lg:text-5xl font-extrabold text-white tracking-tight drop-shadow-md">
@@ -337,12 +353,12 @@ export default function InventoryDashboard() {
                 </div>
 
                 {/* 2. TOTAL ITEMS (Subtle Glow Style) */}
-                <div className="bg-white dark:bg-[#0f172a] border border-gray-200 dark:border-gray-800 p-6 rounded-2xl shadow-sm relative overflow-hidden group transition-all duration-300 hover:border-blue-500/50 hover:shadow-[0_0_15px_rgba(59,130,246,0.1)]">
+                <div className="bg-[#0f172a] border border-slate-800 p-6 rounded-2xl shadow-sm relative overflow-hidden group transition-all duration-300 hover:border-blue-500/30 hover:shadow-lg">
                     <div className="flex justify-between items-start mb-6 relative z-10">
-                        <div className="p-3 bg-blue-50 dark:bg-blue-900/20 rounded-2xl border border-blue-100 dark:border-blue-500/30 shadow-inner">
-                            <Shirt className="text-blue-600 dark:text-blue-400 drop-shadow-sm" size={28} />
+                        <div className="p-3 bg-blue-500/5 border border-blue-500/20 text-blue-400 shadow-sm shadow-blue-900/20 rounded-lg">
+                            <Shirt size={28} />
                         </div>
-                        <span className="text-xs font-bold uppercase text-blue-600 dark:text-blue-400/80 tracking-widest border border-blue-200 dark:border-blue-500/20 px-2 py-1 rounded bg-blue-50 dark:bg-blue-900/20">Prendas</span>
+                        <span className="text-xs font-bold uppercase text-blue-400/80 tracking-widest border border-blue-500/20 px-2 py-1 rounded bg-blue-900/20">Prendas</span>
                     </div>
                     <div className="relative z-10">
                         <div className="text-4xl lg:text-5xl font-extrabold text-white tracking-tight drop-shadow-md">
@@ -358,14 +374,14 @@ export default function InventoryDashboard() {
                 {/* 3. LOW STOCK ALERT (Subtle Glow Style) */}
                 <div
                     onClick={() => setFilterMode(filterMode === 'alerts' ? 'all' : 'alerts')}
-                    className={`bg-white dark:bg-[#0f172a] border p-6 rounded-2xl shadow-sm relative overflow-hidden group transition-all duration-300 cursor-pointer hover:border-orange-500/50 hover:shadow-[0_0_15px_rgba(249,115,22,0.1)] ${lowStockCount > 0 ? 'border-orange-200 dark:border-gray-800' : 'border-gray-200 dark:border-gray-800'}`}
+                    className={`bg-[#0f172a] border border-slate-800 p-6 rounded-2xl shadow-sm relative overflow-hidden group transition-all duration-300 cursor-pointer hover:border-orange-500/30 hover:shadow-lg`}
                 >
                     <div className="flex justify-between items-start mb-6 relative z-10">
-                        <div className={`p-3 rounded-2xl border shadow-inner transition-colors ${lowStockCount > 0
-                            ? 'bg-orange-50 dark:bg-orange-900/20 border-orange-100 dark:border-orange-500/30'
-                            : 'bg-gray-100 dark:bg-slate-800 border-gray-200 dark:border-slate-700'
+                        <div className={`p-3 rounded-lg transition-colors ${lowStockCount > 0
+                            ? 'bg-orange-500/5 border border-orange-500/20 text-orange-400 shadow-sm shadow-orange-900/20'
+                            : 'bg-slate-500/5 border border-slate-700/20 text-slate-500 shadow-sm'
                             }`}>
-                            <AlertTriangle className={lowStockCount > 0 ? "text-orange-600 dark:text-orange-400 animate-pulse drop-shadow-sm" : "text-gray-400 dark:text-slate-500"} size={28} />
+                            <AlertTriangle className={lowStockCount > 0 ? "animate-pulse" : ""} size={28} />
                         </div>
                         <span className={`text-xs font-bold uppercase tracking-widest border px-2 py-1 rounded ${lowStockCount > 0
                             ? 'text-orange-600 dark:text-orange-400/80 border-orange-200 dark:border-orange-500/20 bg-orange-50 dark:bg-orange-900/20'
@@ -602,7 +618,7 @@ export default function InventoryDashboard() {
                                 <th className="px-6 py-4 text-center">Estado</th>
                             </tr>
                         </thead>
-                        <tbody className="divide-y divide-gray-100 dark:divide-slate-800">
+                        <tbody className="divide-y divide-slate-800">
                             {loading ? (
                                 <tr><td colSpan="5" className="p-8 text-center">Cargando...</td></tr>
                             ) : filteredProducts.length === 0 ? (
@@ -631,15 +647,15 @@ export default function InventoryDashboard() {
                                             </div>
                                         </td>
                                         <td className="px-6 py-4 text-center">
-                                            <span className={`px-3 py-1 rounded-full font-bold text-sm ${p.stock_actual > 0 ? 'bg-emerald-100 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400' : 'bg-gray-100 dark:bg-slate-800 text-gray-500 dark:text-slate-500'}`}>
+                                            <span className={`px-3 py-1 rounded-full font-bold text-sm border ${p.stock_actual > 0 ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20' : 'bg-slate-500/10 text-slate-500 border-slate-700/20'}`}>
                                                 {p.stock_actual || 0}
                                             </span>
                                         </td>
                                         <td className="px-6 py-4 text-center">
                                             {p.stock_actual <= 5 ? (
-                                                <span className="text-xs text-red-600 dark:text-red-500 font-bold bg-red-100 dark:bg-red-900/10 px-2 py-1 rounded border border-red-200 dark:border-red-900/20">AGOTÁNDOSE</span>
+                                                <span className="text-xs font-bold bg-red-500/10 text-red-400 border border-red-500/20 px-2 py-1 rounded">AGOTÁNDOSE</span>
                                             ) : (
-                                                <span className="text-xs text-emerald-600 dark:text-emerald-500 font-bold bg-emerald-100 dark:bg-emerald-900/10 px-2 py-1 rounded border border-emerald-200 dark:border-emerald-900/20">OK</span>
+                                                <span className="text-xs font-bold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 px-2 py-1 rounded">OK</span>
                                             )}
                                         </td>
                                     </tr>
