@@ -1,50 +1,16 @@
-import { useState, useEffect } from 'react'
-import { Plus, Search, Edit, Trash2, Shield, Mail, Building2, User, Key } from 'lucide-react'
-import { supabase } from '../../supabaseClient'
-import UserModal from '../../components/UserModal'
-import ResetPasswordModal from '../../components/ResetPasswordModal'
-import Toast from '../../components/ui/Toast'
+import { sendEmailNotification } from '../../utils/emailService'
+
+// ... existing imports
 
 export default function Users() {
-    const [users, setUsers] = useState([])
-    const [loading, setLoading] = useState(true)
-    const [searchTerm, setSearchTerm] = useState('')
-    const [isModalOpen, setIsModalOpen] = useState(false)
-    const [isResetModalOpen, setIsResetModalOpen] = useState(false)
-    const [editingUser, setEditingUser] = useState(null)
-    const [resettingUser, setResettingUser] = useState(null)
-    const [toast, setToast] = useState(null)
+    // ... existing state
 
-    const showToast = (message, type = 'success') => {
-        setToast({ message, type })
-    }
-
-    useEffect(() => {
-        fetchUsers()
-    }, [])
-
-    async function fetchUsers() {
-        try {
-            setLoading(true)
-            const { data, error } = await supabase
-                .from('perfiles')
-                .select('*, sucursales:sucursal_asignada_id(nombre)')
-                .order('nombre_completo', { ascending: true })
-
-            if (error) throw error
-            setUsers(data || [])
-        } catch (error) {
-            console.error('Error fetching users:', error)
-            showToast('Error al cargar usuarios: ' + error.message, 'error')
-        } finally {
-            setLoading(false)
-        }
-    }
+    // ... existing functions
 
     const handleSaveUser = async (formData, adminPassword = null) => {
         try {
             if (editingUser) {
-                // UPDATE existing user with SECURITY CHECK
+                // ... update logic
                 if (!adminPassword) {
                     throw new Error('Se requiere contraseña de administrador')
                 }
@@ -77,7 +43,32 @@ export default function Users() {
                 })
 
                 if (error) throw error
-                showToast('Usuario creado correctamente', 'success')
+
+                // Send Email Notification
+                try {
+                    await sendEmailNotification(
+                        formData.email,
+                        'Bienvenido a LinoLab - Credenciales de Acceso',
+                        `
+                        <div style="font-family: Arial, sans-serif; color: #333;">
+                            <h1 style="color: #2563eb;">Bienvenido a LinoLab</h1>
+                            <p>Hola <strong>${formData.nombre}</strong>,</p>
+                            <p>Tu cuenta ha sido creada exitosamente. Aquí están tus credenciales de acceso:</p>
+                            <div style="background-color: #f3f4f6; padding: 15px; border-radius: 8px; margin: 20px 0;">
+                                <p style="margin: 5px 0;"><strong>Correo:</strong> ${formData.email}</p>
+                                <p style="margin: 5px 0;"><strong>Contraseña Temporal:</strong> ${formData.password}</p>
+                            </div>
+                            <p>Por favor, cambia tu contraseña al iniciar sesión por primera vez.</p>
+                            <hr style="border: none; border-top: 1px solid #e5e7eb; margin: 20px 0;">
+                            <p style="font-size: 12px; color: #6b7280;">Este mensaje fue enviado automáticamente por el sistema LinoLab.</p>
+                        </div>
+                        `
+                    )
+                    showToast('Usuario creado y notificado por correo', 'success')
+                } catch (emailError) {
+                    console.error('Error enviando correo:', emailError)
+                    showToast('Usuario creado, pero falló el envío del correo', 'warning')
+                }
             }
 
             fetchUsers()
