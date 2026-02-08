@@ -9,8 +9,8 @@
   }
 
   body {
-    background-color: #020617;
-    /* slate-950 hex fallback */
+    background-color: #020617 !important;
+    /* slate-950 hex fallback - FORCED */
     color: #e2e8f0;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;

@@ -215,6 +215,13 @@ export default function Layout() {
                         <LogOut size={20} />
                         <span className="font-medium">Cerrar Sesión</span>
                     </button>
+
+                    {/* Version Marker - Visual Deployment Confirmation */}
+                    <div className="mt-3 text-center">
+                        <span className="text-[10px] text-slate-600 font-mono">
+                            v1.1.0 (Dark Fix)
+                        </span>
+                    </div>
                 </div>
             </div>
 
