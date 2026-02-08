@@ -175,29 +175,36 @@
 }
 
 /* 🔥 GLOBAL DARK MODE ENFORCEMENT FOR FORM ELEMENTS */
+/* CLONED FROM EMPRESARIOS.JSX - Deep Blue Aesthetic */
 /* Prevent white backgrounds on inputs, selects, textareas */
 input:not([type="checkbox"]):not([type="radio"]):not([type="range"]),
 select,
 textarea {
-  background-color: #1e293b !important;
-  /* slate-800 */
+  background-color: #0f172a !important;
+  /* slate-900 - DEEP BLUE like Empresarios */
   color: #f8fafc !important;
   /* slate-50 */
-  border-color: #475569 !important;
-  /* slate-600 */
+  border-color: #1e293b !important;
+  /* slate-800 - SUBTLE borders */
 }
 
 /* Force dark backgrounds on common white containers */
+/* Match Empresarios card style exactly */
 .bg-white,
 .bg-gray-50,
 .bg-gray-100 {
-  background-color: #1e293b !important;
-  /* slate-800 forced override */
+  background-color: #0f172a !important;
+  /* slate-900 - DEEP BLUE */
   color: #f8fafc !important;
+  border-color: #1e293b !important;
+  /* slate-800 - SUBTLE */
 }
 
-/* Ensure cards always have dark background */
+/* Ensure cards always have dark background - Empresarios DNA */
 .card {
-  background-color: #1e293b !important;
+  background-color: #0f172a !important;
+  /* slate-900 */
   color: #f8fafc !important;
+  border-color: #1e293b !important;
+  /* slate-800 */
 }
