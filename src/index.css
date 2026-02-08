@@ -2,6 +2,18 @@
 
 @layer base {
 
+  /* 🔥 NUCLEAR DARK MODE - Root Level Enforcement */
+  :root,
+  html,
+  body {
+    background-color: #020617 !important;
+    /* Slate 950 */
+    color: #f8fafc !important;
+    /* Slate 50 */
+    color-scheme: dark;
+    /* Tell browser this site is natively dark */
+  }
+
   html,
   body {
     overflow-x: hidden;
@@ -9,9 +21,6 @@
   }
 
   body {
-    background-color: #020617 !important;
-    /* slate-950 hex fallback - FORCED */
-    color: #e2e8f0;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }

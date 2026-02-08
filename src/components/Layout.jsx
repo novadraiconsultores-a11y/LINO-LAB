@@ -112,14 +112,8 @@ export default function Layout() {
       `}>
                 <div className="flex flex-col items-center justify-center border-b border-gray-200 dark:border-slate-800 p-4">
 
-                    <h1 className="text-2xl font-bold tracking-widest mb-3">
-                        <span className="bg-gradient-to-r from-blue-400 via-purple-500 to-pink-500 bg-clip-text text-transparent">
-                            LINO LAB
-                        </span>
-                        {' '}
-                        <span className="text-yellow-400 text-sm">
-                            (Vercel v1.2)
-                        </span>
+                    <h1 className="text-2xl font-bold tracking-widest bg-gradient-to-r from-blue-400 via-purple-500 to-pink-500 bg-clip-text text-transparent mb-3">
+                        LINO LAB
                     </h1>
 
                     {/* Branch Selector (RBAC Protected) */}

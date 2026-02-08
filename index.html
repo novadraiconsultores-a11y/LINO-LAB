@@ -2,9 +2,18 @@
 <html lang="es" class="dark">
 
 <head>
+  <script>
+    // 🔥 BLOCKING SCRIPT - Runs before ANY rendering
+    // Force dark mode immediately, before browser paints anything
+    document.documentElement.classList.add('dark');
+    // Trick browser into thinking system is dark
+    document.documentElement.style.colorScheme = 'dark';
+    document.documentElement.style.backgroundColor = '#020617';
+  </script>
   <meta charset="UTF-8" />
   <link rel="icon" type="image/svg+xml" href="/vite.svg" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#020617" />
   <title>LinoLab v1.2 (Live)</title>
 </head>
 
