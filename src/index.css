@@ -1,19 +1,25 @@
 @import "tailwindcss";
 
-@layer base {
+/* ═══════════════════════════════════════════════════════════════════════════
+   🌌 DEEP UNIVERSE DESIGN SYSTEM
+   A unified dark mode design system for LinoLab
+   Zero white, deep blue aesthetic, interactive elements
+   ═══════════════════════════════════════════════════════════════════════════ */
 
-  /* 🔥 RADICAL DARK MODE OVERRIDE - ABSOLUTE ENFORCEMENT */
-  /* NO media queries, NO conditions, ONLY dark mode */
+@layer base {
+  /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+     1. EL LIENZO (The Canvas) - Base Foundation
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
   :root,
   html,
   body,
   #root {
     background-color: #020617 !important;
-    /* Slate 950 - PURE BLACK */
-    color: #f8fafc !important;
-    /* Slate 50 - WHITE TEXT */
+    /* Slate-950 - Pure Deep Space */
+    color: #e2e8f0 !important;
+    /* Slate-200 - Soft White */
     color-scheme: dark !important;
-    /* Tell browser: "This site is ONLY dark" */
   }
 
   html,
@@ -28,7 +34,37 @@
   }
 }
 
-/* Mobile-friendly table wrapper */
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   2. SCROLLBARS - Elegant & Minimal
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+/* Custom Scrollbar - Universal */
+.custom-scrollbar::-webkit-scrollbar,
+*::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track,
+*::-webkit-scrollbar-track {
+  background: #020617;
+  /* Deep space */
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb,
+*::-webkit-scrollbar-thumb {
+  background: #334155;
+  /* Slate-700 */
+  border-radius: 8px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover,
+*::-webkit-scrollbar-thumb:hover {
+  background: #475569;
+  /* Slate-600 - Brighter on hover */
+}
+
+/* Table Responsive Scrollbar */
 .table-responsive {
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
@@ -47,90 +83,171 @@
   border-radius: 4px;
 }
 
-/* Custom Scrollbar for Catalog */
-.custom-scrollbar::-webkit-scrollbar {
-  width: 6px;
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   3. GLASS PANELS - Card System with Interactive Borders
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+.glass-panel,
+.card {
+  background-color: rgba(15, 23, 42, 0.95) !important;
+  /* Slate-900 with transparency */
+  border: 1px solid #1e293b !important;
+  /* Slate-800 - Subtle base border */
+  border-radius: 0.75rem !important;
+  /* rounded-xl */
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.4), 0 4px 6px -2px rgba(0, 0, 0, 0.3) !important;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  color: #f8fafc !important;
 }
 
-.custom-scrollbar::-webkit-scrollbar-track {
-  background: rgba(15, 23, 42, 0.5);
+.glass-panel:hover,
+.card:hover {
+  border-color: rgba(6, 182, 212, 0.3) !important;
+  /* Cyan glow on hover */
+  transform: translateY(-2px) !important;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5), 0 10px 10px -5px rgba(0, 0, 0, 0.4) !important;
 }
 
-.custom-scrollbar::-webkit-scrollbar-thumb {
-  background: #334155;
-  border-radius: 4px;
+/* Force dark backgrounds on legacy white containers */
+.bg-white,
+.bg-gray-50,
+.bg-gray-100 {
+  background-color: #0f172a !important;
+  /* Slate-900 */
+  color: #f8fafc !important;
+  border-color: #1e293b !important;
 }
 
-.custom-scrollbar::-webkit-scrollbar-thumb:hover {
-  background: #475569;
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   4. INPUTS & FORMS - Deep Inset Effect
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+input:not([type="checkbox"]):not([type="radio"]):not([type="range"]),
+select,
+textarea {
+  background-color: #020617 !important;
+  /* Darker than cards - inset effect */
+  color: #e2e8f0 !important;
+  /* Slate-200 */
+  border: 1px solid #334155 !important;
+  /* Slate-700 */
+  border-radius: 0.5rem !important;
+  padding: 0.625rem 0.875rem !important;
+  /* Generous padding */
+  transition: all 0.2s ease !important;
 }
 
-/* Print Styles for Thermal Receipt */
-@media print {
-
-  /* Hide everything by default */
-  body * {
-    visibility: hidden;
-  }
-
-  /* Reset background and text colors for printing */
-  body {
-    background-color: white !important;
-    color: black !important;
-  }
-
-  /* Only show the receipt container and its children */
-  .printable-receipt,
-  .printable-receipt * {
-    visibility: visible;
-  }
-
-  /* Position the receipt at the top-left */
-  .printable-receipt {
-    position: absolute;
-    left: 0;
-    top: 0;
-    width: 100%;
-    max-width: 80mm;
-    /* Standard thermal paper width */
-    margin: 0;
-    padding: 0;
-    background: white;
-    color: black;
-    font-family: monospace;
-    /* Monospaced font for receipt look */
-    font-size: 12px;
-  }
-
-  /* Remove shadows, borders, and extra styling */
-  .printable-receipt div {
-    box-shadow: none !important;
-    border: none !important;
-  }
-
-  /* Ensure text is black */
-  .printable-receipt h1,
-  .printable-receipt h2,
-  .printable-receipt p,
-  .printable-receipt span,
-  .printable-receipt div {
-    color: black !important;
-  }
+input:focus,
+select:focus,
+textarea:focus {
+  outline: none !important;
+  border-color: #06b6d4 !important;
+  /* Cyan-500 - Bright focus */
+  box-shadow: 0 0 0 3px rgba(6, 182, 212, 0.1) !important;
 }
 
-/* === REACT DATEPICKER DARK MODE OVERRIDES === */
+input::placeholder,
+textarea::placeholder {
+  color: #64748b !important;
+  /* Slate-500 */
+}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   5. BUTTONS - Gradient Hierarchy
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+button {
+  transition: all 0.2s ease !important;
+}
+
+/* Primary Buttons - Gradient Blue to Cyan */
+.btn-primary,
+button.bg-blue-600,
+button.bg-emerald-600 {
+  background: linear-gradient(135deg, #2563eb 0%, #06b6d4 100%) !important;
+  color: white !important;
+  border: none !important;
+  padding: 0.625rem 1.25rem !important;
+  border-radius: 0.5rem !important;
+  font-weight: 600 !important;
+  box-shadow: 0 4px 6px -1px rgba(37, 99, 235, 0.3) !important;
+}
+
+.btn-primary:hover,
+button.bg-blue-600:hover,
+button.bg-emerald-600:hover {
+  transform: translateY(-1px) !important;
+  box-shadow: 0 10px 15px -3px rgba(37, 99, 235, 0.4) !important;
+}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   6. THIRD PARTY LIBRARY OVERRIDES - Force Dark Mode
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+/* SweetAlert2 */
+.swal2-popup {
+  background-color: #0f172a !important;
+  color: #f8fafc !important;
+  border: 1px solid #1e293b !important;
+}
+
+.swal2-title,
+.swal2-html-container {
+  color: #f8fafc !important;
+}
+
+/* Recharts */
+.recharts-wrapper,
+.recharts-surface {
+  background-color: transparent !important;
+}
+
+.recharts-tooltip-wrapper {
+  background-color: #0f172a !important;
+  border: 1px solid #1e293b !important;
+  border-radius: 0.5rem !important;
+}
+
+/* ApexCharts */
+.apexcharts-tooltip {
+  background: #0f172a !important;
+  color: #f8fafc !important;
+  border: 1px solid #1e293b !important;
+}
+
+.apexcharts-tooltip-title {
+  background: #1e293b !important;
+  border-bottom: 1px solid #334155 !important;
+}
+
+/* React Toastify */
+.Toastify__toast {
+  background-color: #0f172a !important;
+  color: #f8fafc !important;
+  border: 1px solid #1e293b !important;
+}
+
+/* DataTables */
+.dataTables_wrapper {
+  background-color: #0f172a !important;
+  color: #f8fafc !important;
+}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   7. REACT DATEPICKER - Deep Universe Theme
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
 .react-datepicker {
   font-family: inherit !important;
   background-color: #0f172a !important;
-  /* slate-900 */
   border: 1px solid #334155 !important;
   color: #e2e8f0 !important;
   border-radius: 0.75rem !important;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.4) !important;
 }
 
 .react-datepicker__header {
   background-color: #1e293b !important;
-  /* slate-800 */
   border-bottom: 1px solid #334155 !important;
   border-top-left-radius: 0.75rem !important;
   border-top-right-radius: 0.75rem !important;
@@ -156,55 +273,91 @@
 .react-datepicker__day--in-selecting-range,
 .react-datepicker__day--in-range {
   background-color: #2563eb !important;
-  /* blue-600 */
   color: white !important;
 }
 
 .react-datepicker__day--keyboard-selected {
   background-color: #1d4ed8 !important;
-  /* blue-700 */
 }
 
 .react-datepicker__day--disabled {
   color: #475569 !important;
 }
 
-/* Input Wrapper Styling if needed */
 .custom-datepicker-wrapper .react-datepicker-wrapper {
   width: 100%;
 }
 
-/* 🔥 GLOBAL DARK MODE ENFORCEMENT FOR FORM ELEMENTS */
-/* CLONED FROM EMPRESARIOS.JSX - Deep Blue Aesthetic */
-/* Prevent white backgrounds on inputs, selects, textareas */
-input:not([type="checkbox"]):not([type="radio"]):not([type="range"]),
-select,
-textarea {
-  background-color: #0f172a !important;
-  /* slate-900 - DEEP BLUE like Empresarios */
-  color: #f8fafc !important;
-  /* slate-50 */
-  border-color: #1e293b !important;
-  /* slate-800 - SUBTLE borders */
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   8. PRINT STYLES - Thermal Receipt
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+@media print {
+  body * {
+    visibility: hidden;
+  }
+
+  body {
+    background-color: white !important;
+    color: black !important;
+  }
+
+  .printable-receipt,
+  .printable-receipt * {
+    visibility: visible;
+  }
+
+  .printable-receipt {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    max-width: 80mm;
+    margin: 0;
+    padding: 0;
+    background: white;
+    color: black;
+    font-family: monospace;
+    font-size: 12px;
+  }
+
+  .printable-receipt div {
+    box-shadow: none !important;
+    border: none !important;
+  }
+
+  .printable-receipt h1,
+  .printable-receipt h2,
+  .printable-receipt p,
+  .printable-receipt span,
+  .printable-receipt div {
+    color: black !important;
+  }
 }
 
-/* Force dark backgrounds on common white containers */
-/* Match Empresarios card style exactly */
-.bg-white,
-.bg-gray-50,
-.bg-gray-100 {
-  background-color: #0f172a !important;
-  /* slate-900 - DEEP BLUE */
-  color: #f8fafc !important;
-  border-color: #1e293b !important;
-  /* slate-800 - SUBTLE */
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   9. UTILITY CLASSES - Deep Universe Extras
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+/* Glow effect for important elements */
+.glow-cyan {
+  box-shadow: 0 0 20px rgba(6, 182, 212, 0.3) !important;
 }
 
-/* Ensure cards always have dark background - Empresarios DNA */
-.card {
-  background-color: #0f172a !important;
-  /* slate-900 */
-  color: #f8fafc !important;
-  border-color: #1e293b !important;
-  /* slate-800 */
+.glow-blue {
+  box-shadow: 0 0 20px rgba(37, 99, 235, 0.3) !important;
+}
+
+/* Deep inset for sunken elements */
+.deep-inset {
+  background-color: #020617 !important;
+  box-shadow: inset 0 2px 4px 0 rgba(0, 0, 0, 0.3) !important;
+}
+
+/* Gradient text */
+.gradient-text {
+  background: linear-gradient(135deg, #2563eb 0%, #06b6d4 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
