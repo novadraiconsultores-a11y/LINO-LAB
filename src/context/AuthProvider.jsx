@@ -13,43 +13,53 @@ export const AuthProvider = ({ children }) => {
     const [authError, setAuthError] = useState(null)
 
     // Helper: Explicit Profile Fetch (Simplified & Aggressive)
-    const getProfile = async (userId) => {
+    const getProfile = async (currentUser) => {
+        if (!currentUser) return;
+        const userId = currentUser.id;
+
         try {
-            console.log("INTENTANDO FETCH PERFIL PARA:", userId); // Debug
+            // console.log("INTENTANDO FETCH PERFIL PARA:", userId); 
 
             const { data, error } = await supabase
-                .from('perfiles') // Tabla correcta
-                .select('*, sucursales(nombre)') // Join w/ sucursales directly if possible
-                .eq('id_perfil', userId) // ID correcto
+                .from('perfiles')
+                .select('*, sucursales(nombre)')
+                .eq('id_perfil', userId)
                 .single();
 
             if (error) {
-                console.error("ERROR SUPABASE:", error);
+                console.warn("Error cargando perfil (Auth):", error.message);
                 throw error;
             }
 
             if (data) {
-                console.log("PERFIL ENCONTRADO:", data); // Debug
-                // Normalize data structure for consistency
+                // console.log("PERFIL ENCONTRADO DB:", data); 
+
+                // Normalización de Rol
+                const dbRole = data.rol ? data.rol.trim().toLowerCase() : 'vendedor'
+
                 const userProfile = {
                     ...data,
-                    rol: data.rol ? data.rol.trim().toLowerCase() : 'vendedor'
+                    rol: dbRole
                 }
+
                 setProfile(userProfile);
 
-                // FORCE SYNC: Merge DB profile into User state to override stale token metadata
-                setUser(prev => ({ ...prev, ...userProfile }));
+                // CRITICAL: Force overwriting the user state with DB data
+                // This ensures 'user.rol' is exactly what is in the DB, ignoring session metadata
+                setUser({
+                    ...currentUser,
+                    ...userProfile, // This puts 'rol', 'sucursal_id', etc. at top level
+                    user_metadata: {
+                        ...currentUser.user_metadata,
+                        rol: dbRole // Also update metadata mirror just in case
+                    }
+                });
             }
         } catch (error) {
-            console.error("Error cargando perfil:", error.message);
-            // Fallback opcional si falla la DB (Critical for debugging visibility)
-            setProfile({
-                rol: 'vendedor',
-                nombre: 'Usuario (Fallback)',
-                id_perfil: userId
-            });
-            // Don't merge fallback into user to avoid overwriting session data with junk if just net error
+            // Fallback: If DB fails, keep session user but mark as Vendedor for safety
             setAuthError(error)
+            // Optional: Enforce safest role on error
+            /* setUser(prev => ({ ...prev, rol: 'vendedor' })) */
         }
     }
 
@@ -58,10 +68,13 @@ export const AuthProvider = ({ children }) => {
         supabase.auth.getSession().then(({ data: { session } }) => {
             setSession(session)
             const currentUser = session?.user ?? null
+
+            // Initial set (might be stale role from token)
             setUser(currentUser)
 
             if (currentUser) {
-                getProfile(currentUser.id).finally(() => setLoading(false))
+                // Immediately fetch DB truth
+                getProfile(currentUser).finally(() => setLoading(false))
             } else {
                 setLoading(false)
             }
@@ -71,10 +84,13 @@ export const AuthProvider = ({ children }) => {
         const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
             setSession(session)
             const currentUser = session?.user ?? null
+
+            // Set based on session first
             setUser(currentUser)
 
             if (currentUser) {
-                getProfile(currentUser.id).finally(() => setLoading(false))
+                // Then override with DB truth
+                getProfile(currentUser).finally(() => setLoading(false))
             } else {
                 setProfile(null)
                 setAuthError(null)
@@ -85,28 +101,31 @@ export const AuthProvider = ({ children }) => {
         return () => subscription.unsubscribe()
     }, [])
 
-    const value = {
-        session,
-        user,
-        profile,
-        authError,
-        signOut: () => supabase.auth.signOut()
-    }
+    return () => subscription.unsubscribe()
+}, [])
 
-    if (loading) {
-        return (
-            <div className="min-h-screen bg-slate-950 flex items-center justify-center">
-                <div className="flex flex-col items-center gap-4">
-                    <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-emerald-500"></div>
-                    <p className="text-slate-400 text-sm font-mono animate-pulse">Cargando perfil...</p>
-                </div>
-            </div>
-        )
-    }
+const value = {
+    session,
+    user,
+    profile,
+    authError,
+    signOut: () => supabase.auth.signOut()
+}
 
+if (loading) {
     return (
-        <AuthContext.Provider value={value}>
-            {children}
-        </AuthContext.Provider>
+        <div className="min-h-screen bg-slate-950 flex items-center justify-center">
+            <div className="flex flex-col items-center gap-4">
+                <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-emerald-500"></div>
+                <p className="text-slate-400 text-sm font-mono animate-pulse">Cargando perfil...</p>
+            </div>
+        </div>
     )
+}
+
+return (
+    <AuthContext.Provider value={value}>
+        {children}
+    </AuthContext.Provider>
+)
 }
