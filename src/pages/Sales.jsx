@@ -204,8 +204,12 @@ export default function Sales() {
             setCart([])
             fetchProducts() // Refresh catalog stock
 
+            // ... (inside handlePaymentConfirm)
             // 7. Send Email Receipt (Silent/Async)
-            if (paymentDetails.clientEmail) {
+            if (paymentDetails.clientEmail && saleId) { // Added saleId check
+                // Safe ID for display
+                const safeSaleId = String(saleId || '???')
+
                 const emailHtml = `
                     <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #e2e8f0; border-radius: 10px; background-color: #f8fafc;">
                         <div style="text-align: center; margin-bottom: 20px;">
@@ -216,7 +220,7 @@ export default function Sales() {
                         <div style="background-color: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
                             <div style="border-bottom: 1px solid #f1f5f9; padding-bottom: 15px; margin-bottom: 15px;">
                                 <p style="margin: 5px 0; color: #334155;"><strong>Fecha:</strong> ${new Date().toLocaleString()}</p>
-                                <p style="margin: 5px 0; color: #334155;"><strong>Folio de Venta:</strong> ${saleId}</p>
+                                <p style="margin: 5px 0; color: #334155;"><strong>Folio de Venta:</strong> ${safeSaleId}</p>
                                 <p style="margin: 5px 0; color: #334155;"><strong>Método de Pago:</strong> ${paymentDetails.method}</p>
                             </div>
 
@@ -255,11 +259,11 @@ export default function Sales() {
 
                 sendEmailNotification(
                     paymentDetails.clientEmail,
-                    `Ticket de Compra - LinoLab #${saleId.slice(0, 8)}`,
+                    `Ticket de Compra - LinoLab #${safeSaleId.slice(0, 8)}`, // Safe slice
                     emailHtml
                 ).catch(err => console.error('Error enviando ticket por correo (Silencioso):', err))
             } else {
-                console.log('No se envió ticket: Cliente sin email registrado')
+                console.log('No se envió ticket: Cliente sin email registrado o ID inválido')
             }
 
         } catch (error) {
@@ -291,20 +295,20 @@ export default function Sales() {
                             </span>
                         )}
                     </h1>
-                    <div className="bg-slate-900 border border-slate-700 p-3 rounded-xl flex items-center gap-3 shadow-sm">
-                        <Search className="text-slate-500" size={24} />
+                    <div className="bg-slate-900 border border-slate-700 p-3 rounded-xl flex items-center gap-3 shadow-sm relative">
+                        <Search className="text-slate-500 absolute left-4" size={24} />
                         <input
                             type="text"
                             placeholder="Buscar producto..."
                             value={searchTerm}
                             onChange={(e) => setSearchTerm(e.target.value)}
-                            className="bg-transparent border-none focus:outline-none text-white w-full text-lg placeholder-slate-600"
+                            className="bg-transparent border-none focus:outline-none text-white w-full text-lg placeholder-slate-600 pl-10"
                             autoFocus
                         />
                     </div>
                 </div>
 
-                {/* Stock Toggle Filter */}
+                {/* ... Stock Toggle Filter ... */}
                 <div className="flex justify-end mb-4">
                     <button
                         onClick={() => setShowOutOfStock(!showOutOfStock)}
@@ -319,6 +323,7 @@ export default function Sales() {
                 </div>
 
                 <div className="flex-1 overflow-y-auto pr-2 custom-scrollbar">
+                    {/* ... Grid Content ... */}
                     {loading ? (
                         <div className="flex items-center justify-center h-40">
                             <p className="text-slate-500">Cargando catálogo...</p>
@@ -389,8 +394,8 @@ export default function Sales() {
             </div>
 
             {/* Right: Virtual Ticket (30-40%) */}
-            <div className="w-full md:w-[400px] xl:w-[450px] bg-white dark:bg-slate-900 border-l border-gray-200 dark:border-slate-800 flex flex-col shadow-2xl relative z-10">
-                <div className="p-6 bg-white dark:bg-slate-900 border-b border-gray-200 dark:border-slate-800">
+            <div className="w-full md:w-[400px] xl:w-[450px] bg-white dark:bg-slate-900 border-l border-gray-200 dark:border-slate-800 flex flex-col shadow-2xl relative z-10 h-full">
+                <div className="p-6 bg-white dark:bg-slate-900 border-b border-gray-200 dark:border-slate-800 shrink-0">
                     <h2 className="text-xl font-bold flex items-center gap-2 text-white">
                         <ShoppingCart size={24} className="text-blue-600 dark:text-blue-500" />
                         Ticket de Venta
@@ -400,8 +405,8 @@ export default function Sales() {
                     </p>
                 </div>
 
-                {/* Cart Items */}
-                <div className="flex-1 overflow-y-auto p-4 space-y-3 bg-slate-950/50">
+                {/* Cart Items - Scrollable & Max Height Constrained */}
+                <div className="flex-1 overflow-y-auto p-4 space-y-3 bg-slate-950/50 custom-scrollbar max-h-[60vh]">
                     {cart.length === 0 ? (
                         <div className="h-full flex flex-col items-center justify-center text-gray-400 dark:text-slate-600 opacity-60">
                             <ShoppingCart size={48} className="mb-2" />
@@ -456,8 +461,8 @@ export default function Sales() {
                     )}
                 </div>
 
-                {/* Totals Section */}
-                <div className="p-6 bg-white dark:bg-slate-900 border-t border-gray-200 dark:border-slate-800 shadow-[0_-4px_20px_rgba(0,0,0,0.1)] dark:shadow-[0_-4px_20px_rgba(0,0,0,0.4)] relative z-20">
+                {/* Totals Section - Fixed Bottom */}
+                <div className="p-6 bg-white dark:bg-slate-900 border-t border-gray-200 dark:border-slate-800 shadow-[0_-4px_20px_rgba(0,0,0,0.1)] dark:shadow-[0_-4px_20px_rgba(0,0,0,0.4)] relative z-20 mt-auto shrink-0">
                     <div className="space-y-2 mb-6">
                         <div className="flex justify-between text-gray-500 dark:text-slate-400 text-sm">
                             <span>Subtotal (Base)</span>
