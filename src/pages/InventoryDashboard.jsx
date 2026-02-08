@@ -302,9 +302,9 @@ export default function InventoryDashboard() {
                             <button
                                 onClick={() => setFilterMode('all')}
                                 style={{
-                                    backgroundColor: 'rgba(239, 68, 68, 0.1)',
+                                    backgroundColor: '#1a0a0a',
                                     color: '#fca5a5',
-                                    border: '1px solid rgba(239, 68, 68, 0.2)',
+                                    border: '1px solid #3d1a1a',
                                     borderRadius: '9999px',
                                     padding: '0.25rem 0.75rem',
                                     fontSize: '0.75rem',
@@ -314,12 +314,16 @@ export default function InventoryDashboard() {
                                     gap: '0.5rem',
                                     marginTop: '0.5rem',
                                     cursor: 'pointer',
-                                    transition: 'all 0.2s'
+                                    transition: 'all 0.2s',
+                                    outline: 'none',
+                                    WebkitAppearance: 'none',
+                                    MozAppearance: 'none',
+                                    appearance: 'none'
                                 }}
-                                onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'rgba(239, 68, 68, 0.2)'}
-                                onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'rgba(239, 68, 68, 0.1)'}
+                                onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#2d1010'}
+                                onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#1a0a0a'}
                             >
-                                <AlertTriangle size={12} style={{ color: '#f87171' }} />
+                                <AlertTriangle size={12} style={{ color: '#f87171', flexShrink: 0 }} />
                                 <span style={{ color: '#f87171' }}>Filtro Activo: Alertas de Stock</span> (Click para ver todo)
                             </button>
                         )}

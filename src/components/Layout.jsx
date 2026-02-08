@@ -126,7 +126,6 @@ export default function Layout() {
                                     <select
                                         value={activeBranch || 'global'}
                                         onChange={handleBranchChange}
-                                        style={{ paddingLeft: '48px' }}
                                         className="w-full appearance-none rounded-xl border border-slate-800 bg-[#0b1120] px-4 py-3 text-sm font-medium text-slate-200 shadow-sm transition-all focus:border-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-500"
                                     >
                                         <option value="global">🌍 Vista Global</option>
@@ -136,12 +135,6 @@ export default function Layout() {
                                             </option>
                                         ))}
                                     </select>
-                                    <Building2 size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 dark:text-gray-500 pointer-events-none" />
-                                    <div className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-gray-400">
-                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="h-4 w-4">
-                                            <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
-                                        </svg>
-                                    </div>
                                 </div>
                             </>
                         ) : (
