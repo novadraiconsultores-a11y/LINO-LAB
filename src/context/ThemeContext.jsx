@@ -3,19 +3,19 @@ import { createContext, useContext, useEffect, useState } from 'react'
 const ThemeContext = createContext()
 
 export function ThemeProvider({ children }) {
-    // Always true
-    const theme = 'dark'
+    // FORCE DARK MODE: Always 'dark', ignoring localStorage/system
+    const [theme] = useState('dark')
 
     useEffect(() => {
-        // FORCE DARK MODE
         const root = window.document.documentElement
         root.classList.remove('light')
         root.classList.add('dark')
 
-        // Force body background
-        document.body.style.backgroundColor = '#020617' // slate-950
+        // Force body background as safety net
+        document.body.style.backgroundColor = '#020617'
         document.body.style.color = '#ffffff'
 
+        // Optionally update text in storage but NEVER read from it
         localStorage.setItem('theme', 'dark')
     }, [])
 
