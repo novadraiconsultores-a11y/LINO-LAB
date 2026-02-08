@@ -436,7 +436,7 @@ export default function Home() {
     const PAYMENT_COLORS = ['#10B981', '#3B82F6', '#F59E0B', '#6366F1', '#EC4899']
 
     return (
-        <div className="min-h-screen bg-gray-50 dark:bg-slate-950 text-gray-900 dark:text-white p-6 md:p-8 overflow-y-auto custom-scrollbar transition-colors duration-200">
+        <div className="min-h-screen bg-gray-50 dark:bg-slate-950 text-gray-900 dark:text-white p-3 sm:p-4 md:p-6 overflow-y-auto custom-scrollbar transition-colors duration-200">
 
             {/* TOP NAVIGATION */}
             <div className="flex flex-col md:flex-row justify-between items-center mb-8 gap-4">
@@ -474,7 +474,7 @@ export default function Home() {
 
                     {/* Controls & Super Filters */}
                     <div className="flex flex-col xl:flex-row justify-between items-start xl:items-center gap-4 mb-6">
-                        <h2 className="text-xl font-bold flex items-center gap-2">
+                        <h2 className="text-lg sm:text-xl font-bold flex items-center gap-2">
                             <Activity className="text-emerald-500" size={20} />
                             <div className="flex items-center gap-3">
                                 Panel de Control
@@ -558,7 +558,7 @@ export default function Home() {
                     </div>
 
                     {/* Main Charts Grid (Row 2) */}
-                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 mb-6 sm:mb-8">
                         {/* 1. Sales by Owner */}
                         {/* 1. Sales by Owner */}
                         <div className="bg-slate-900/50 border border-slate-800 rounded-2xl p-6 shadow-xl backdrop-blur-sm">
@@ -619,16 +619,16 @@ export default function Home() {
                     </div>
 
                     {/* NEW ROW 3: COCKPIT LAYOUT (3 COLUMNS) */}
-                    <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 mb-8">
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-4 sm:gap-6 mb-6 sm:mb-8">
 
                         {/* Col 1: Top 5 Best Sellers (Span 5) */}
                         {/* Col 1: Top 5 Best Sellers (Span 5) */}
-                        <div className="lg:col-span-5 bg-slate-900/50 border border-slate-800 rounded-2xl p-6 shadow-xl backdrop-blur-sm flex flex-col">
+                        <div className="md:col-span-2 lg:col-span-5 bg-slate-900/50 border border-slate-800 rounded-2xl p-4 sm:p-6 shadow-xl backdrop-blur-sm flex flex-col">
                             <h3 className="text-lg font-bold mb-4 flex items-center gap-2">
                                 <TrendingUp size={18} className="text-emerald-400" />
                                 Top 5 Productos Estrella
                             </h3>
-                            <div className="overflow-x-auto flex-1">
+                            <div className="overflow-x-auto flex-1 table-responsive">
                                 <table className="w-full text-sm text-left text-slate-400">
                                     <thead className="text-xs text-slate-500 uppercase bg-slate-800/50">
                                         <tr>
@@ -661,7 +661,7 @@ export default function Home() {
 
                         {/* Col 2: Payment Methods (Span 4) */}
                         {/* Col 2: Payment Methods (Span 4) */}
-                        <div className="lg:col-span-4 bg-slate-900/50 border border-slate-800 rounded-2xl p-6 shadow-xl backdrop-blur-sm flex flex-col">
+                        <div className="md:col-span-1 lg:col-span-4 bg-slate-900/50 border border-slate-800 rounded-2xl p-4 sm:p-6 shadow-xl backdrop-blur-sm flex flex-col">
                             <h3 className="text-lg font-bold mb-2 flex items-center gap-2">
                                 <CreditCard size={18} className="text-blue-500" />
                                 Métodos de Pago
@@ -708,7 +708,7 @@ export default function Home() {
                         </div>
 
                         {/* Col 3: Inventory Health (Span 3) */}
-                        <div className="lg:col-span-3 flex flex-col gap-4">
+                        <div className="md:col-span-1 lg:col-span-3 flex flex-col gap-3 sm:gap-4">
                             {/* Widget 1: Out of Stock */}
                             <div className="bg-slate-900/50 border border-slate-800 rounded-2xl p-5 flex items-center justify-between shadow-lg relative overflow-hidden flex-1 backdrop-blur-sm">
                                 <div>

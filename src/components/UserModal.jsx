@@ -238,7 +238,7 @@ export default function UserModal({ isOpen, onClose, onSave, initialData = null 
                             </>
                         )}
 
-                        <div className="grid grid-cols-2 gap-4">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                             {/* Rol */}
                             <div>
                                 <label className={labelClass}>Rol</label>

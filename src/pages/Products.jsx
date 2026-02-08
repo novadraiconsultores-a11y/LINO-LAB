@@ -162,11 +162,11 @@ export default function Products() {
     )
 
     return (
-        <div className="p-8 max-w-7xl mx-auto">
+        <div className="p-3 sm:p-4 md:p-6 lg:p-8 max-w-7xl mx-auto">
             {/* Header */}
             <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8">
                 <div>
-                    <h1 className="text-3xl font-bold text-white">Catálogo de Productos</h1>
+                    <h1 className="text-2xl sm:text-3xl font-bold text-white">Catálogo de Productos</h1>
                     <p className="text-slate-400 mt-1">Gestión de Fichas Técnicas (Sin Stock)</p>
                 </div>
                 <button
@@ -192,7 +192,7 @@ export default function Products() {
 
             {/* Table */}
             <div className="bg-slate-900 border border-slate-800 rounded-xl overflow-hidden shadow-sm backdrop-blur-sm">
-                <div className="overflow-x-auto">
+                <div className="overflow-x-auto table-responsive">
                     <table className="w-full text-left text-sm text-slate-400">
                         <thead className="text-slate-200 uppercase font-medium bg-slate-800/50">
                             <tr>

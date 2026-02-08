@@ -471,7 +471,7 @@ export default function ProductModal({ isOpen, onClose, onSave, initialData = nu
                                 />
                             </div>
 
-                            <div className="grid grid-cols-2 gap-4">
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                 <div>
                                     <label className={labelClass}>Categoría</label>
                                     <select
@@ -503,7 +503,7 @@ export default function ProductModal({ isOpen, onClose, onSave, initialData = nu
                                 </div>
                             </div>
 
-                            <div className="grid grid-cols-2 gap-4">
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                 <div>
                                     <label className={labelClass}>Deporte</label>
                                     <select
@@ -543,7 +543,7 @@ export default function ProductModal({ isOpen, onClose, onSave, initialData = nu
                                 </div>
                             </div>
 
-                            <div className="grid grid-cols-3 gap-3">
+                            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
                                 <div>
                                     <label className={labelClass}>Calidad</label>
                                     <select
@@ -584,7 +584,7 @@ export default function ProductModal({ isOpen, onClose, onSave, initialData = nu
                                 </div>
                             </div>
 
-                            <div className="grid grid-cols-2 gap-4">
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                 <div>
                                     <label className={labelClass}>Costo Producto</label>
                                     <input

@@ -5,6 +5,10 @@ import App from './App.jsx'
 
 import { ThemeProvider } from './context/ThemeContext'
 
+// 🔥 NUCLEAR DARK MODE ENFORCEMENT
+// Force dark mode ALWAYS - no exceptions, no localStorage, no system preferences
+document.documentElement.classList.add('dark')
+
 createRoot(document.getElementById('root')).render(
   <StrictMode>
     <ThemeProvider>

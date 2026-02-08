@@ -222,9 +222,9 @@ export default function Sales() {
         <div className="h-screen flex flex-col md:flex-row bg-slate-950 overflow-hidden">
 
             {/* Left: Catalog (60-70%) */}
-            <div className="flex-1 flex flex-col p-6 min-w-0">
+            <div className="flex-1 flex flex-col p-3 sm:p-4 md:p-6 min-w-0">
                 <div className="mb-6">
-                    <h1 className="text-2xl font-bold text-white mb-2 flex items-center justify-between">
+                    <h1 className="text-xl sm:text-2xl font-bold text-white mb-2 flex items-center justify-between">
                         Catálogo
                         {activeBranchName && (
                             <span className="text-xs font-normal text-emerald-400 bg-emerald-950/30 px-3 py-1 rounded-full border border-emerald-500/20">
@@ -269,7 +269,7 @@ export default function Sales() {
                             No se encontraron productos disponibles.
                         </div>
                     ) : (
-                        <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 pb-20">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-4 pb-20">
                             {filteredProducts.map(product => (
                                 <div
                                     key={product.id_producto}

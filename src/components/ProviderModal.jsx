@@ -147,7 +147,7 @@ export default function ProviderModal({ isOpen, onClose, onSave, initialData = n
                     </div>
 
                     {/* Series Config: Letter & Visual Code */}
-                    <div className="grid grid-cols-2 gap-4">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div>
                             <label className={labelClass}>Prefijo Letra</label>
                             <div className="relative">

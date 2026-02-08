@@ -94,9 +94,10 @@ export default function Layout() {
                 />
             )}
 
-            {/* Mobile Menu Button */}
+            {/* Mobile Menu Button - Hidden when sidebar is open */}
             <button
-                className="lg:hidden fixed top-4 left-4 z-[60] p-3 bg-slate-900/90 backdrop-blur-sm rounded-lg border border-slate-700 text-slate-300 hover:text-white hover:border-slate-500 transition-all shadow-lg"
+                className={`lg:hidden fixed top-4 left-4 z-[60] p-3 bg-slate-900/90 backdrop-blur-sm rounded-lg border border-slate-700 text-slate-300 hover:text-white hover:border-slate-500 transition-all shadow-lg ${isMobileMenuOpen ? 'opacity-0 pointer-events-none' : 'opacity-100'
+                    }`}
                 onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
                 aria-label="Toggle menu"
             >
@@ -105,9 +106,9 @@ export default function Layout() {
 
             {/* Sidebar */}
             <div className={`
-        fixed inset-y-0 left-0 z-50 w-64 bg-slate-900 border-r border-slate-800 transform transition-transform duration-300 ease-in-out shadow-2xl
+        fixed inset-y-0 left-0 z-50 w-64 bg-slate-900 border-r border-slate-800 transform transition-transform duration-300 ease-in-out shadow-2xl flex flex-col h-[100dvh]
         ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full'}
-        lg:relative lg:translate-x-0 lg:shadow-none
+        lg:relative lg:translate-x-0 lg:shadow-none lg:h-screen
       `}>
                 <div className="flex flex-col items-center justify-center border-b border-gray-200 dark:border-slate-800 p-4">
 
@@ -153,7 +154,7 @@ export default function Layout() {
                     </div>
                 </div>
 
-                <nav className="flex flex-col p-4 gap-2">
+                <nav className="flex flex-col p-4 gap-2 flex-1 overflow-y-auto custom-scrollbar">
                     {navigation.filter(item => {
                         // Normalize safe
                         const role = profile?.rol ? profile.rol.toLowerCase() : ''
