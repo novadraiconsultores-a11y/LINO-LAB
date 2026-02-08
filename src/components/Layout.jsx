@@ -85,20 +85,29 @@ export default function Layout() {
     ]
 
     return (
-        <div className="flex min-h-screen w-full transition-colors duration-300 bg-slate-950 text-white">
+        <div className="flex min-h-screen w-full transition-colors duration-300 bg-slate-950 text-white overflow-x-hidden">
+            {/* Mobile Backdrop Overlay */}
+            {isMobileMenuOpen && (
+                <div
+                    className="fixed inset-0 bg-black/60 backdrop-blur-sm z-40 lg:hidden"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                />
+            )}
+
             {/* Mobile Menu Button */}
             <button
-                className="lg:hidden p-4 absolute top-0 left-0 z-20 text-slate-400 hover:text-white"
+                className="lg:hidden fixed top-4 left-4 z-[60] p-3 bg-slate-900/90 backdrop-blur-sm rounded-lg border border-slate-700 text-slate-300 hover:text-white hover:border-slate-500 transition-all shadow-lg"
                 onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                aria-label="Toggle menu"
             >
-                <Menu />
+                <Menu size={20} />
             </button>
 
             {/* Sidebar */}
             <div className={`
-        fixed inset-y-0 left-0 z-10 w-64 bg-slate-900 border-r border-slate-800 transform transition-transform duration-200 ease-in-out
+        fixed inset-y-0 left-0 z-50 w-64 bg-slate-900 border-r border-slate-800 transform transition-transform duration-300 ease-in-out shadow-2xl
         ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full'}
-        lg:relative lg:translate-x-0
+        lg:relative lg:translate-x-0 lg:shadow-none
       `}>
                 <div className="flex flex-col items-center justify-center border-b border-gray-200 dark:border-slate-800 p-4">
 
@@ -209,7 +218,9 @@ export default function Layout() {
             </div>
 
             {/* Main Content */}
-            <div className="flex-1 overflow-auto relative">
+            <div className="flex-1 overflow-auto relative w-full">
+                {/* Mobile top spacing for hamburger button */}
+                <div className="lg:hidden h-16" />
                 <Outlet />
 
                 {/* Branding Footer */}
