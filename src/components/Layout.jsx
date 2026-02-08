@@ -1,17 +1,31 @@
-import { Link, Outlet, useLocation } from 'react-router-dom'
+import { Link, Outlet, useLocation, useNavigate } from 'react-router-dom'
 import { Home, Package, ShoppingCart, Users, Settings, Menu, ClipboardList, BarChart3, Tag, Building2, Truck, LogOut, Sun, Moon } from 'lucide-react'
 import { useState, useEffect } from 'react'
 import { supabase } from '../supabaseClient'
 import { useAuth } from '../context/AuthProvider'
 import { useTheme } from '../context/ThemeContext'
+import { useIdleTimer } from '../hooks/useIdleTimer'
 
 export default function Layout() {
     const location = useLocation()
+    const navigate = useNavigate()
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
     const [branches, setBranches] = useState([])
     const [activeBranch, setActiveBranch] = useState(() => localStorage.getItem('sucursal_activa') || '')
     const { signOut, profile, user, authError } = useAuth()
     const { theme, toggleTheme } = useTheme()
+
+    // Auto-Logout Logic
+    const handleIdleLogout = async () => {
+        await signOut()
+        localStorage.clear() // Safety clear
+        navigate('/login')
+    }
+
+    useIdleTimer({
+        onIdle: handleIdleLogout,
+        isEnabled: !!user // Only run if user is logged in
+    })
 
     useEffect(() => {
         if (profile && profile.rol !== 'admin') {
