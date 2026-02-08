@@ -404,13 +404,19 @@ export default function Traspasos() {
                                 <span className="flex gap-2"><Search size={16} /> 2. Selección de Productos</span>
                                 <span className="text-xs text-blue-400">Mostrando solo Stock &gt; 0</span>
                             </h2>
-                            <input
-                                type="text"
-                                placeholder="Buscar producto en tu inventario..."
-                                value={search}
-                                onChange={e => setSearch(e.target.value)}
-                                className="w-full bg-slate-800 border-none rounded-lg p-3 mb-4 focus:ring-2 ring-blue-500 text-sm"
-                            />
+                            <div className="relative group mb-4">
+                                <div className="absolute inset-y-0 left-0 w-12 flex items-center justify-center pointer-events-none z-10">
+                                    <Search className="text-slate-500 group-focus-within:text-blue-500 transition-colors" size={20} />
+                                </div>
+                                <input
+                                    type="text"
+                                    placeholder="Buscar producto en tu inventario..."
+                                    value={search}
+                                    onChange={e => setSearch(e.target.value)}
+                                    className="w-full bg-slate-800 border-none rounded-lg p-3 focus:ring-2 ring-blue-500 text-sm"
+                                    style={{ paddingLeft: '40px' }}
+                                />
+                            </div>
                             <div className="h-80 overflow-y-auto custom-scrollbar space-y-2">
                                 {loading && <p className="text-center text-slate-500 py-4">Cargando inventario...</p>}
                                 {!loading && filteredProducts.length === 0 && <p className="text-center text-slate-500 py-4">No hay productos disponibles para enviar.</p>}

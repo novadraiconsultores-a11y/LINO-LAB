@@ -543,11 +543,14 @@ export default function InventoryDashboard() {
                     </button>
                 </div>
                 <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-3">
-                    <div className="col-span-2 md:col-span-2 lg:col-span-2 relative">
-                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 dark:text-slate-500" size={14} />
+                    <div className="col-span-2 md:col-span-2 lg:col-span-2 relative group">
+                        <div className="absolute inset-y-0 left-0 w-12 flex items-center justify-center pointer-events-none z-10">
+                            <Search className="text-gray-400 dark:text-slate-500 group-focus-within:text-blue-500 transition-colors" size={20} />
+                        </div>
                         <input
                             placeholder="Buscar producto..."
-                            className={`${inputClass} pl-10`}
+                            className={`${inputClass}`} // inputClass already has basic styles
+                            style={{ paddingLeft: '40px' }} // HARDCODED STANDARD
                             value={filters.search}
                             onChange={(e) => handleFilterChange('search', e.target.value)}
                         />

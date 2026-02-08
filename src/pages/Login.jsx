@@ -88,6 +88,7 @@ export default function Login() {
                                 value={email}
                                 onChange={e => setEmail(e.target.value)}
                                 className={`w-full bg-slate-950 border border-slate-800 text-white pr-4 py-3 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all placeholder:text-slate-600 shadow-sm ${!email ? 'force-icon-padding' : ''}`}
+                                style={{ paddingLeft: '40px' }}
                                 placeholder="usuario@linolab.com"
                                 required
                             />
@@ -105,6 +106,7 @@ export default function Login() {
                                 value={password}
                                 onChange={e => setPassword(e.target.value)}
                                 className={`w-full bg-slate-950 border border-slate-800 text-white pr-4 py-3 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all placeholder:text-slate-600 shadow-sm ${!password ? 'force-icon-padding' : ''}`}
+                                style={{ paddingLeft: '40px' }}
                                 placeholder="••••••••"
                                 required
                             />

@@ -1,11 +1,49 @@
+import { useState, useEffect } from 'react'
+import { Plus, Search, Edit, Trash2, Shield, Building2, Mail, User, Key, X, Check } from 'lucide-react'
+import { supabase } from '../../supabaseClient'
+import { useAuth } from '../../context/AuthProvider'
 import { sendEmailNotification } from '../../utils/emailService'
-
-// ... existing imports
+import UserModal from '../../components/UserModal'
+import ResetPasswordModal from '../../components/ResetPasswordModal'
+import Toast from '../../components/ui/Toast'
 
 export default function Users() {
-    // ... existing state
+    const { user } = useAuth()
+    const [users, setUsers] = useState([])
+    const [loading, setLoading] = useState(true)
+    const [searchTerm, setSearchTerm] = useState('')
+    const [isModalOpen, setIsModalOpen] = useState(false)
+    const [editingUser, setEditingUser] = useState(null)
+    const [isResetModalOpen, setIsResetModalOpen] = useState(false)
+    const [resettingUser, setResettingUser] = useState(null)
+    const [toast, setToast] = useState(null)
 
-    // ... existing functions
+    const showToast = (message, type = 'success') => {
+        setToast({ message, type })
+        setTimeout(() => setToast(null), 3000)
+    }
+
+    useEffect(() => {
+        fetchUsers()
+    }, [])
+
+    const fetchUsers = async () => {
+        try {
+            setLoading(true)
+            const { data, error } = await supabase
+                .from('perfiles')
+                .select('*, sucursales(nombre)')
+                .order('nombre_completo', { ascending: true })
+
+            if (error) throw error
+            setUsers(data || [])
+        } catch (error) {
+            console.error('Error fetching users:', error)
+            showToast('Error cargando usuarios', 'error')
+        } finally {
+            setLoading(false)
+        }
+    }
 
     const handleSaveUser = async (formData, adminPassword = null) => {
         try {
@@ -146,17 +184,27 @@ export default function Users() {
         user.email?.toLowerCase().includes(searchTerm.toLowerCase())
     )
 
-    const getRoleBadgeColor = (role) => {
-        switch (role?.toLowerCase()) {
-            case 'admin':
-                return 'bg-purple-900/40 text-purple-400 border-purple-800'
-            case 'gerente':
-                return 'bg-blue-900/40 text-blue-400 border-blue-800'
-            case 'vendedor':
-                return 'bg-emerald-900/40 text-emerald-400 border-emerald-800'
-            default:
-                return 'bg-slate-800 text-slate-400 border-slate-700'
-        }
+    // STRICT ACCESS GUARD
+    if (user?.rol !== 'admin') {
+        return (
+            <div className="p-8 flex flex-col items-center justify-center min-h-[60vh] text-center">
+                <div className="w-16 h-16 bg-red-500/10 rounded-full flex items-center justify-center mb-4 border border-red-500/20">
+                    <Shield className="text-red-500" size={32} />
+                </div>
+                <h2 className="text-2xl font-bold text-white mb-2">Acceso Denegado</h2>
+                <p className="text-slate-400 max-w-md mx-auto">
+                    Tu rol actual es <span className="text-white font-mono bg-slate-800 px-2 py-0.5 rounded">{user?.rol || 'Desconocido'}</span>.
+                    Se requieren privilegios de <span className="text-purple-400 font-bold">ADMIN</span> para ver este módulo.
+                </p>
+                <div className="mt-6 p-4 bg-slate-900 border border-slate-800 rounded-lg text-xs text-left text-slate-500 font-mono w-full max-w-md">
+                    <p>Debug Info:</p>
+                    <p>ID: {user?.id}</p>
+                    <p>Email: {user?.email}</p>
+                    <p>MetaRol: {user?.user_metadata?.rol || 'N/A'}</p>
+                    <p>DBRol: {user?.rol || 'N/A'}</p>
+                </div>
+            </div>
+        )
     }
 
     return (
@@ -175,14 +223,17 @@ export default function Users() {
                 </button>
             </div>
 
-            <div className="bg-slate-900/50 p-4 rounded-xl border border-slate-800 mb-6 flex items-center gap-3 shadow-sm">
-                <Search className="text-slate-500" size={20} />
+            <div className="bg-slate-900/50 p-4 rounded-xl border border-slate-800 mb-6 flex items-center gap-3 shadow-sm relative group">
+                <div className="absolute inset-y-0 left-0 w-12 flex items-center justify-center pointer-events-none z-10">
+                    <Search className="text-slate-500 group-focus-within:text-blue-500 transition-colors" size={20} />
+                </div>
                 <input
                     type="text"
                     placeholder="Buscar por nombre o correo..."
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
                     className="bg-transparent border-none focus:outline-none text-slate-200 w-full placeholder-slate-600"
+                    style={{ paddingLeft: '40px' }}
                 />
             </div>
 

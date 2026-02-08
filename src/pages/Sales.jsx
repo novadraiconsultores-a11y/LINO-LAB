@@ -296,14 +296,17 @@ export default function Sales() {
                             </span>
                         )}
                     </h1>
-                    <div className="bg-slate-900 border border-slate-700 p-3 rounded-xl flex items-center gap-3 shadow-sm relative">
-                        <Search className="text-slate-500 absolute left-4" size={24} />
+                    <div className="bg-slate-900 border border-slate-700 p-3 rounded-xl flex items-center gap-3 shadow-sm relative group">
+                        <div className="absolute inset-y-0 left-0 w-12 flex items-center justify-center pointer-events-none z-10">
+                            <Search className="text-slate-500 group-focus-within:text-blue-500 transition-colors" size={24} />
+                        </div>
                         <input
                             type="text"
                             placeholder="Buscar producto..."
                             value={searchTerm}
                             onChange={(e) => setSearchTerm(e.target.value)}
-                            className="bg-transparent border-none focus:outline-none text-white w-full text-lg placeholder-slate-600 pl-10"
+                            className="bg-transparent border-none focus:outline-none text-white w-full text-lg placeholder-slate-600"
+                            style={{ paddingLeft: '40px' }}
                             autoFocus
                         />
                     </div>
@@ -482,19 +485,16 @@ export default function Sales() {
                         </div>
                     </div>
 
-                    {/* Input Email con FIX de Icono */}
-                    <div className="relative mb-4">
-                        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                            <Mail className="h-5 w-5 text-slate-400" />
+                    {/* Input Email con FIX de Icono Standard */}
+                    <div className="relative mb-4 group">
+                        <div className="absolute inset-y-0 left-0 w-12 flex items-center justify-center pointer-events-none z-10">
+                            <Mail className="h-5 w-5 text-slate-400 group-focus-within:text-blue-500 transition-colors" />
                         </div>
                         <input
                             type="email"
                             placeholder="cliente@email.com (Opcional)"
-                            className="w-full bg-slate-800 border border-slate-600 rounded-lg py-2 pl-10 pr-4 text-white placeholder-slate-500 focus:outline-none focus:border-blue-500"
-                            // Logic to handle email state would go here if we were hoisting state, 
-                            // but since PaymentModal handles it, we might need to sync or remove it from there.
-                            // For now, I will add a local state for it in the next step or assume PaymentModal is the source of truth?
-                            // User asked to put it HERE. So I will add `clientEmail` state to Sales.jsx.
+                            className="w-full bg-slate-800 border border-slate-600 rounded-lg py-2 pr-4 text-white placeholder-slate-500 focus:outline-none focus:border-blue-500"
+                            style={{ paddingLeft: '40px' }}
                             onChange={(e) => setClientEmail(e.target.value)}
                             value={clientEmail}
                         />

@@ -35,7 +35,10 @@ export const AuthProvider = ({ children }) => {
                     ...data,
                     rol: data.rol ? data.rol.trim().toLowerCase() : 'vendedor'
                 }
-                setProfile(userProfile); // <--- AQUÍ ES DONDE FALLABA ANTES
+                setProfile(userProfile);
+
+                // FORCE SYNC: Merge DB profile into User state to override stale token metadata
+                setUser(prev => ({ ...prev, ...userProfile }));
             }
         } catch (error) {
             console.error("Error cargando perfil:", error.message);
@@ -45,6 +48,7 @@ export const AuthProvider = ({ children }) => {
                 nombre: 'Usuario (Fallback)',
                 id_perfil: userId
             });
+            // Don't merge fallback into user to avoid overwriting session data with junk if just net error
             setAuthError(error)
         }
     }
