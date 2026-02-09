@@ -19,6 +19,7 @@ export default function Users() {
         rol: 'vendedor',
         sucursal_id: ''
     })
+    const [confirmPassword, setConfirmPassword] = useState('')
 
     useEffect(() => {
         fetchUsers()
@@ -47,12 +48,13 @@ export default function Users() {
     }
 
     const handleOpenModal = (user = null) => {
+        setConfirmPassword('') // Reset confirm password
         if (user) {
             setEditingUser(user)
             setFormData({
                 nombre_completo: user.nombre_completo || '',
                 email: user.email || '',
-                password: '', // Password not fetched for security
+                password: '',
                 rol: user.rol || 'vendedor',
                 sucursal_id: user.sucursal_id || ''
             })
@@ -72,6 +74,17 @@ export default function Users() {
     const handleSaveUser = async (e) => {
         e.preventDefault()
 
+        // 1. Validate Password Match
+        if (formData.password && formData.password !== confirmPassword) {
+            return Swal.fire({
+                icon: 'error',
+                title: 'Error de Validación',
+                text: 'Las contraseñas no coinciden.',
+                background: '#0f172a',
+                color: '#fff'
+            })
+        }
+
         try {
             if (editingUser) {
                 // Update Logic
@@ -81,22 +94,14 @@ export default function Users() {
                     sucursal_id: formData.sucursal_id || null
                 }
 
-                // Only update password if provided (requires backend RPC usually, but user asked for DB update)
-                // Assuming we just update profile for now. Password change usually needs auth api.
-                // If user meant updating DB field 'password' (unlikely for Supabase Auth), we'd do it here.
-                // BUT, Supabase Auth handles passwords. We'll try to update profile first.
-
                 const { error } = await supabase
                     .from('perfiles')
                     .update(updates)
-                    .eq('id', editingUser.id) // Assuming 'id' is the PK for perfiles (usually uuid)
+                    .eq('id', editingUser.id)
 
                 if (error) throw error
 
-                // If password was changed, we might need a separate call.
                 if (formData.password) {
-                    // Requires admin privilege or edge function. Attempting auth update might fail if not logged in as that user.
-                    // We'll notify user about this limitation if it fails, or just show success for profile.
                     Swal.fire({
                         icon: 'info',
                         title: 'Nota',
@@ -117,7 +122,6 @@ export default function Users() {
 
             } else {
                 // Create Logic (RPC)
-                // Using registrar_usuario_admin RPC as per previous context
                 const { data, error } = await supabase.rpc('registrar_usuario_admin', {
                     email_input: formData.email,
                     password_input: formData.password,
@@ -191,7 +195,7 @@ export default function Users() {
                 </button>
             </div>
 
-            {/* Search Bar (CLEANER: No Icon, px-3) */}
+            {/* Search Bar */}
             <div className="bg-slate-900 border border-slate-800 p-4 rounded-xl mb-6 shadow-sm relative group max-w-lg">
                 <input
                     type="text"
@@ -297,19 +301,19 @@ export default function Users() {
                         </div>
 
                         {/* Modal Body */}
-                        <form onSubmit={handleSaveUser} className="p-6 space-y-4">
+                        <form onSubmit={handleSaveUser} className="p-6 space-y-4" autoComplete="off">
 
                             {/* Nombre */}
                             <div>
                                 <label className="block text-slate-400 text-xs uppercase font-bold mb-2">Nombre Completo</label>
                                 <div className="relative">
-                                    <User className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500" size={18} />
                                     <input
                                         type="text"
                                         required
+                                        autoComplete="off"
                                         value={formData.nombre_completo}
                                         onChange={e => setFormData({ ...formData, nombre_completo: e.target.value })}
-                                        className="w-full bg-slate-800 border border-slate-700 rounded-xl py-3 pl-10 pr-4 text-white focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+                                        className="w-full bg-slate-800 border border-slate-700 rounded-xl py-3 px-3 text-white focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
                                         placeholder="Ej. Juan Pérez"
                                     />
                                 </div>
@@ -319,14 +323,14 @@ export default function Users() {
                             <div>
                                 <label className="block text-slate-400 text-xs uppercase font-bold mb-2">Correo Electrónico</label>
                                 <div className="relative">
-                                    <Mail className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500" size={18} />
                                     <input
                                         type="email"
                                         required
-                                        disabled={!!editingUser} // Email no editable on update usually
+                                        autoComplete="new-email"
+                                        disabled={!!editingUser}
                                         value={formData.email}
                                         onChange={e => setFormData({ ...formData, email: e.target.value })}
-                                        className={`w-full bg-slate-800 border border-slate-700 rounded-xl py-3 pl-10 pr-4 text-white focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 ${editingUser ? 'opacity-50 cursor-not-allowed' : ''}`}
+                                        className={`w-full bg-slate-800 border border-slate-700 rounded-xl py-3 px-3 text-white focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 ${editingUser ? 'opacity-50 cursor-not-allowed' : ''}`}
                                         placeholder="usuario@empresa.com"
                                     />
                                 </div>
@@ -338,15 +342,34 @@ export default function Users() {
                                     {editingUser ? 'Nueva Contraseña (Opcional)' : 'Contraseña'}
                                 </label>
                                 <div className="relative">
-                                    <Lock className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500" size={18} />
                                     <input
                                         type="password"
                                         required={!editingUser}
                                         minLength={6}
+                                        autoComplete="new-password"
                                         value={formData.password}
                                         onChange={e => setFormData({ ...formData, password: e.target.value })}
-                                        className="w-full bg-slate-800 border border-slate-700 rounded-xl py-3 pl-10 pr-4 text-white focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+                                        className="w-full bg-slate-800 border border-slate-700 rounded-xl py-3 px-3 text-white focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
                                         placeholder={editingUser ? "Dejar en blanco para mantener" : "Mínimo 6 caracteres"}
+                                    />
+                                </div>
+                            </div>
+
+                            {/* Confirmar Password (New) */}
+                            <div>
+                                <label className="block text-slate-400 text-xs uppercase font-bold mb-2">
+                                    Confirmar Contraseña
+                                </label>
+                                <div className="relative">
+                                    <input
+                                        type="password"
+                                        required={!editingUser && formData.password.length > 0}
+                                        minLength={6}
+                                        autoComplete="new-password"
+                                        value={confirmPassword}
+                                        onChange={e => setConfirmPassword(e.target.value)}
+                                        className="w-full bg-slate-800 border border-slate-700 rounded-xl py-3 px-3 text-white focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+                                        placeholder="Repite la contraseña"
                                     />
                                 </div>
                             </div>
@@ -356,11 +379,10 @@ export default function Users() {
                                 <div>
                                     <label className="block text-slate-400 text-xs uppercase font-bold mb-2">Rol</label>
                                     <div className="relative">
-                                        <Shield className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500" size={18} />
                                         <select
                                             value={formData.rol}
                                             onChange={e => setFormData({ ...formData, rol: e.target.value })}
-                                            className="w-full bg-slate-800 border border-slate-700 rounded-xl py-3 pl-10 pr-4 text-white focus:outline-none focus:border-blue-500 appearance-none"
+                                            className="w-full bg-slate-800 border border-slate-700 rounded-xl py-3 px-3 text-white focus:outline-none focus:border-blue-500 appearance-none"
                                         >
                                             <option value="vendedor">Vendedor</option>
                                             <option value="inventario">Inventario</option>
@@ -374,11 +396,10 @@ export default function Users() {
                                 <div>
                                     <label className="block text-slate-400 text-xs uppercase font-bold mb-2">Sucursal</label>
                                     <div className="relative">
-                                        <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500" size={18} />
                                         <select
                                             value={formData.sucursal_id}
                                             onChange={e => setFormData({ ...formData, sucursal_id: e.target.value })}
-                                            className="w-full bg-slate-800 border border-slate-700 rounded-xl py-3 pl-10 pr-4 text-white focus:outline-none focus:border-blue-500 appearance-none"
+                                            className="w-full bg-slate-800 border border-slate-700 rounded-xl py-3 px-3 text-white focus:outline-none focus:border-blue-500 appearance-none"
                                         >
                                             <option value="">-- Asignar --</option>
                                             {sucursales.map(s => (
