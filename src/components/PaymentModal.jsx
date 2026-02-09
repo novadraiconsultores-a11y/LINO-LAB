@@ -246,12 +246,11 @@ export default function PaymentModal({ isOpen, onClose, total, onConfirm, saleDe
                                 <div>
                                     <label className="block text-slate-400 text-xs uppercase font-bold mb-2">Enviar Ticket (Opcional)</label>
                                     <div className="relative">
-                                        <Mail className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500" size={16} />
                                         <input
                                             type="email"
                                             value={clientEmail}
                                             onChange={(e) => setClientEmail(e.target.value)}
-                                            className="w-full bg-slate-900 border border-slate-600 rounded-lg py-2 pl-9 pr-4 text-white text-sm focus:outline-none focus:border-blue-500"
+                                            className="w-full bg-slate-900 border border-slate-600 rounded-lg py-2 px-3 text-white text-sm focus:outline-none focus:border-blue-500"
                                             placeholder="cliente@email.com"
                                         />
                                     </div>
