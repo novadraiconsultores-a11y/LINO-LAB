@@ -101,31 +101,28 @@ export const AuthProvider = ({ children }) => {
         return () => subscription.unsubscribe()
     }, [])
 
-    return () => subscription.unsubscribe()
-}, [])
+    const value = {
+        session,
+        user,
+        profile,
+        authError,
+        signOut: () => supabase.auth.signOut()
+    }
 
-const value = {
-    session,
-    user,
-    profile,
-    authError,
-    signOut: () => supabase.auth.signOut()
-}
-
-if (loading) {
-    return (
-        <div className="min-h-screen bg-slate-950 flex items-center justify-center">
-            <div className="flex flex-col items-center gap-4">
-                <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-emerald-500"></div>
-                <p className="text-slate-400 text-sm font-mono animate-pulse">Cargando perfil...</p>
+    if (loading) {
+        return (
+            <div className="min-h-screen bg-slate-950 flex items-center justify-center">
+                <div className="flex flex-col items-center gap-4">
+                    <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-emerald-500"></div>
+                    <p className="text-slate-400 text-sm font-mono animate-pulse">Cargando perfil...</p>
+                </div>
             </div>
-        </div>
-    )
-}
+        )
+    }
 
-return (
-    <AuthContext.Provider value={value}>
-        {children}
-    </AuthContext.Provider>
-)
+    return (
+        <AuthContext.Provider value={value}>
+            {children}
+        </AuthContext.Provider>
+    )
 }
