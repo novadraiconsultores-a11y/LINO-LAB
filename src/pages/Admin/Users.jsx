@@ -1,15 +1,28 @@
 import { useState, useEffect } from 'react'
 import { supabase } from '../../supabaseClient'
-import { UserPlus, Search, Shield, MapPin, Mail, User } from 'lucide-react'
+import { UserPlus, Search, Shield, MapPin, Mail, User, Edit2, X, Lock, Save, Trash2 } from 'lucide-react'
 import Swal from 'sweetalert2'
 
 export default function Users() {
     const [users, setUsers] = useState([])
+    const [sucursales, setSucursales] = useState([])
     const [loading, setLoading] = useState(true)
     const [searchTerm, setSearchTerm] = useState('')
 
+    // Modal State
+    const [isModalOpen, setIsModalOpen] = useState(false)
+    const [editingUser, setEditingUser] = useState(null)
+    const [formData, setFormData] = useState({
+        nombre_completo: '',
+        email: '',
+        password: '',
+        rol: 'vendedor',
+        sucursal_id: ''
+    })
+
     useEffect(() => {
         fetchUsers()
+        fetchSucursales()
     }, [])
 
     const fetchUsers = async () => {
@@ -25,6 +38,117 @@ export default function Users() {
             console.error('Error fetching users:', error)
         } finally {
             setLoading(false)
+        }
+    }
+
+    const fetchSucursales = async () => {
+        const { data } = await supabase.from('sucursales').select('*').order('nombre')
+        setSucursales(data || [])
+    }
+
+    const handleOpenModal = (user = null) => {
+        if (user) {
+            setEditingUser(user)
+            setFormData({
+                nombre_completo: user.nombre_completo || '',
+                email: user.email || '',
+                password: '', // Password not fetched for security
+                rol: user.rol || 'vendedor',
+                sucursal_id: user.sucursal_id || ''
+            })
+        } else {
+            setEditingUser(null)
+            setFormData({
+                nombre_completo: '',
+                email: '',
+                password: '',
+                rol: 'vendedor',
+                sucursal_id: ''
+            })
+        }
+        setIsModalOpen(true)
+    }
+
+    const handleSaveUser = async (e) => {
+        e.preventDefault()
+
+        try {
+            if (editingUser) {
+                // Update Logic
+                const updates = {
+                    nombre_completo: formData.nombre_completo,
+                    rol: formData.rol,
+                    sucursal_id: formData.sucursal_id || null
+                }
+
+                // Only update password if provided (requires backend RPC usually, but user asked for DB update)
+                // Assuming we just update profile for now. Password change usually needs auth api.
+                // If user meant updating DB field 'password' (unlikely for Supabase Auth), we'd do it here.
+                // BUT, Supabase Auth handles passwords. We'll try to update profile first.
+
+                const { error } = await supabase
+                    .from('perfiles')
+                    .update(updates)
+                    .eq('id', editingUser.id) // Assuming 'id' is the PK for perfiles (usually uuid)
+
+                if (error) throw error
+
+                // If password was changed, we might need a separate call.
+                if (formData.password) {
+                    // Requires admin privilege or edge function. Attempting auth update might fail if not logged in as that user.
+                    // We'll notify user about this limitation if it fails, or just show success for profile.
+                    Swal.fire({
+                        icon: 'info',
+                        title: 'Nota',
+                        text: 'La actualización de contraseña requiere re-autenticación o permisos administrativos avanzados. El perfil ha sido actualizado.',
+                        background: '#0f172a',
+                        color: '#fff'
+                    })
+                } else {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Usuario Actualizado',
+                        background: '#0f172a',
+                        color: '#fff',
+                        timer: 1500,
+                        showConfirmButton: false
+                    })
+                }
+
+            } else {
+                // Create Logic (RPC)
+                // Using registrar_usuario_admin RPC as per previous context
+                const { data, error } = await supabase.rpc('registrar_usuario_admin', {
+                    email_input: formData.email,
+                    password_input: formData.password,
+                    nombre_input: formData.nombre_completo,
+                    rol_input: formData.rol,
+                    sucursal_id_input: formData.sucursal_id || null
+                })
+
+                if (error) throw error
+
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Usuario Creado',
+                    text: 'El usuario ha sido registrado exitosamente.',
+                    background: '#0f172a',
+                    color: '#fff'
+                })
+            }
+
+            setIsModalOpen(false)
+            fetchUsers()
+
+        } catch (error) {
+            console.error('Error saving user:', error)
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: error.message || 'No se pudo guardar el usuario.',
+                background: '#0f172a',
+                color: '#fff'
+            })
         }
     }
 
@@ -59,7 +183,7 @@ export default function Users() {
                     <p className="text-slate-400 mt-1">Gestión de usuarios y permisos de acceso</p>
                 </div>
                 <button
-                    onClick={() => Swal.fire('Próximamente', 'La creación de usuarios se habilitará en la siguiente fase.', 'info')}
+                    onClick={() => handleOpenModal()}
                     className="bg-blue-600 hover:bg-blue-500 text-white px-6 py-3 rounded-xl flex items-center gap-2 font-bold transition-all shadow-lg shadow-blue-900/20 hover:scale-105"
                 >
                     <UserPlus size={20} />
@@ -67,17 +191,14 @@ export default function Users() {
                 </button>
             </div>
 
-            {/* Search Bar */}
+            {/* Search Bar (CLEANER: No Icon, px-3) */}
             <div className="bg-slate-900 border border-slate-800 p-4 rounded-xl mb-6 shadow-sm relative group max-w-lg">
-                <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                    <Search className="text-slate-500" size={20} />
-                </div>
                 <input
                     type="text"
                     placeholder="Buscar por nombre o email..."
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
-                    className="bg-transparent border-none focus:outline-none text-slate-200 w-full placeholder-slate-600 pl-10"
+                    className="bg-transparent border-none focus:outline-none text-slate-200 w-full placeholder-slate-600 px-3"
                 />
             </div>
 
@@ -143,8 +264,12 @@ export default function Users() {
                                             </span>
                                         </td>
                                         <td className="p-6 text-center">
-                                            <button className="text-slate-500 hover:text-white transition-colors p-2 hover:bg-slate-800 rounded-lg">
-                                                <Shield size={18} />
+                                            <button
+                                                onClick={() => handleOpenModal(user)}
+                                                className="text-blue-400 hover:text-white transition-colors p-2 hover:bg-slate-800 rounded-lg"
+                                                title="Editar Usuario"
+                                            >
+                                                <Edit2 size={18} />
                                             </button>
                                         </td>
                                     </tr>
@@ -154,6 +279,138 @@ export default function Users() {
                     </table>
                 </div>
             </div>
+
+            {/* Modal de Usuario (Crear / Editar) */}
+            {isModalOpen && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4 animate-in fade-in">
+                    <div className="bg-slate-900 border border-slate-700 rounded-2xl w-full max-w-lg shadow-2xl overflow-hidden">
+
+                        {/* Modal Header */}
+                        <div className="p-6 border-b border-slate-800 flex justify-between items-center bg-slate-950">
+                            <h3 className="text-xl font-bold text-white flex items-center gap-2">
+                                {editingUser ? <Edit2 className="text-blue-500" /> : <UserPlus className="text-emerald-500" />}
+                                {editingUser ? 'Editar Miembro' : 'Nuevo Miembro'}
+                            </h3>
+                            <button onClick={() => setIsModalOpen(false)} className="text-slate-500 hover:text-white transition-colors">
+                                <X size={24} />
+                            </button>
+                        </div>
+
+                        {/* Modal Body */}
+                        <form onSubmit={handleSaveUser} className="p-6 space-y-4">
+
+                            {/* Nombre */}
+                            <div>
+                                <label className="block text-slate-400 text-xs uppercase font-bold mb-2">Nombre Completo</label>
+                                <div className="relative">
+                                    <User className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500" size={18} />
+                                    <input
+                                        type="text"
+                                        required
+                                        value={formData.nombre_completo}
+                                        onChange={e => setFormData({ ...formData, nombre_completo: e.target.value })}
+                                        className="w-full bg-slate-800 border border-slate-700 rounded-xl py-3 pl-10 pr-4 text-white focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+                                        placeholder="Ej. Juan Pérez"
+                                    />
+                                </div>
+                            </div>
+
+                            {/* Email */}
+                            <div>
+                                <label className="block text-slate-400 text-xs uppercase font-bold mb-2">Correo Electrónico</label>
+                                <div className="relative">
+                                    <Mail className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500" size={18} />
+                                    <input
+                                        type="email"
+                                        required
+                                        disabled={!!editingUser} // Email no editable on update usually
+                                        value={formData.email}
+                                        onChange={e => setFormData({ ...formData, email: e.target.value })}
+                                        className={`w-full bg-slate-800 border border-slate-700 rounded-xl py-3 pl-10 pr-4 text-white focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 ${editingUser ? 'opacity-50 cursor-not-allowed' : ''}`}
+                                        placeholder="usuario@empresa.com"
+                                    />
+                                </div>
+                            </div>
+
+                            {/* Password */}
+                            <div>
+                                <label className="block text-slate-400 text-xs uppercase font-bold mb-2">
+                                    {editingUser ? 'Nueva Contraseña (Opcional)' : 'Contraseña'}
+                                </label>
+                                <div className="relative">
+                                    <Lock className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500" size={18} />
+                                    <input
+                                        type="password"
+                                        required={!editingUser}
+                                        minLength={6}
+                                        value={formData.password}
+                                        onChange={e => setFormData({ ...formData, password: e.target.value })}
+                                        className="w-full bg-slate-800 border border-slate-700 rounded-xl py-3 pl-10 pr-4 text-white focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+                                        placeholder={editingUser ? "Dejar en blanco para mantener" : "Mínimo 6 caracteres"}
+                                    />
+                                </div>
+                            </div>
+
+                            <div className="grid grid-cols-2 gap-4">
+                                {/* Rol */}
+                                <div>
+                                    <label className="block text-slate-400 text-xs uppercase font-bold mb-2">Rol</label>
+                                    <div className="relative">
+                                        <Shield className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500" size={18} />
+                                        <select
+                                            value={formData.rol}
+                                            onChange={e => setFormData({ ...formData, rol: e.target.value })}
+                                            className="w-full bg-slate-800 border border-slate-700 rounded-xl py-3 pl-10 pr-4 text-white focus:outline-none focus:border-blue-500 appearance-none"
+                                        >
+                                            <option value="vendedor">Vendedor</option>
+                                            <option value="inventario">Inventario</option>
+                                            <option value="gerente">Gerente</option>
+                                            <option value="admin">Administrador</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                {/* Sucursal */}
+                                <div>
+                                    <label className="block text-slate-400 text-xs uppercase font-bold mb-2">Sucursal</label>
+                                    <div className="relative">
+                                        <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500" size={18} />
+                                        <select
+                                            value={formData.sucursal_id}
+                                            onChange={e => setFormData({ ...formData, sucursal_id: e.target.value })}
+                                            className="w-full bg-slate-800 border border-slate-700 rounded-xl py-3 pl-10 pr-4 text-white focus:outline-none focus:border-blue-500 appearance-none"
+                                        >
+                                            <option value="">-- Asignar --</option>
+                                            {sucursales.map(s => (
+                                                <option key={s.id_sucursal} value={s.id_sucursal}>{s.nombre}</option>
+                                            ))}
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* Actions */}
+                            <div className="pt-4 flex gap-3">
+                                <button
+                                    type="button"
+                                    onClick={() => setIsModalOpen(false)}
+                                    className="flex-1 py-3 px-4 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-xl font-bold transition-colors"
+                                >
+                                    Cancelar
+                                </button>
+                                <button
+                                    type="submit"
+                                    className="flex-1 py-3 px-4 bg-blue-600 hover:bg-blue-500 text-white rounded-xl font-bold shadow-lg shadow-blue-900/20 transition-all flex justify-center items-center gap-2"
+                                >
+                                    <Save size={18} />
+                                    {editingUser ? 'Guardar Cambios' : 'Registrar'}
+                                </button>
+                            </div>
+
+                        </form>
+                    </div>
+                </div>
+            )}
         </div>
     )
 }
