@@ -56,7 +56,7 @@ export default function Users() {
                 email: user.email || '',
                 password: '',
                 rol: user.rol || 'vendedor',
-                sucursal_id: user.sucursal_id || ''
+                sucursal_id: user.sucursal_asignada_id || '' // FIXED: DB Field ID
             })
         } else {
             setEditingUser(null)
@@ -91,13 +91,13 @@ export default function Users() {
                 const updates = {
                     nombre_completo: formData.nombre_completo,
                     rol: formData.rol,
-                    sucursal_id: formData.sucursal_id || null
+                    sucursal_asignada_id: formData.sucursal_id || null // FIXED: DB Field Name
                 }
 
                 const { error } = await supabase
                     .from('perfiles')
                     .update(updates)
-                    .eq('id', editingUser.id)
+                    .eq('id_perfil', editingUser.id_perfil) // FIXED: Primary Key
 
                 if (error) throw error
 
