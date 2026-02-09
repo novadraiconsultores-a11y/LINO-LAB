@@ -487,14 +487,10 @@ export default function Sales() {
 
                     {/* Input Email con FIX de Icono Standard */}
                     <div className="relative mb-4 group">
-                        <div className="absolute inset-y-0 left-0 w-12 flex items-center justify-center pointer-events-none z-10">
-                            <Mail className="h-5 w-5 text-slate-400 group-focus-within:text-blue-500 transition-colors" />
-                        </div>
                         <input
                             type="email"
                             placeholder="cliente@email.com (Opcional)"
-                            className="w-full bg-slate-800 border border-slate-600 rounded-lg py-2 pr-4 text-white placeholder-slate-500 focus:outline-none focus:border-blue-500"
-                            style={{ paddingLeft: '3.5rem' }}
+                            className="w-full bg-slate-800 border border-slate-600 rounded-lg py-2 px-3 text-white placeholder-slate-500 focus:outline-none focus:border-blue-500"
                             onChange={(e) => setClientEmail(e.target.value)}
                             value={clientEmail}
                         />

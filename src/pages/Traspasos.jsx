@@ -405,16 +405,12 @@ export default function Traspasos() {
                                 <span className="text-xs text-blue-400">Mostrando solo Stock &gt; 0</span>
                             </h2>
                             <div className="relative group mb-4">
-                                <div className="absolute inset-y-0 left-0 w-12 flex items-center justify-center pointer-events-none z-10">
-                                    <Search className="text-slate-500 group-focus-within:text-blue-500 transition-colors" size={20} />
-                                </div>
                                 <input
                                     type="text"
                                     placeholder="Buscar producto en tu inventario..."
                                     value={search}
                                     onChange={e => setSearch(e.target.value)}
                                     className="w-full bg-slate-800 border-none rounded-lg p-3 focus:ring-2 ring-blue-500 text-sm"
-                                    style={{ paddingLeft: '3.5rem' }}
                                 />
                             </div>
                             <div className="h-80 overflow-y-auto custom-scrollbar space-y-2">
