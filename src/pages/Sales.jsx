@@ -297,16 +297,12 @@ export default function Sales() {
                         )}
                     </h1>
                     <div className="bg-slate-900 border border-slate-700 p-3 rounded-xl flex items-center gap-3 shadow-sm relative group">
-                        <div className="absolute inset-y-0 left-0 w-12 flex items-center justify-center pointer-events-none z-10">
-                            <Search className="text-slate-500 group-focus-within:text-blue-500 transition-colors" size={24} />
-                        </div>
                         <input
                             type="text"
                             placeholder="Buscar producto..."
                             value={searchTerm}
                             onChange={(e) => setSearchTerm(e.target.value)}
-                            className="bg-transparent border-none focus:outline-none text-white w-full text-lg placeholder-slate-600"
-                            style={{ paddingLeft: '40px' }}
+                            className="bg-transparent border-none focus:outline-none text-white w-full text-lg placeholder-slate-600 px-3"
                             autoFocus
                         />
                     </div>

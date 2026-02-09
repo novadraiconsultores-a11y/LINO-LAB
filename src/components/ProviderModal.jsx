@@ -112,7 +112,7 @@ export default function ProviderModal({ isOpen, onClose, onSave, initialData = n
         onSave(formData)
     }
 
-    const inputClass = "w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-blue-500 transition-colors pl-9"
+    const inputClass = "w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-blue-500 transition-colors"
     const labelClass = "block text-slate-400 text-xs mb-1 uppercase font-semibold"
 
     return (
@@ -151,14 +151,12 @@ export default function ProviderModal({ isOpen, onClose, onSave, initialData = n
                         <div>
                             <label className={labelClass}>Prefijo Letra</label>
                             <div className="relative">
-                                <Tag size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500" />
                                 <select
                                     name="prefijo_letra"
                                     value={formData.prefijo_letra}
                                     onChange={handleLetterChange}
                                     required
                                     className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-blue-500 transition-colors appearance-none"
-                                    style={{ paddingLeft: '3.5rem' }}
                                 >
                                     <option value="">Seleccionar</option>
                                     {alphabet.map(letter => (
@@ -170,13 +168,11 @@ export default function ProviderModal({ isOpen, onClose, onSave, initialData = n
                         <div>
                             <label className={labelClass}>Código Visual</label>
                             <div className="relative">
-                                <Eye size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-emerald-500" />
                                 <input
                                     type="text"
                                     value={formData.codigo_visual}
                                     readOnly
                                     className="w-full bg-slate-800/50 border border-slate-700 rounded-lg px-3 py-2 text-emerald-400 font-bold font-mono focus:outline-none cursor-not-allowed"
-                                    style={{ paddingLeft: '3.5rem' }}
                                     placeholder={calculating ? "Calculando..." : "Ej. A001"}
                                 />
                             </div>
@@ -188,14 +184,12 @@ export default function ProviderModal({ isOpen, onClose, onSave, initialData = n
                         <div>
                             <label className={labelClass}>Teléfono</label>
                             <div className="relative">
-                                <Phone size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500" />
                                 <input
                                     name="telefono_empresario"
                                     type="tel"
                                     value={formData.telefono_empresario || ''}
                                     onChange={handleChange}
                                     className={inputClass}
-                                    style={{ paddingLeft: '3.5rem' }}
                                     placeholder="55 1234 5678"
                                 />
                             </div>
@@ -204,14 +198,12 @@ export default function ProviderModal({ isOpen, onClose, onSave, initialData = n
                         <div>
                             <label className={labelClass}>Email</label>
                             <div className="relative">
-                                <Mail size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500" />
                                 <input
                                     name="email_empresario"
                                     type="email"
                                     value={formData.email_empresario || ''}
                                     onChange={handleChange}
                                     className={inputClass}
-                                    style={{ paddingLeft: '3.5rem' }}
                                     placeholder="contacto@ejemplo.com"
                                 />
                             </div>
