@@ -157,7 +157,8 @@ export default function ProviderModal({ isOpen, onClose, onSave, initialData = n
                                     value={formData.prefijo_letra}
                                     onChange={handleLetterChange}
                                     required
-                                    className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-blue-500 transition-colors pl-9 appearance-none"
+                                    className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-blue-500 transition-colors appearance-none"
+                                    style={{ paddingLeft: '3.5rem' }}
                                 >
                                     <option value="">Seleccionar</option>
                                     {alphabet.map(letter => (
@@ -174,7 +175,8 @@ export default function ProviderModal({ isOpen, onClose, onSave, initialData = n
                                     type="text"
                                     value={formData.codigo_visual}
                                     readOnly
-                                    className="w-full bg-slate-800/50 border border-slate-700 rounded-lg px-3 py-2 text-emerald-400 font-bold font-mono focus:outline-none cursor-not-allowed pl-9"
+                                    className="w-full bg-slate-800/50 border border-slate-700 rounded-lg px-3 py-2 text-emerald-400 font-bold font-mono focus:outline-none cursor-not-allowed"
+                                    style={{ paddingLeft: '3.5rem' }}
                                     placeholder={calculating ? "Calculando..." : "Ej. A001"}
                                 />
                             </div>
@@ -193,6 +195,7 @@ export default function ProviderModal({ isOpen, onClose, onSave, initialData = n
                                     value={formData.telefono_empresario || ''}
                                     onChange={handleChange}
                                     className={inputClass}
+                                    style={{ paddingLeft: '3.5rem' }}
                                     placeholder="55 1234 5678"
                                 />
                             </div>
@@ -208,6 +211,7 @@ export default function ProviderModal({ isOpen, onClose, onSave, initialData = n
                                     value={formData.email_empresario || ''}
                                     onChange={handleChange}
                                     className={inputClass}
+                                    style={{ paddingLeft: '3.5rem' }}
                                     placeholder="contacto@ejemplo.com"
                                 />
                             </div>

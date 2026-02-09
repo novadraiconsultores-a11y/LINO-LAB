@@ -36,6 +36,7 @@ export default function Users() {
                 .order('nombre_completo', { ascending: true })
 
             if (error) throw error
+            console.log('Data Equipo:', data, error) // Debug solicitado
             setUsers(data || [])
         } catch (error) {
             console.error('Error fetching users:', error)
@@ -289,7 +290,7 @@ export default function Users() {
                             <div className="col-span-3 w-full">
                                 <div className="text-sm text-slate-400 flex items-center gap-2">
                                     <Building2 size={14} className="text-slate-600" />
-                                    {user.sucursales?.nombre || 'Sin Asignar'}
+                                    {user.sucursales?.nombre || 'Sin Sucursal'}
                                 </div>
                             </div>
 

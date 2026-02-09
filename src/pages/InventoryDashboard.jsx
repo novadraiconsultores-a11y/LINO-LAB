@@ -550,7 +550,7 @@ export default function InventoryDashboard() {
                         <input
                             placeholder="Buscar producto..."
                             className={`${inputClass}`} // inputClass already has basic styles
-                            style={{ paddingLeft: '40px' }} // HARDCODED STANDARD
+                            style={{ paddingLeft: '3.5rem' }} // HARDCODED STANDARD
                             value={filters.search}
                             onChange={(e) => handleFilterChange('search', e.target.value)}
                         />

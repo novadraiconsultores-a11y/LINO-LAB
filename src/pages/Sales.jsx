@@ -494,7 +494,7 @@ export default function Sales() {
                             type="email"
                             placeholder="cliente@email.com (Opcional)"
                             className="w-full bg-slate-800 border border-slate-600 rounded-lg py-2 pr-4 text-white placeholder-slate-500 focus:outline-none focus:border-blue-500"
-                            style={{ paddingLeft: '40px' }}
+                            style={{ paddingLeft: '3.5rem' }}
                             onChange={(e) => setClientEmail(e.target.value)}
                             value={clientEmail}
                         />

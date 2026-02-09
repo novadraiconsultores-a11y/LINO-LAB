@@ -414,7 +414,7 @@ export default function Traspasos() {
                                     value={search}
                                     onChange={e => setSearch(e.target.value)}
                                     className="w-full bg-slate-800 border-none rounded-lg p-3 focus:ring-2 ring-blue-500 text-sm"
-                                    style={{ paddingLeft: '40px' }}
+                                    style={{ paddingLeft: '3.5rem' }}
                                 />
                             </div>
                             <div className="h-80 overflow-y-auto custom-scrollbar space-y-2">
