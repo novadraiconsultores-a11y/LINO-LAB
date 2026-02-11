@@ -3,7 +3,9 @@ import { useLocation } from 'react-router-dom'
 import { supabase } from '../supabaseClient'
 import { Package, Search, Save, Plus, Trash2, ShoppingCart, FileText, User, AlertTriangle, X, Check, History, Download, Mail, Eye, Calendar, DollarSign, Box } from 'lucide-react'
 import jsPDF from 'jspdf'
+import jsPDF from 'jspdf'
 import autoTable from 'jspdf-autotable'
+import { sendEmailNotification } from '../utils/emailService'
 
 export default function Supply() {
     const location = useLocation()
@@ -522,13 +524,67 @@ export default function Supply() {
     }
 
     const [emailLoading, setEmailLoading] = useState(false)
-    const handleSendEmail = (email) => {
+    const handleSendEmail = async (email) => {
+        if (!email) return alert("Por favor ingresa un correo válido.")
+
         setEmailLoading(true)
-        console.log(`Enviando PDF a: ${email}`)
-        setTimeout(() => {
-            setEmailLoading(false)
-            alert(`PDF enviado correctamente a ${email}`)
-        }, 2000)
+
+        // 1. Construir HTML del Recibo
+        const dateStr = new Date(currentReceipt.fecha_entrada).toLocaleDateString('es-MX')
+        const totalStr = formatCurrency(currentReceipt.total_costo_entrada || currentReceipt.total_costo || 0)
+        const providerName = currentReceipt.empresarios?.nombre_empresario || 'Proveedor'
+        const folio = currentReceipt.referencia_documento || 'S/R'
+
+        // Construir filas de la tabla
+        const rowsHtml = currentReceipt.details.map(d => `
+            <tr style="border-bottom: 1px solid #334155;">
+                <td style="padding: 8px; color: #e2e8f0;">${d.productos?.nombre_producto}</td>
+                <td style="padding: 8px; text-align: center; color: #cbd5e1;">${d.cantidad_ingresada || d.cantidad}</td>
+                <td style="padding: 8px; text-align: right; color: #cbd5e1;">${formatCurrency(d.costo_unitario_ingreso || d.costo_unitario)}</td>
+            </tr>
+        `).join('')
+
+        const emailHtml = `
+            <div style="font-family: sans-serif; background-color: #0f172a; color: #fff; padding: 20px; border-radius: 8px;">
+                <h2 style="color: #34d399; margin-top: 0;">LINO LAB - Entrada de Inventario</h2>
+                <p style="color: #94a3b8;">Folio: <strong>${folio}</strong> | Fecha: ${dateStr}</p>
+                <hr style="border-color: #334155;">
+                <p><strong>Proveedor:</strong> ${providerName}</p>
+                
+                <table style="width: 100%; border-collapse: collapse; font-size: 14px;">
+                    <thead>
+                        <tr style="background-color: #1e293b; color: #94a3b8; text-align: left;">
+                            <th style="padding: 8px;">Producto</th>
+                            <th style="padding: 8px; text-align: center;">Cant.</th>
+                            <th style="padding: 8px; text-align: right;">Costo</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${rowsHtml}
+                    </tbody>
+                </table>
+                
+                <div style="text-align: right; margin-top: 20px;">
+                    <p style="color: #94a3b8; margin: 0;">Valor Total:</p>
+                    <h2 style="margin: 0; color: #fff;">${totalStr}</h2>
+                </div>
+            </div>
+        `
+
+        // 2. Enviar Correo
+        const success = await sendEmailNotification(
+            email,
+            `Recibo Entrada #${folio} - Lino Lab`,
+            emailHtml
+        )
+
+        setEmailLoading(false)
+
+        if (success) {
+            alert(`✅ Recibo enviado correctamente a ${email}`)
+        } else {
+            alert("❌ Hubo un error al enviar el correo. Revisa la consola o intenta más tarde.")
+        }
     }
 
     // --- Tab B Helpers ---
