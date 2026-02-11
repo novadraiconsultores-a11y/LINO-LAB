@@ -898,35 +898,35 @@ export default function Supply() {
             )}
             {showReceiptModal && currentReceipt && (
                 <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/90 backdrop-blur-md p-4 animate-in zoom-in-95 duration-200">
-                    <div className="bg-white text-slate-900 w-full max-w-2xl max-h-[90vh] overflow-y-auto rounded-none shadow-2xl relative flex flex-col">
+                    <div className="bg-white dark:bg-slate-900 text-slate-900 dark:text-white w-full max-w-2xl max-h-[90vh] overflow-y-auto rounded-none shadow-2xl relative flex flex-col">
 
                         {/* Paper Header */}
-                        <div className="p-8 border-b-2 border-dashed border-slate-300 bg-slate-50 flex justify-between items-start">
+                        <div className="p-8 border-b-2 border-dashed border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-950 flex justify-between items-start">
                             <div>
-                                <h1 className="text-2xl font-black tracking-tighter text-slate-900">LINO LAB</h1>
-                                <p className="text-xs uppercase tracking-widest text-slate-500 mt-1">Recibo de Entrada de Inventario</p>
+                                <h1 className="text-2xl font-black tracking-tighter text-slate-900 dark:text-white">LINO LAB</h1>
+                                <p className="text-xs uppercase tracking-widest text-slate-500 dark:text-slate-400 mt-1">Recibo de Entrada de Inventario</p>
                             </div>
                             <div className="text-right">
-                                <div className="bg-emerald-100 text-emerald-800 px-3 py-1 rounded-full text-xs font-bold border border-emerald-200 inline-block mb-2">
+                                <div className="bg-emerald-100 dark:bg-emerald-900/30 text-emerald-800 dark:text-emerald-400 px-3 py-1 rounded-full text-xs font-bold border border-emerald-200 dark:border-emerald-800 inline-block mb-2">
                                     COMPLETADO
                                 </div>
-                                <p className="text-sm font-mono text-slate-600">{formatDate(currentReceipt.fecha_entrada)}</p>
+                                <p className="text-sm font-mono text-slate-600 dark:text-slate-400">{formatDate(currentReceipt.fecha_entrada)}</p>
                             </div>
                         </div>
 
                         {/* Validated Details Section */}
-                        <div className="p-8 bg-white flex-1">
+                        <div className="p-8 bg-white dark:bg-slate-900 flex-1">
                             {/* Meta Info Grid */}
                             <div className="grid grid-cols-2 gap-8 mb-8">
                                 <div>
-                                    <span className="block text-[10px] uppercase text-slate-400 font-bold tracking-wider">Proveedor</span>
-                                    <span className="block text-lg font-bold text-slate-800 border-b border-slate-100 pb-1">
+                                    <span className="block text-[10px] uppercase text-slate-400 dark:text-slate-500 font-bold tracking-wider">Proveedor</span>
+                                    <span className="block text-lg font-bold text-slate-800 dark:text-slate-200 border-b border-slate-100 dark:border-slate-800 pb-1">
                                         {currentReceipt.empresarios?.nombre_empresario}
                                     </span>
                                 </div>
                                 <div>
-                                    <span className="block text-[10px] uppercase text-slate-400 font-bold tracking-wider">Referencia / Folio</span>
-                                    <span className="block text-lg font-mono text-slate-600 border-b border-slate-100 pb-1">
+                                    <span className="block text-[10px] uppercase text-slate-400 dark:text-slate-500 font-bold tracking-wider">Referencia / Folio</span>
+                                    <span className="block text-lg font-mono text-slate-600 dark:text-slate-300 border-b border-slate-100 dark:border-slate-800 pb-1">
                                         {currentReceipt.referencia_documento || currentReceipt.referencia_folio || 'S/R'}
                                     </span>
                                 </div>
@@ -935,23 +935,23 @@ export default function Supply() {
                             {/* Table */}
                             <table className="w-full text-sm mb-8">
                                 <thead>
-                                    <tr className="text-xs uppercase text-slate-400 border-b-2 border-slate-200">
+                                    <tr className="text-xs uppercase text-slate-900 dark:text-slate-300 border-b-2 border-slate-200 dark:border-slate-700">
                                         <th className="py-2 text-left">Producto / SKU</th>
                                         <th className="py-2 text-center">Cant.</th>
                                         <th className="py-2 text-right">Costo U.</th>
                                         <th className="py-2 text-right">Total</th>
                                     </tr>
                                 </thead>
-                                <tbody className="font-mono text-slate-600">
+                                <tbody className="font-mono text-slate-600 dark:text-slate-300">
                                     {currentReceipt.details?.map((detail, idx) => (
-                                        <tr key={idx} className="border-b border-slate-100">
+                                        <tr key={idx} className="border-b border-slate-100 dark:border-slate-800">
                                             <td className="py-3">
-                                                <div className="font-bold text-slate-800">{detail.productos?.nombre_producto}</div>
-                                                <div className="text-[10px]">{detail.productos?.sku_producto}</div>
+                                                <div className="font-bold text-slate-800 dark:text-slate-200">{detail.productos?.nombre_producto}</div>
+                                                <div className="text-[10px] text-slate-500 dark:text-slate-500">{detail.productos?.sku_producto}</div>
                                             </td>
-                                            <td className="py-3 text-center">{detail.cantidad_ingresada || detail.cantidad}</td>
-                                            <td className="py-3 text-right">{formatCurrency(detail.costo_unitario_ingreso || detail.costo_unitario)}</td>
-                                            <td className="py-3 text-right font-bold text-slate-900">
+                                            <td className="py-3 text-center text-slate-900 dark:text-slate-200">{detail.cantidad_ingresada || detail.cantidad}</td>
+                                            <td className="py-3 text-right text-slate-900 dark:text-slate-200">{formatCurrency(detail.costo_unitario_ingreso || detail.costo_unitario)}</td>
+                                            <td className="py-3 text-right font-bold text-slate-900 dark:text-white">
                                                 {formatCurrency((detail.cantidad_ingresada || detail.cantidad) * (detail.costo_unitario_ingreso || detail.costo_unitario))}
                                             </td>
                                         </tr>
@@ -960,10 +960,10 @@ export default function Supply() {
                             </table>
 
                             {/* Totals */}
-                            <div className="flex justify-end border-t-2 border-slate-900 pt-4">
+                            <div className="flex justify-end border-t-2 border-slate-900 dark:border-slate-100 pt-4">
                                 <div className="text-right">
                                     <span className="block text-xs uppercase text-slate-400 font-bold">Valor Total del Lote</span>
-                                    <span className="block text-3xl font-black text-slate-900">
+                                    <span className="block text-3xl font-black text-slate-900 dark:text-white">
                                         {formatCurrency(currentReceipt.total_costo_entrada || currentReceipt.total_costo)}
                                     </span>
                                 </div>
@@ -971,17 +971,17 @@ export default function Supply() {
                         </div>
 
                         {/* Actions Footer */}
-                        <div className="p-6 bg-slate-100 border-t border-slate-200 flex flex-col md:flex-row gap-4 items-center justify-between">
+                        <div className="p-6 bg-slate-100 dark:bg-slate-950 border-t border-slate-200 dark:border-slate-800 flex flex-col md:flex-row gap-4 items-center justify-between">
                             <div className="flex items-center gap-2 w-full md:w-auto">
                                 <input
                                     type="email"
                                     placeholder="correo@ejemplo.com"
-                                    className="px-4 py-2 border border-slate-300 rounded-lg text-sm w-full outline-none focus:border-blue-500"
+                                    className="px-4 py-2 border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 rounded-lg text-sm w-full outline-none focus:border-blue-500 text-slate-900 dark:text-white"
                                     id="emailInput"
                                 />
                                 <button
                                     onClick={() => handleSendEmail(document.getElementById('emailInput').value)}
-                                    className="bg-white border border-slate-300 hover:bg-slate-50 text-slate-700 px-4 py-2 rounded-lg text-sm font-bold flex items-center gap-2"
+                                    className="bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 px-4 py-2 rounded-lg text-sm font-bold flex items-center gap-2"
                                 >
                                     {emailLoading ? '...' : <Mail size={16} />}
                                 </button>
@@ -990,13 +990,13 @@ export default function Supply() {
                             <div className="flex gap-3 w-full md:w-auto">
                                 <button
                                     onClick={() => handleDownloadPDF(currentReceipt)}
-                                    className="flex-1 md:flex-none bg-slate-900 hover:bg-slate-800 text-white px-6 py-3 rounded-lg font-bold flex items-center justify-center gap-2 shadow-lg"
+                                    className="flex-1 md:flex-none bg-slate-900 dark:bg-slate-100 hover:bg-slate-800 dark:hover:bg-slate-200 text-white dark:text-slate-900 px-6 py-3 rounded-lg font-bold flex items-center justify-center gap-2 shadow-lg"
                                 >
                                     <Download size={18} /> Descargar PDF
                                 </button>
                                 <button
                                     onClick={() => setShowReceiptModal(false)}
-                                    className="px-4 py-3 text-slate-500 hover:text-slate-800 font-bold"
+                                    className="px-4 py-3 text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-white font-bold"
                                 >
                                     Cerrar
                                 </button>
