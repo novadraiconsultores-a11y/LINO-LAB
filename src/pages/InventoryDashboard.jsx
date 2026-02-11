@@ -228,7 +228,7 @@ export default function InventoryDashboard() {
     const COLORS_GENDER = ['#3B82F6', '#EC4899', '#8B5CF6', '#F59E0B'] // Blue, Pink, Violet, Amber
     const COLORS_QUALITY = ['#10B981', '#F59E0B', '#F43F5E', '#64748B'] // Emerald, Amber, Rose, Slate
 
-    const inputClass = "bg-[#0f172a] border border-slate-800 text-white text-xs rounded-lg px-3 py-2 outline-none focus:border-blue-500 w-full transition-all hover:border-slate-500"
+    const inputClass = "bg-[#0f172a] border border-slate-800 text-white text-xs rounded-lg px-3 py-2 md:py-2.5 outline-none focus:border-blue-500 w-full transition-all hover:border-slate-500"
 
     const handleExportExcel = () => {
         const dataToExport = filteredProducts.map(p => {
@@ -281,7 +281,7 @@ export default function InventoryDashboard() {
     }
 
     return (
-        <div className="p-8 max-w-[1600px] mx-auto min-h-screen">
+        <div className="p-4 md:p-8 max-w-[1600px] mx-auto min-h-[100dvh]">
             <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8">
                 <div>
                     <div>
@@ -316,20 +316,21 @@ export default function InventoryDashboard() {
             </div>
 
             {/* KPI CARDS SECTION (Neon Void Style) */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+            {/* KPI CARDS SECTION (Neon Void Style) */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 mb-8">
                 {/* 1. TOTAL VALUE (Subtle Glow Style) */}
-                <div className="bg-[#0f172a] border border-slate-800 p-6 rounded-2xl shadow-sm relative overflow-hidden group transition-all duration-300 hover:border-emerald-500/30 hover:shadow-lg">
-                    <div className="flex justify-between items-start mb-6 relative z-10">
-                        <div className="p-3 bg-emerald-500/5 border border-emerald-500/20 text-emerald-400 shadow-sm shadow-emerald-900/20 rounded-lg">
-                            <DollarSign size={28} />
+                <div className="bg-[#0f172a] border border-slate-800 p-4 md:p-6 rounded-2xl shadow-sm relative overflow-hidden group transition-all duration-300 hover:border-emerald-500/30 hover:shadow-lg">
+                    <div className="flex justify-between items-start mb-4 md:mb-6 relative z-10">
+                        <div className="p-2 md:p-3 bg-emerald-500/5 border border-emerald-500/20 text-emerald-400 shadow-sm shadow-emerald-900/20 rounded-lg">
+                            <DollarSign size={20} className="md:w-7 md:h-7" />
                         </div>
-                        <span className="text-xs font-bold uppercase text-emerald-400/80 tracking-widest border border-emerald-500/20 px-2 py-1 rounded bg-emerald-900/20">Valor Estimado</span>
+                        <span className="text-[10px] md:text-xs font-bold uppercase text-emerald-400/80 tracking-widest border border-emerald-500/20 px-2 py-1 rounded bg-emerald-900/20">Valor Estimado</span>
                     </div>
                     <div className="relative z-10">
-                        <div className="text-4xl lg:text-5xl font-extrabold text-white tracking-tight drop-shadow-md">
+                        <div className="text-3xl lg:text-5xl font-extrabold text-white tracking-tight drop-shadow-md">
                             {totalValue.toLocaleString('es-MX', { style: 'currency', currency: 'MXN', maximumFractionDigits: 0 })}
                         </div>
-                        <p className="text-emerald-600/80 dark:text-emerald-400/60 text-sm mt-2 font-medium flex items-center gap-2">
+                        <p className="text-emerald-600/80 dark:text-emerald-400/60 text-xs md:text-sm mt-2 font-medium flex items-center gap-2">
                             <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
                             En inventario filtrado
                         </p>
@@ -337,18 +338,18 @@ export default function InventoryDashboard() {
                 </div>
 
                 {/* 2. TOTAL ITEMS (Subtle Glow Style) */}
-                <div className="bg-[#0f172a] border border-slate-800 p-6 rounded-2xl shadow-sm relative overflow-hidden group transition-all duration-300 hover:border-blue-500/30 hover:shadow-lg">
-                    <div className="flex justify-between items-start mb-6 relative z-10">
-                        <div className="p-3 bg-blue-500/5 border border-blue-500/20 text-blue-400 shadow-sm shadow-blue-900/20 rounded-lg">
-                            <Shirt size={28} />
+                <div className="bg-[#0f172a] border border-slate-800 p-4 md:p-6 rounded-2xl shadow-sm relative overflow-hidden group transition-all duration-300 hover:border-blue-500/30 hover:shadow-lg">
+                    <div className="flex justify-between items-start mb-4 md:mb-6 relative z-10">
+                        <div className="p-2 md:p-3 bg-blue-500/5 border border-blue-500/20 text-blue-400 shadow-sm shadow-blue-900/20 rounded-lg">
+                            <Shirt size={20} className="md:w-7 md:h-7" />
                         </div>
-                        <span className="text-xs font-bold uppercase text-blue-400/80 tracking-widest border border-blue-500/20 px-2 py-1 rounded bg-blue-900/20">Prendas</span>
+                        <span className="text-[10px] md:text-xs font-bold uppercase text-blue-400/80 tracking-widest border border-blue-500/20 px-2 py-1 rounded bg-blue-900/20">Prendas</span>
                     </div>
                     <div className="relative z-10">
-                        <div className="text-4xl lg:text-5xl font-extrabold text-white tracking-tight drop-shadow-md">
+                        <div className="text-3xl lg:text-5xl font-extrabold text-white tracking-tight drop-shadow-md">
                             {totalStock.toLocaleString()}
                         </div>
-                        <p className="text-blue-600/80 dark:text-blue-400/60 text-sm mt-2 font-medium flex items-center gap-2">
+                        <p className="text-blue-600/80 dark:text-blue-400/60 text-xs md:text-sm mt-2 font-medium flex items-center gap-2">
                             <span className="w-1.5 h-1.5 rounded-full bg-blue-500 animate-pulse"></span>
                             Stock físico
                         </p>
@@ -358,26 +359,26 @@ export default function InventoryDashboard() {
                 {/* 3. LOW STOCK ALERT (Subtle Glow Style) */}
                 <div
                     onClick={() => setFilterMode(filterMode === 'alerts' ? 'all' : 'alerts')}
-                    className={`bg-[#0f172a] border border-slate-800 p-6 rounded-2xl shadow-sm relative overflow-hidden group transition-all duration-300 cursor-pointer hover:border-orange-500/30 hover:shadow-lg`}
+                    className={`bg-[#0f172a] border border-slate-800 p-4 md:p-6 rounded-2xl shadow-sm relative overflow-hidden group transition-all duration-300 cursor-pointer hover:border-orange-500/30 hover:shadow-lg sm:col-span-2 lg:col-span-1`}
                 >
-                    <div className="flex justify-between items-start mb-6 relative z-10">
-                        <div className={`p-3 rounded-lg transition-colors ${lowStockCount > 0
+                    <div className="flex justify-between items-start mb-4 md:mb-6 relative z-10">
+                        <div className={`p-2 md:p-3 rounded-lg transition-colors ${lowStockCount > 0
                             ? 'bg-orange-500/5 border border-orange-500/20 text-orange-400 shadow-sm shadow-orange-900/20'
                             : 'bg-slate-500/5 border border-slate-700/20 text-slate-500 shadow-sm'
                             }`}>
-                            <AlertTriangle className={lowStockCount > 0 ? "animate-pulse" : ""} size={28} />
+                            <AlertTriangle className={lowStockCount > 0 ? "animate-pulse" : ""} size={20} />
                         </div>
-                        <span className={`text-xs font-bold uppercase tracking-widest border px-2 py-1 rounded ${lowStockCount > 0
+                        <span className={`text-[10px] md:text-xs font-bold uppercase tracking-widest border px-2 py-1 rounded ${lowStockCount > 0
                             ? 'text-orange-600 dark:text-orange-400/80 border-orange-200 dark:border-orange-500/20 bg-orange-50 dark:bg-orange-900/20'
                             : 'text-slate-600 border-slate-800 bg-slate-900'
                             }`}>Alertas</span>
                     </div>
                     <div className="relative z-10">
-                        <div className={`text-4xl lg:text-5xl font-extrabold tracking-tight drop-shadow-md transition-colors ${lowStockCount > 0 ? 'text-white' : 'text-slate-600'
+                        <div className={`text-3xl lg:text-5xl font-extrabold tracking-tight drop-shadow-md transition-colors ${lowStockCount > 0 ? 'text-white' : 'text-slate-600'
                             }`}>
                             {lowStockCount}
                         </div>
-                        <p className={`text-sm mt-2 font-medium ${lowStockCount > 0 ? 'text-orange-600 dark:text-orange-400/60' : 'text-gray-400 dark:text-slate-500'}`}>
+                        <p className={`text-xs md:text-sm mt-2 font-medium ${lowStockCount > 0 ? 'text-orange-600 dark:text-orange-400/60' : 'text-gray-400 dark:text-slate-500'}`}>
                             {lowStockCount > 0 ? 'Productos requieren atención' : 'Todo en orden'}
                         </p>
                     </div>
@@ -588,8 +589,8 @@ export default function InventoryDashboard() {
                 </div>
             </div>
 
-            {/* Read-Only Table */}
-            <div className="bg-white dark:bg-[#0f172a] border border-gray-200 dark:border-slate-800 rounded-xl overflow-hidden shadow-sm">
+            {/* Read-Only Table (Hidden on Mobile) */}
+            <div className="bg-white dark:bg-[#0f172a] border border-gray-200 dark:border-slate-800 rounded-xl overflow-hidden shadow-sm hidden md:block">
                 <div className="overflow-x-auto">
                     <table className="w-full text-left text-sm text-gray-500 dark:text-slate-400">
                         <thead className="bg-gray-100 dark:bg-slate-800/50 text-gray-700 dark:text-slate-200 uppercase font-medium">
@@ -647,6 +648,56 @@ export default function InventoryDashboard() {
                         </tbody>
                     </table>
                 </div>
+            </div>
+
+            {/* Mobile Card View (Visible only on Mobile) */}
+            <div className="md:hidden space-y-3 pb-20">
+                {filteredProducts.map(product => {
+                    const isLowStock = (product.stock_actual || 0) < 5
+                    return (
+                        <div key={product.id_producto} className="bg-slate-800 p-4 rounded-xl border border-slate-700 flex flex-col gap-3 shadow-md">
+                            <div className="flex gap-4">
+                                {/* Image Placeholder */}
+                                <div className="w-16 h-16 bg-slate-700 rounded-lg flex-shrink-0 overflow-hidden">
+                                    {product.imagen_producto_url ? (
+                                        <img src={product.imagen_producto_url} alt="" className="w-full h-full object-cover" />
+                                    ) : (
+                                        <div className="w-full h-full flex items-center justify-center text-slate-500">
+                                            <Package size={20} />
+                                        </div>
+                                    )}
+                                </div>
+
+                                <div className="flex-1 min-w-0">
+                                    <h4 className="font-bold text-white text-sm truncate">{product.nombre_producto}</h4>
+                                    <p className="text-xs font-mono text-slate-400 mb-1">{product.sku_producto}</p>
+                                    <div className="flex flex-wrap gap-2">
+                                        <span className="text-[10px] bg-slate-900 border border-slate-600 px-1.5 py-0.5 rounded text-slate-300">
+                                            {product.categoria_producto}
+                                        </span>
+                                        <span className={`text-[10px] px-1.5 py-0.5 rounded font-bold border ${isLowStock ? 'bg-orange-900/20 text-orange-400 border-orange-500/20' : 'bg-blue-900/20 text-blue-400 border-blue-500/20'}`}>
+                                            Stock: {product.stock_actual}
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* Footer Info */}
+                            <div className="flex justify-between items-center text-xs pt-3 border-t border-slate-700/50">
+                                <span className="text-slate-500">{product.empresario?.nombre_empresario}</span>
+                                <span className="text-slate-300">
+                                    {Number(product.precio_venta).toLocaleString('es-MX', { style: 'currency', currency: 'MXN' })}
+                                </span>
+                            </div>
+
+                            {isLowStock && (product.stock_actual || 0) > 0 && (
+                                <div className="text-center text-[10px] font-bold text-orange-400 bg-orange-900/10 border border-orange-500/20 rounded py-1">
+                                    ¡Pocas unidades!
+                                </div>
+                            )}
+                        </div>
+                    )
+                })}
             </div>
         </div>
     )
