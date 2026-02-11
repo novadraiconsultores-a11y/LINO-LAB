@@ -3,8 +3,8 @@ import { useLocation } from 'react-router-dom'
 import { supabase } from '../supabaseClient'
 import { Package, Search, Save, Plus, Trash2, ShoppingCart, FileText, User, AlertTriangle, X, Check, History, Download, Mail, Eye, Calendar, DollarSign, Box } from 'lucide-react'
 import jsPDF from 'jspdf'
-
 import autoTable from 'jspdf-autotable'
+import Swal from 'sweetalert2'
 import { sendEmailNotification } from '../utils/emailService'
 
 export default function Supply() {
