@@ -525,65 +525,128 @@ export default function Supply() {
 
     const [emailLoading, setEmailLoading] = useState(false)
     const handleSendEmail = async (email) => {
-        if (!email) return alert("Por favor ingresa un correo válido.")
+        // Validación elegante con SweetAlert2
+        if (!email) {
+            return Swal.fire({
+                icon: 'warning',
+                title: 'Falta el correo',
+                text: 'Por favor ingresa una dirección de correo válida.',
+                background: '#0f172a',
+                color: '#fff',
+                confirmButtonColor: '#10b981'
+            })
+        }
 
         setEmailLoading(true)
 
-        // 1. Construir HTML del Recibo
-        const dateStr = new Date(currentReceipt.fecha_entrada).toLocaleDateString('es-MX')
+        // 1. Datos para el correo
+        const dateStr = new Date(currentReceipt.fecha_entrada).toLocaleDateString('es-MX', { year: 'numeric', month: 'long', day: 'numeric' })
         const totalStr = formatCurrency(currentReceipt.total_costo_entrada || currentReceipt.total_costo || 0)
         const providerName = currentReceipt.empresarios?.nombre_empresario || 'Proveedor'
         const folio = currentReceipt.referencia_documento || 'S/R'
 
-        // Construir filas de la tabla
+        // 2. Construir Filas (Diseño Limpio)
         const rowsHtml = currentReceipt.details.map(d => `
             <tr style="border-bottom: 1px solid #334155;">
-                <td style="padding: 8px; color: #e2e8f0;">${d.productos?.nombre_producto}</td>
-                <td style="padding: 8px; text-align: center; color: #cbd5e1;">${d.cantidad_ingresada || d.cantidad}</td>
-                <td style="padding: 8px; text-align: right; color: #cbd5e1;">${formatCurrency(d.costo_unitario_ingreso || d.costo_unitario)}</td>
+                <td style="padding: 12px 0; color: #e2e8f0; font-size: 14px;">
+                    <strong style="color: #fff;">${d.productos?.nombre_producto}</strong><br>
+                    <span style="color: #94a3b8; font-size: 12px;">SKU: ${d.productos?.sku_producto}</span>
+                </td>
+                <td style="padding: 12px 0; text-align: center; color: #cbd5e1; font-size: 14px;">${d.cantidad_ingresada || d.cantidad}</td>
+                <td style="padding: 12px 0; text-align: right; color: #fff; font-weight: bold; font-size: 14px;">${formatCurrency(d.costo_unitario_ingreso || d.costo_unitario)}</td>
             </tr>
         `).join('')
 
+        // 3. HTML "Premium Dark" (Minimalista)
         const emailHtml = `
-            <div style="font-family: sans-serif; background-color: #0f172a; color: #fff; padding: 20px; border-radius: 8px;">
-                <h2 style="color: #34d399; margin-top: 0;">LINO LAB - Entrada de Inventario</h2>
-                <p style="color: #94a3b8;">Folio: <strong>${folio}</strong> | Fecha: ${dateStr}</p>
-                <hr style="border-color: #334155;">
-                <p><strong>Proveedor:</strong> ${providerName}</p>
-                
-                <table style="width: 100%; border-collapse: collapse; font-size: 14px;">
-                    <thead>
-                        <tr style="background-color: #1e293b; color: #94a3b8; text-align: left;">
-                            <th style="padding: 8px;">Producto</th>
-                            <th style="padding: 8px; text-align: center;">Cant.</th>
-                            <th style="padding: 8px; text-align: right;">Costo</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        ${rowsHtml}
-                    </tbody>
-                </table>
-                
-                <div style="text-align: right; margin-top: 20px;">
-                    <p style="color: #94a3b8; margin: 0;">Valor Total:</p>
-                    <h2 style="margin: 0; color: #fff;">${totalStr}</h2>
+            <div style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; background-color: #0f172a; padding: 40px 20px; color: #e2e8f0;">
+                <div style="max-width: 600px; margin: 0 auto; background-color: #1e293b; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);">
+                    
+                    <div style="background-color: #10b981; padding: 24px; text-align: center;">
+                        <h1 style="margin: 0; color: #fff; font-size: 24px; letter-spacing: 1px;">LINO LAB</h1>
+                        <p style="margin: 5px 0 0 0; color: #ecfdf5; font-size: 14px;">Confirmación de Entrada</p>
+                    </div>
+
+                    <div style="padding: 32px;">
+                        <p style="margin-top: 0; color: #94a3b8; font-size: 14px;">Hola,</p>
+                        <p style="color: #cbd5e1; font-size: 16px; line-height: 1.5;">
+                            Se ha registrado exitosamente la entrada de inventario del proveedor <strong style="color: #fff;">${providerName}</strong>.
+                        </p>
+
+                        <div style="background-color: #0f172a; border-radius: 8px; padding: 16px; margin: 24px 0;">
+                            <table style="width: 100%; border-collapse: collapse;">
+                                <tr>
+                                    <td style="color: #94a3b8; font-size: 12px; text-transform: uppercase;">Folio</td>
+                                    <td style="text-align: right; color: #fff; font-family: monospace;">${folio}</td>
+                                </tr>
+                                <tr>
+                                    <td style="color: #94a3b8; font-size: 12px; text-transform: uppercase;">Fecha</td>
+                                    <td style="text-align: right; color: #fff;">${dateStr}</td>
+                                </tr>
+                            </table>
+                        </div>
+
+                        <h3 style="color: #fff; font-size: 16px; margin-bottom: 12px; border-bottom: 1px solid #334155; padding-bottom: 8px;">Resumen de Artículos</h3>
+                        
+                        <table style="width: 100%; border-collapse: collapse; margin-bottom: 24px;">
+                            <thead>
+                                <tr>
+                                    <th style="text-align: left; color: #94a3b8; font-size: 12px; padding-bottom: 8px;">PRODUCTO</th>
+                                    <th style="text-align: center; color: #94a3b8; font-size: 12px; padding-bottom: 8px;">CANT.</th>
+                                    <th style="text-align: right; color: #94a3b8; font-size: 12px; padding-bottom: 8px;">COSTO U.</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${rowsHtml}
+                            </tbody>
+                        </table>
+
+                        <div style="border-top: 2px dashed #334155; padding-top: 20px; text-align: right;">
+                            <span style="color: #94a3b8; font-size: 14px; margin-right: 10px;">Valor Total de Entrada:</span>
+                            <span style="color: #10b981; font-size: 24px; font-weight: bold;">${totalStr}</span>
+                        </div>
+                    </div>
+
+                    <div style="background-color: #0f172a; padding: 20px; text-align: center; border-top: 1px solid #334155;">
+                        <p style="margin: 0; color: #64748b; font-size: 12px;">
+                            © ${new Date().getFullYear()} Lino Lab Sistema.<br>
+                            Este es un comprobante digital automático.
+                        </p>
+                    </div>
                 </div>
             </div>
         `
 
-        // 2. Enviar Correo
+        // 4. Envío
         const success = await sendEmailNotification(
             email,
-            `Recibo Entrada #${folio} - Lino Lab`,
+            `Lino Lab: Recibo de Entrada ${folio}`,
             emailHtml
         )
 
         setEmailLoading(false)
 
+        // 5. Feedback con SweetAlert2
         if (success) {
-            alert(`✅ Recibo enviado correctamente a ${email}`)
+            Swal.fire({
+                icon: 'success',
+                title: '¡Enviado!',
+                text: `El recibo se envió correctamente a ${email}`,
+                background: '#0f172a',
+                color: '#fff',
+                confirmButtonColor: '#10b981',
+                timer: 2000,
+                showConfirmButton: false
+            })
         } else {
-            alert("❌ Hubo un error al enviar el correo. Revisa la consola o intenta más tarde.")
+            Swal.fire({
+                icon: 'error',
+                title: 'Error de Envío',
+                text: 'No se pudo enviar el correo. Verifica la dirección o intenta más tarde.',
+                background: '#0f172a',
+                color: '#fff',
+                confirmButtonColor: '#ef4444'
+            })
         }
     }
 
