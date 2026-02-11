@@ -336,12 +336,12 @@ export default function Traspasos() {
     )
 
     return (
-        <div className="p-8 max-w-7xl mx-auto min-h-screen text-slate-100 relative">
+        <div className="p-4 md:p-8 max-w-7xl mx-auto min-h-[100dvh] text-slate-100 relative">
 
             {/* Header */}
-            <div className="flex justify-between items-center mb-8">
+            <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 md:mb-8 gap-4 md:gap-0">
                 <div>
-                    <h1 className="text-3xl font-bold text-white flex items-center gap-3">
+                    <h1 className="text-2xl md:text-3xl font-bold text-white flex items-center gap-3">
                         <Truck className="text-blue-500" size={32} />
                         Gestión de Traspasos
                         {activeBranchName && (
@@ -350,27 +350,27 @@ export default function Traspasos() {
                             </span>
                         )}
                     </h1>
-                    <p className="text-slate-400 mt-1">Envío y Recepción de Mercancía entre Sucursales</p>
+                    <p className="text-slate-400 mt-1 text-sm md:text-base">Envío y Recepción de Mercancía entre Sucursales</p>
                 </div>
 
-                <div className="bg-slate-900 p-1 rounded-lg border border-slate-700 flex gap-1">
+                <div className="w-full md:w-auto bg-slate-900 p-1 rounded-lg border border-slate-700 grid grid-cols-3 md:flex gap-1">
                     <button
                         onClick={() => setActiveTab('send')}
-                        className={`px-4 py-2 rounded-md font-bold text-sm flex items-center gap-2 transition-all ${activeTab === 'send' ? 'bg-blue-600 text-white' : 'text-slate-400 hover:text-white'
+                        className={`justify-center px-4 py-2 rounded-md font-bold text-xs md:text-sm flex items-center gap-2 transition-all ${activeTab === 'send' ? 'bg-blue-600 text-white' : 'text-slate-400 hover:text-white'
                             }`}
                     >
-                        <ArrowRight size={16} /> Nuevo Envío
+                        <ArrowRight size={16} /> <span className="hidden md:inline">Nuevo Envío</span><span className="md:hidden">Enviar</span>
                     </button>
                     <button
                         onClick={() => setActiveTab('receive')}
-                        className={`px-4 py-2 rounded-md font-bold text-sm flex items-center gap-2 transition-all ${activeTab === 'receive' ? 'bg-emerald-600 text-white' : 'text-slate-400 hover:text-white'
+                        className={`justify-center px-4 py-2 rounded-md font-bold text-xs md:text-sm flex items-center gap-2 transition-all ${activeTab === 'receive' ? 'bg-emerald-600 text-white' : 'text-slate-400 hover:text-white'
                             }`}
                     >
-                        <Package size={16} /> Buzón de Entrada
+                        <Package size={16} /> <span className="hidden md:inline">Buzón de Entrada</span><span className="md:hidden">Buzón</span>
                     </button>
                     <button
                         onClick={() => setActiveTab('history')}
-                        className={`px-4 py-2 rounded-md font-bold text-sm flex items-center gap-2 transition-all ${activeTab === 'history' ? 'bg-purple-600 text-white' : 'text-slate-400 hover:text-white'
+                        className={`justify-center px-4 py-2 rounded-md font-bold text-xs md:text-sm flex items-center gap-2 transition-all ${activeTab === 'history' ? 'bg-purple-600 text-white' : 'text-slate-400 hover:text-white'
                             }`}
                     >
                         <Clock size={16} /> Historial
@@ -380,10 +380,10 @@ export default function Traspasos() {
 
             {/* SEND TAB */}
             {activeTab === 'send' && (
-                <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 animate-in fade-in">
+                <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 md:gap-6 animate-in fade-in">
                     {/* Left: Product Selector */}
                     <div className="lg:col-span-7 space-y-4">
-                        <div className="bg-slate-900 border border-slate-700 rounded-xl p-6">
+                        <div className="bg-slate-900 border border-slate-700 rounded-xl p-4 md:p-6">
                             <h2 className="text-sm text-slate-400 uppercase font-bold mb-4 flex gap-2">
                                 <MapPin size={16} /> 1. Destino
                             </h2>
@@ -399,7 +399,7 @@ export default function Traspasos() {
                             </select>
                         </div>
 
-                        <div className={`bg-slate-900 border border-slate-700 rounded-xl p-6 flex-1 ${!destBranch ? 'opacity-50 pointer-events-none' : ''}`}>
+                        <div className={`bg-slate-900 border border-slate-700 rounded-xl p-4 md:p-6 flex-1 ${!destBranch ? 'opacity-50 pointer-events-none' : ''}`}>
                             <h2 className="text-sm text-slate-400 uppercase font-bold mb-4 flex gap-2 justify-between">
                                 <span className="flex gap-2"><Search size={16} /> 2. Selección de Productos</span>
                                 <span className="text-xs text-blue-400">Mostrando solo Stock &gt; 0</span>
@@ -413,7 +413,7 @@ export default function Traspasos() {
                                     className="w-full bg-slate-800 border-none rounded-lg p-3 focus:ring-2 ring-blue-500 text-sm"
                                 />
                             </div>
-                            <div className="h-80 overflow-y-auto custom-scrollbar space-y-2">
+                            <div className="max-h-[40vh] md:h-80 overflow-y-auto custom-scrollbar space-y-2">
                                 {loading && <p className="text-center text-slate-500 py-4">Cargando inventario...</p>}
                                 {!loading && filteredProducts.length === 0 && <p className="text-center text-slate-500 py-4">No hay productos disponibles para enviar.</p>}
                                 {filteredProducts.map(product => (
@@ -436,8 +436,8 @@ export default function Traspasos() {
                     </div>
 
                     {/* Right: Cart */}
-                    <div className="lg:col-span-5 flex flex-col h-full">
-                        <div className="bg-slate-900 border border-slate-700 rounded-xl p-6 flex-1 flex flex-col shadow-lg">
+                    <div className="lg:col-span-5 flex flex-col h-auto md:h-full">
+                        <div className="bg-slate-900 border border-slate-700 rounded-xl p-4 md:p-6 flex-1 flex flex-col shadow-lg">
                             <h2 className="text-lg font-bold text-white mb-4 flex items-center gap-2">
                                 <Package className="text-blue-500" /> Lista de Envío
                             </h2>
@@ -489,10 +489,10 @@ export default function Traspasos() {
                         <table className="w-full text-left text-sm">
                             <thead className="bg-slate-950 text-slate-400 uppercase text-xs font-bold">
                                 <tr>
-                                    <th className="p-4">Origen</th>
-                                    <th className="p-4">Fecha Envío</th>
-                                    <th className="p-4">Estado</th>
-                                    <th className="p-4 text-center">Acciones</th>
+                                    <th className="p-3 md:p-4">Origen</th>
+                                    <th className="p-3 md:p-4">Fecha Envío</th>
+                                    <th className="p-3 md:p-4">Estado</th>
+                                    <th className="p-3 md:p-4 text-center">Acciones</th>
                                 </tr>
                             </thead>
                             <tbody className="divide-y divide-slate-800">
@@ -504,9 +504,9 @@ export default function Traspasos() {
                                 )}
                                 {transfers.map(t => (
                                     <tr key={t.id_traspaso} className="hover:bg-slate-800/50 transition-colors">
-                                        <td className="p-4 font-bold text-white">{t.origin?.nombre}</td>
-                                        <td className="p-4 text-slate-400">{new Date(t.fecha_envio).toLocaleDateString()} {new Date(t.fecha_envio).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</td>
-                                        <td className="p-4">
+                                        <td className="p-3 md:p-4 font-bold text-white">{t.origin?.nombre}</td>
+                                        <td className="p-3 md:p-4 text-slate-400">{new Date(t.fecha_envio).toLocaleDateString()} <span className="hidden md:inline">{new Date(t.fecha_envio).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span></td>
+                                        <td className="p-3 md:p-4">
                                             <span className={`px-2 py-1 rounded text-xs font-bold border ${t.estado === 'COMPLETADO'
                                                 ? 'bg-emerald-900/30 text-emerald-400 border-emerald-500/30'
                                                 : 'bg-amber-900/30 text-amber-400 border-amber-500/30'
@@ -514,7 +514,7 @@ export default function Traspasos() {
                                                 {t.estado}
                                             </span>
                                         </td>
-                                        <td className="p-4 text-center">
+                                        <td className="p-3 md:p-4 text-center">
                                             <button
                                                 onClick={() => handleViewDetails(t)}
                                                 className="bg-slate-800 hover:bg-slate-700 text-blue-400 px-3 py-1 rounded border border-slate-700 shadow-sm transition-all"
@@ -537,11 +537,11 @@ export default function Traspasos() {
                         <table className="w-full text-left text-sm">
                             <thead className="bg-slate-950 text-slate-400 uppercase text-xs font-bold">
                                 <tr>
-                                    <th className="p-4">Fecha</th>
-                                    <th className="p-4">Trayecto</th>
-                                    <th className="p-4 text-center">Items</th>
-                                    <th className="p-4">Estado</th>
-                                    <th className="p-4 text-center">Detalles</th>
+                                    <th className="p-3 md:p-4">Fecha</th>
+                                    <th className="p-3 md:p-4">Trayecto</th>
+                                    <th className="p-3 md:p-4 text-center">Items</th>
+                                    <th className="p-3 md:p-4">Estado</th>
+                                    <th className="p-3 md:p-4 text-center">Detalles</th>
                                 </tr>
                             </thead>
                             <tbody className="divide-y divide-slate-800">
@@ -555,10 +555,10 @@ export default function Traspasos() {
                                     const isOutgoing = t.ref_sucursal_origen_id === activeBranchId
                                     return (
                                         <tr key={t.id_traspaso} className="hover:bg-slate-800/50 transition-colors">
-                                            <td className="p-4 text-slate-300">
-                                                {new Date(t.fecha_envio).toLocaleDateString()} <span className="text-slate-500 text-xs">{new Date(t.fecha_envio).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
+                                            <td className="p-3 md:p-4 text-slate-300">
+                                                {new Date(t.fecha_envio).toLocaleDateString()} <span className="hidden md:inline text-slate-500 text-xs">{new Date(t.fecha_envio).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
                                             </td>
-                                            <td className="p-4">
+                                            <td className="p-3 md:p-4">
                                                 {isOutgoing ? (
                                                     <div className="flex items-center gap-2 text-rose-400">
                                                         <ArrowUpRight size={18} />
@@ -571,7 +571,7 @@ export default function Traspasos() {
                                                     </div>
                                                 )}
                                             </td>
-                                            <td className="p-4 text-center font-mono text-slate-400">
+                                            <td className="p-3 md:p-4 text-center font-mono text-slate-400">
                                                 {/* Requires fetching details to count items or we assume we can just show 'Ver Detalles' for now? 
                                                     User requirement says "Total Items: Suma de cantidades."
                                                     Wait, we are not fetching details in the LIST view (expensive).
