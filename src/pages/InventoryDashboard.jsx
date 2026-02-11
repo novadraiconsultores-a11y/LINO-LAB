@@ -42,33 +42,56 @@ export default function InventoryDashboard() {
         try {
             setLoading(true)
 
-            // 1. Resolve Branch (LocalStorage > Matriz)
+            // 1. Get Current User & Profile (Security Check)
+            const { data: { user } } = await supabase.auth.getUser()
+            if (!user) throw new Error("No user found")
+
+            const { data: profile } = await supabase
+                .from('perfiles')
+                .select('rol, sucursal_asignada_id, sucursales(nombre)')
+                .eq('id_perfil', user.id)
+                .single()
+
+            // 2. Resolve Branch Logic
             let branchId = localStorage.getItem('sucursal_activa')
             let branchName = ''
-            const isGlobal = branchId === 'global'
+            let isGlobal = branchId === 'global'
 
-            if (!isGlobal) {
-                let branchQuery = supabase.from('sucursales').select('id_sucursal, nombre, es_matriz')
+            // --- CRITICAL FIX: FORCE BRANCH FOR NON-ADMINS ---
+            if (profile && profile.rol !== 'admin') {
+                // Si no es admin, está obligado a ver su sucursal
+                branchId = profile.sucursal_asignada_id
+                branchName = profile.sucursales?.nombre || 'Mi Sucursal'
+                isGlobal = false
 
-                if (branchId) {
-                    branchQuery = branchQuery.eq('id_sucursal', branchId)
-                } else {
-                    branchQuery = branchQuery.eq('es_matriz', true)
-                }
-
-                const { data: branchData } = await branchQuery.limit(1).maybeSingle()
-
-                if (branchData) {
-                    branchId = branchData.id_sucursal
-                    branchName = branchData.nombre
-                    // Sync first load
-                    if (!localStorage.getItem('sucursal_activa')) localStorage.setItem('sucursal_activa', branchId)
-                } else {
-                    branchId = null
-                    console.warn('No active branch found')
-                }
+                // Auto-fix localStorage for consistency
+                if (branchId) localStorage.setItem('sucursal_activa', branchId)
             } else {
-                branchName = 'Vista Global (Todas)'
+                // Logic for Admins (Keep existing flexibility)
+                if (!isGlobal) {
+                    let branchQuery = supabase.from('sucursales').select('id_sucursal, nombre, es_matriz')
+
+                    if (branchId) {
+                        branchQuery = branchQuery.eq('id_sucursal', branchId)
+                    } else {
+                        branchQuery = branchQuery.eq('es_matriz', true)
+                    }
+
+                    const { data: branchData } = await branchQuery.limit(1).maybeSingle()
+
+                    if (branchData) {
+                        branchId = branchData.id_sucursal
+                        branchName = branchData.nombre
+                        // Sync first load
+                        if (!localStorage.getItem('sucursal_activa')) localStorage.setItem('sucursal_activa', branchId)
+                    } else {
+                        // Fallback logic if ID in localstorage is invalid
+                        branchId = null
+                        console.warn('No active branch found or invalid ID')
+                    }
+                } else {
+                    branchName = 'Vista Global (Todas)'
+                }
             }
 
             setActiveBranchName(branchName)
@@ -79,7 +102,7 @@ export default function InventoryDashboard() {
                 return
             }
 
-            // 2. Fetch Inventory for this Branch (or Global)
+            // 3. Fetch Inventory for this Branch (or Global)
             let invQuery = supabase
                 .from('inventario')
                 .select(`
@@ -98,7 +121,7 @@ export default function InventoryDashboard() {
 
             if (invError) throw invError
 
-            // 3. Map to Flat Structure (UI Compatibility)
+            // 4. Map to Flat Structure (UI Compatibility)
             const mappedProducts = (invData || []).map(item => {
                 const p = item.producto || {}
                 return {
@@ -112,7 +135,7 @@ export default function InventoryDashboard() {
 
             setProducts(mappedProducts)
 
-            // 4. Fetch Providers (for filter)
+            // 5. Fetch Providers (for filter)
             const { data: provData } = await supabase.from('empresarios').select('id_empresario, nombre_empresario')
             setProviders(provData || [])
 
