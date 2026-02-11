@@ -460,12 +460,12 @@ export default function Sales() {
     })
 
     return (
-        <div className="h-screen flex flex-col md:flex-row bg-slate-950 overflow-hidden relative">
+        <div className="h-[100dvh] flex flex-col md:flex-row bg-slate-950 overflow-hidden relative">
 
             {/* Left: Catalog (60-70%) */}
-            <div className="flex-1 flex flex-col p-3 sm:p-4 md:p-6 min-w-0">
+            <div className="h-[60%] md:h-auto flex-1 flex flex-col p-2 md:p-6 min-w-0">
                 <div className="mb-6">
-                    <h1 className="text-xl sm:text-2xl font-bold text-white mb-2 flex items-center justify-between">
+                    <h1 className="text-lg sm:text-2xl font-bold text-white mb-2 flex items-center justify-between">
                         Catálogo
                         {activeBranchName && (
                             <span className="text-xs font-normal text-emerald-400 bg-emerald-950/30 px-3 py-1 rounded-full border border-emerald-500/20">
@@ -511,7 +511,7 @@ export default function Sales() {
                             No se encontraron productos disponibles.
                         </div>
                     ) : (
-                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-4 pb-20">
+                        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2 sm:gap-4 pb-20">
                             {filteredProducts.map(product => (
                                 <div
                                     key={product.id_producto}
@@ -572,9 +572,9 @@ export default function Sales() {
             </div>
 
             {/* Right: Virtual Ticket (30-40%) */}
-            <div className="w-full md:w-[400px] xl:w-[450px] bg-white dark:bg-slate-900 border-l border-gray-200 dark:border-slate-800 flex flex-col shadow-2xl relative z-10 h-full">
+            <div className="w-full md:w-[400px] xl:w-[450px] h-[40%] md:h-full bg-white dark:bg-slate-900 border-l border-gray-200 dark:border-slate-800 flex flex-col shadow-2xl relative z-10">
                 {/* Header Fijo */}
-                <div className="p-6 bg-white dark:bg-slate-900 border-b border-gray-200 dark:border-slate-800 shrink-0">
+                <div className="p-3 md:p-6 bg-white dark:bg-slate-900 border-b border-gray-200 dark:border-slate-800 shrink-0">
                     <h2 className="text-xl font-bold flex items-center gap-2 text-white">
                         <ShoppingCart size={24} className="text-blue-600 dark:text-blue-500" />
                         Ticket de Venta
@@ -595,9 +595,9 @@ export default function Sales() {
                         cart.map(item => {
                             const unitPriceBase = item.precio_venta / 1.16
                             return (
-                                <div key={item.id_producto} className="bg-white dark:bg-slate-800 p-3 rounded-lg shadow-sm border border-gray-200 dark:border-slate-700 flex gap-3 group hover:border-gray-300 dark:hover:border-slate-600 transition-colors">
+                                <div key={item.id_producto} className="bg-white dark:bg-slate-800 p-2 md:p-3 rounded-lg shadow-sm border border-gray-200 dark:border-slate-700 flex gap-3 group hover:border-gray-300 dark:hover:border-slate-600 transition-colors">
                                     <div className="flex-1">
-                                        <h4 className="font-medium text-white text-sm leading-tight mb-1">
+                                        <h4 className="font-medium text-white text-xs md:text-sm leading-tight mb-1">
                                             {item.nombre_producto}
                                         </h4>
                                         <div className="flex items-center gap-2 text-xs font-mono text-gray-500 dark:text-slate-400">
@@ -640,7 +640,7 @@ export default function Sales() {
                 </div>
 
                 {/* Footer Fijo (Totales + Botón) */}
-                <div className="p-6 bg-white dark:bg-slate-900 border-t border-gray-200 dark:border-slate-800 shadow-[0_-4px_20px_rgba(0,0,0,0.1)] dark:shadow-[0_-4px_20px_rgba(0,0,0,0.4)] relative z-20 shrink-0">
+                <div className="p-4 md:p-6 bg-white dark:bg-slate-900 border-t border-gray-200 dark:border-slate-800 shadow-[0_-4px_20px_rgba(0,0,0,0.1)] dark:shadow-[0_-4px_20px_rgba(0,0,0,0.4)] relative z-20 shrink-0">
                     <div className="space-y-2 mb-4">
                         <div className="flex justify-between text-gray-500 dark:text-slate-400 text-sm">
                             <span>Subtotal (Base)</span>
