@@ -1,8 +1,10 @@
 import { useEffect, useState } from 'react'
-import { Search, ShoppingCart, Plus, Minus, Trash2, CreditCard, Eye, EyeOff, Mail } from 'lucide-react'
+import { Search, ShoppingCart, Plus, Minus, Trash2, CreditCard, Eye, EyeOff, Mail, Check, Printer, RefreshCw } from 'lucide-react'
 import { supabase } from '../supabaseClient'
 import PaymentModal from '../components/PaymentModal'
 import { sendEmailNotification } from '../utils/emailService'
+import Swal from 'sweetalert2'
+import jsPDF from 'jspdf'
 
 export default function Sales() {
     const [products, setProducts] = useState([])
@@ -12,10 +14,15 @@ export default function Sales() {
     const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false)
     const [showOutOfStock, setShowOutOfStock] = useState(false)
     const [activeBranchName, setActiveBranchName] = useState('')
-    const [clientEmail, setClientEmail] = useState('') // New state for email
 
-    // New state to hold receipt data after cart is cleared
+    // New UX States
+    const [showSuccessModal, setShowSuccessModal] = useState(false)
     const [lastSaleDetails, setLastSaleDetails] = useState(null)
+    const [emailForTicket, setEmailForTicket] = useState('')
+    const [sendingEmail, setSendingEmail] = useState(false)
+
+    // Helper formatter
+    const formatCurrency = (amount) => new Intl.NumberFormat('es-MX', { style: 'currency', currency: 'MXN' }).format(amount)
 
     useEffect(() => {
         fetchProducts()
@@ -57,7 +64,6 @@ export default function Sales() {
             }
 
             // 2. Fetch Inventory for POS (Filtered by Branch)
-            // Requirement: "Solo muestra productos ... que tengan cantidad > 0"
             const { data, error } = await supabase
                 .from('inventario')
                 .select(`
@@ -65,7 +71,7 @@ export default function Sales() {
                     producto:ref_producto_id (*)
                 `)
                 .eq('ref_sucursal_id', branchId)
-                .gt('cantidad', 0) // Explicit requirement to show only available items
+                .gt('cantidad', 0)
 
             if (error) throw error
 
@@ -74,7 +80,7 @@ export default function Sales() {
                 const p = item.producto || {}
                 return {
                     ...p,
-                    stock_actual: item.cantidad // Data source is the inventory record
+                    stock_actual: item.cantidad
                 }
             })
             // Sort
@@ -92,13 +98,17 @@ export default function Sales() {
     const addToCart = (product) => {
         const existingItem = cart.find(item => item.id_producto === product.id_producto)
 
-        // Check global stock
-        // Check global stock
-        if (product.stock_actual <= 0) return // Prevent adding empty stock
+        if (product.stock_actual <= 0) return
 
         const currentQtyInCart = existingItem ? existingItem.qty : 0
         if (currentQtyInCart + 1 > product.stock_actual) {
-            alert(`No hay suficiente stock. Disponible: ${product.stock_actual}`)
+            Swal.fire({
+                icon: 'warning',
+                title: 'Stock Insuficiente',
+                text: `Solo hay ${product.stock_actual} unidades disponibles.`,
+                background: '#0f172a',
+                color: '#fff'
+            })
             return
         }
 
@@ -119,7 +129,6 @@ export default function Sales() {
         setCart(cart.map(item => {
             if (item.id_producto === id) {
                 const newQty = Math.max(1, item.qty + delta)
-                // Check stock limit for increase
                 if (delta > 0 && newQty > item.stock_actual) {
                     return item
                 }
@@ -134,35 +143,37 @@ export default function Sales() {
     const subtotal = cartTotal / 1.16
     const tax = cartTotal - subtotal
 
-    // Handlers
-    const handlePaymentConfirm = async (paymentDetails) => {
+    // Core Logic: Process Sale
+    const handleProcessSale = async (paymentDetails) => {
         try {
-            // 0. Validation & Branch Resolution
+            // 0. Validation
             const branchId = localStorage.getItem('sucursal_activa')
             if (!branchId) {
-                alert("Error CRÍTICO: Sucursal no detectada. Por favor recargue la página.")
+                Swal.fire('Error', 'Sucursal no detectada. Recarga la página.', 'error')
                 return
             }
 
-            // 1. Capture Sale Details for Receipt BEFORE clearing cart
-            const currentSaleDetails = {
+            // 1. Prepare Data
+            const currentSaleData = {
                 items: [...cart],
-                subtotal: subtotal,
-                tax: tax,
+                subtotal, // from state calculation
+                tax,
                 total: cartTotal,
                 method: paymentDetails.method,
+                amountReceived: paymentDetails.amountReceived,
+                change: paymentDetails.change,
                 date: new Date(),
-                clientEmail: paymentDetails.clientEmail
+                branchId
             }
 
-            // 2. Insert Sale Header (ventas_cabecera)
+            // 2. Insert Header
             const { data: saleData, error: saleError } = await supabase
                 .from('ventas_cabecera')
                 .insert([{
                     total_venta: cartTotal,
                     metodo_pago: paymentDetails.method,
                     fecha_venta: new Date().toISOString(),
-                    ref_sucursal_id: branchId // Explicit Persistence
+                    ref_sucursal_id: branchId
                 }])
                 .select()
                 .single()
@@ -170,12 +181,9 @@ export default function Sales() {
             if (saleError) throw saleError
 
             const saleId = saleData.id_venta
+            currentSaleData.folio = saleId
 
-            // Inject sale ID into receipt details
-            currentSaleDetails.id = saleId
-            setLastSaleDetails(currentSaleDetails)
-
-            // 3. Prepare Detailed Lines & Update Stock List (ventas_detalle)
+            // 3. Insert Details
             const saleDetails = cart.map(item => ({
                 ref_venta_id: saleId,
                 ref_producto_id: item.id_producto,
@@ -184,14 +192,13 @@ export default function Sales() {
                 subtotal_renglon: item.precio_venta * item.qty
             }))
 
-            // 4. Insert Sale Details
             const { error: detailsError } = await supabase
                 .from('ventas_detalle')
                 .insert(saleDetails)
 
             if (detailsError) throw detailsError
 
-            // 5. Update Inventory Stock (Specific Branch)
+            // 4. Update Stock
             for (const item of cart) {
                 const newStock = item.stock_actual - item.qty
                 await supabase
@@ -201,75 +208,122 @@ export default function Sales() {
                     .eq('ref_sucursal_id', branchId)
             }
 
-            // 6. Reset & Refresh
-            setCart([])
-            fetchProducts() // Refresh catalog stock
+            // 5. Success State Transition
+            setLastSaleDetails(currentSaleData)
+            setIsPaymentModalOpen(false)
+            setShowSuccessModal(true)
 
-            // ... (inside handlePaymentConfirm)
-            // 7. Send Email Receipt (Silent/Async)
-            if (paymentDetails.clientEmail && saleId) { // Added saleId check
-                // Safe ID for display
-                const safeSaleId = String(saleId || '???')
-
-                const emailHtml = `
-                    <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #e2e8f0; border-radius: 10px; background-color: #f8fafc;">
-                        <div style="text-align: center; margin-bottom: 20px;">
-                            <h1 style="color: #0f172a; margin: 0;">LinoLab</h1>
-                            <p style="color: #64748b; margin: 5px 0 0;">Ticket de Compra Digital</p>
-                        </div>
-                        
-                        <div style="background-color: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
-                            <div style="border-bottom: 1px solid #f1f5f9; padding-bottom: 15px; margin-bottom: 15px;">
-                                <p style="margin: 5px 0; color: #334155;"><strong>Fecha:</strong> ${new Date().toLocaleString()}</p>
-                                <p style="margin: 5px 0; color: #334155;"><strong>Folio de Venta:</strong> ${safeSaleId}</p>
-                                <p style="margin: 5px 0; color: #334155;"><strong>Método de Pago:</strong> ${paymentDetails.method}</p>
-                            </div>
-
-                            <table style="width: 100%; border-collapse: collapse; margin-bottom: 20px;">
-                                <thead>
-                                    <tr style="background-color: #f1f5f9; color: #475569; text-align: left;">
-                                        <th style="padding: 10px; font-size: 12px; text-transform: uppercase;">Producto</th>
-                                        <th style="padding: 10px; font-size: 12px; text-transform: uppercase; text-align: right;">Cant</th>
-                                        <th style="padding: 10px; font-size: 12px; text-transform: uppercase; text-align: right;">Total</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    ${cart.map(item => `
-                                        <tr style="border-bottom: 1px solid #f1f5f9;">
-                                            <td style="padding: 10px; color: #334155;">${item.nombre_producto}</td>
-                                            <td style="padding: 10px; text-align: right; color: #64748b;">${item.qty}</td>
-                                            <td style="padding: 10px; text-align: right; color: #334155; font-weight: bold;">$${(item.precio_venta * item.qty).toFixed(2)}</td>
-                                        </tr>
-                                    `).join('')}
-                                </tbody>
-                            </table>
-
-                            <div style="text-align: right; margin-top: 20px;">
-                                <p style="margin: 5px 0; font-size: 14px; color: #64748b;">Subtotal: $${subtotal.toFixed(2)}</p>
-                                <p style="margin: 5px 0; font-size: 14px; color: #64748b;">IVA (16%): $${tax.toFixed(2)}</p>
-                                <h2 style="margin: 10px 0 0; color: #0f172a; font-size: 24px;">Total: $${cartTotal.toFixed(2)}</h2>
-                            </div>
-                        </div>
-
-                        <div style="text-align: center; margin-top: 30px; color: #94a3b8; font-size: 12px;">
-                            <p>Gracias por tu compra en LinoLab</p>
-                            <p>Este es un comprobante digital generado automáticamente.</p>
-                        </div>
-                    </div>
-                `
-
-                sendEmailNotification(
-                    paymentDetails.clientEmail,
-                    `Ticket de Compra - LinoLab #${safeSaleId.slice(0, 8)}`, // Safe slice
-                    emailHtml
-                ).catch(err => console.error('Error enviando ticket por correo (Silencioso):', err))
-            } else {
-                console.log('No se envió ticket: Cliente sin email registrado o ID inválido')
-            }
+            // IMPORTANT: Cart is NOT cleared here yet. It stays visible in background.
 
         } catch (error) {
             console.error('Error al procesar venta:', error.message)
-            alert('Error en la transacción: ' + error.message)
+            Swal.fire({
+                icon: 'error',
+                title: 'Error en Transacción',
+                text: error.message,
+                background: '#0f172a',
+                color: '#fff'
+            })
+        }
+    }
+
+    // Post-Sale Actions
+    const handleNewSale = () => {
+        setCart([])
+        setLastSaleDetails(null)
+        setShowSuccessModal(false)
+        setEmailForTicket('')
+        fetchProducts() // Refresh stock visuals
+    }
+
+    const handlePrintTicket = () => {
+        if (!lastSaleDetails) return
+
+        // Simple 80mm PDF generation
+        const doc = new jsPDF({
+            orientation: 'portrait',
+            unit: 'mm',
+            format: [80, 200] // 80mm width, variable height approx
+        })
+
+        let y = 10
+        doc.setFontSize(12)
+        doc.text('LINO LAB', 40, y, { align: 'center' })
+        y += 5
+        doc.setFontSize(8)
+        doc.text('Folio: ' + lastSaleDetails.folio, 40, y, { align: 'center' })
+        y += 5
+        doc.text(lastSaleDetails.date.toLocaleString(), 40, y, { align: 'center' })
+        y += 5
+        doc.text('--------------------------------', 40, y, { align: 'center' })
+        y += 5
+
+        lastSaleDetails.items.forEach(item => {
+            doc.text(`${item.nombre_producto}`, 5, y)
+            y += 4
+            doc.text(`${item.qty} x ${formatCurrency(item.precio_venta)} = ${formatCurrency(item.qty * item.precio_venta)}`, 75, y, { align: 'right' })
+            y += 5
+        })
+
+        doc.text('--------------------------------', 40, y, { align: 'center' })
+        y += 5
+        doc.setFontSize(10)
+        doc.text(`TOTAL: ${formatCurrency(lastSaleDetails.total)}`, 75, y, { align: 'right' })
+        y += 5
+        doc.setFontSize(8)
+        doc.text(`Pago: ${lastSaleDetails.method}`, 5, y)
+        y += 10
+        doc.text('¡Gracias por su constante preferencia!', 40, y, { align: 'center' })
+
+        doc.autoPrint()
+        doc.output('dataurlnewwindow')
+    }
+
+    const handleSendTicketEmail = async () => {
+        if (!emailForTicket) return Swal.fire('Error', 'Ingresa un correo', 'warning')
+        if (!lastSaleDetails) return
+
+        setSendingEmail(true)
+
+        const rows = lastSaleDetails.items.map(item => `
+            <tr>
+                <td style="padding: 5px; color: #333;">${item.nombre_producto}</td>
+                <td style="padding: 5px; text-align: right; color: #555;">${item.qty}</td>
+                <td style="padding: 5px; text-align: right; color: #333;">${formatCurrency(item.precio_venta * item.qty)}</td>
+            </tr>
+        `).join('')
+
+        const html = `
+            <div style="font-family: Arial, sans-serif; padding: 20px; background: #f4f4f5;">
+                <div style="background: white; padding: 20px; border-radius: 10px; max-width: 400px; margin: 0 auto;">
+                    <h2 style="text-align: center; color: #0f172a;">LINO LAB</h2>
+                    <p style="text-align: center; color: #64748b; font-size: 12px;">Folio: ${lastSaleDetails.folio}</p>
+                    <hr style="border: 0; border-top: 1px dashed #ccc; margin: 20px 0;">
+                    <table style="width: 100%; font-size: 14px;">
+                        ${rows}
+                    </table>
+                    <hr style="border: 0; border-top: 1px dashed #ccc; margin: 20px 0;">
+                    <h3 style="text-align: right; color: #0f172a;">Total: ${formatCurrency(lastSaleDetails.total)}</h3>
+                </div>
+            </div>
+        `
+
+        const success = await sendEmailNotification(emailForTicket, `Ticket de Compra #${lastSaleDetails.folio}`, html)
+
+        setSendingEmail(false)
+        if (success) {
+            Swal.fire({
+                icon: 'success',
+                title: 'Enviado',
+                text: `Ticket enviado a ${emailForTicket}`,
+                background: '#0f172a',
+                color: '#fff',
+                timer: 1500,
+                showConfirmButton: false
+            })
+            setEmailForTicket('') // Clear input only
+        } else {
+            Swal.fire('Error', 'No se pudo enviar el correo', 'error')
         }
     }
 
@@ -283,7 +337,7 @@ export default function Sales() {
     })
 
     return (
-        <div className="h-screen flex flex-col md:flex-row bg-slate-950 overflow-hidden">
+        <div className="h-screen flex flex-col md:flex-row bg-slate-950 overflow-hidden relative">
 
             {/* Left: Catalog (60-70%) */}
             <div className="flex-1 flex flex-col p-3 sm:p-4 md:p-6 min-w-0">
@@ -297,6 +351,7 @@ export default function Sales() {
                         )}
                     </h1>
                     <div className="bg-slate-900 border border-slate-700 p-3 rounded-xl flex items-center gap-3 shadow-sm relative group">
+                        <Search className="text-slate-500" />
                         <input
                             type="text"
                             placeholder="Buscar producto..."
@@ -308,7 +363,7 @@ export default function Sales() {
                     </div>
                 </div>
 
-                {/* ... Stock Toggle Filter ... */}
+                {/* Stock Toggle Filter */}
                 <div className="flex justify-end mb-4">
                     <button
                         onClick={() => setShowOutOfStock(!showOutOfStock)}
@@ -323,7 +378,7 @@ export default function Sales() {
                 </div>
 
                 <div className="flex-1 overflow-y-auto pr-2 custom-scrollbar">
-                    {/* ... Grid Content ... */}
+                    {/* Grid Content */}
                     {loading ? (
                         <div className="flex items-center justify-center h-40">
                             <p className="text-slate-500">Cargando catálogo...</p>
@@ -375,7 +430,7 @@ export default function Sales() {
                                             <div>
                                                 <p className="text-[10px] text-gray-500 dark:text-slate-500 mb-0.5 font-mono">{product.sku_producto}</p>
                                                 <p className="text-lg font-bold text-blue-600 dark:text-emerald-400">
-                                                    ${product.precio_venta.toFixed(2)}
+                                                    {formatCurrency(product.precio_venta)}
                                                 </p>
                                             </div>
                                             <div className={`w-8 h-8 rounded-full flex items-center justify-center text-white transition-all transform shadow-lg ${product.stock_actual > 0
@@ -423,14 +478,13 @@ export default function Sales() {
                                             {item.nombre_producto}
                                         </h4>
                                         <div className="flex items-center gap-2 text-xs font-mono text-gray-500 dark:text-slate-400">
-                                            <span className="bg-gray-100 dark:bg-slate-900 px-1 rounded border border-gray-200 dark:border-slate-700">Base: ${unitPriceBase.toFixed(2)}</span>
                                             <span>x {item.qty}</span>
                                         </div>
                                     </div>
 
                                     <div className="flex flex-col items-end gap-2">
                                         <span className="font-bold text-blue-600 dark:text-emerald-400">
-                                            ${(item.precio_venta * item.qty).toFixed(2)}
+                                            {formatCurrency(item.precio_venta * item.qty)}
                                         </span>
 
                                         <div className="flex items-center gap-1 bg-gray-100 dark:bg-slate-900 rounded-lg p-0.5 border border-gray-200 dark:border-slate-700">
@@ -462,34 +516,23 @@ export default function Sales() {
                     )}
                 </div>
 
-                {/* Footer Fijo (Totales + Email + Botón) */}
+                {/* Footer Fijo (Totales + Botón) */}
                 <div className="p-6 bg-white dark:bg-slate-900 border-t border-gray-200 dark:border-slate-800 shadow-[0_-4px_20px_rgba(0,0,0,0.1)] dark:shadow-[0_-4px_20px_rgba(0,0,0,0.4)] relative z-20 shrink-0">
                     <div className="space-y-2 mb-4">
                         <div className="flex justify-between text-gray-500 dark:text-slate-400 text-sm">
                             <span>Subtotal (Base)</span>
-                            <span>${subtotal.toFixed(2)}</span>
+                            <span>{formatCurrency(subtotal)}</span>
                         </div>
                         <div className="flex justify-between text-gray-500 dark:text-slate-400 text-sm">
                             <span>IVA (16%)</span>
-                            <span>${tax.toFixed(2)}</span>
+                            <span>{formatCurrency(tax)}</span>
                         </div>
                         <div className="flex justify-between items-end border-t border-dashed border-gray-300 dark:border-slate-700 pt-3 mt-2">
                             <span className="text-xl font-bold text-white">Total</span>
                             <span className="text-3xl font-bold text-blue-600 dark:text-emerald-400 font-mono drop-shadow-sm">
-                                ${cartTotal.toFixed(2)}
+                                {formatCurrency(cartTotal)}
                             </span>
                         </div>
-                    </div>
-
-                    {/* Input Email con FIX de Icono Standard */}
-                    <div className="relative mb-4 group">
-                        <input
-                            type="email"
-                            placeholder="cliente@email.com (Opcional)"
-                            className="w-full bg-slate-800 border border-slate-600 rounded-lg py-2 px-3 text-white placeholder-slate-500 focus:outline-none focus:border-blue-500"
-                            onChange={(e) => setClientEmail(e.target.value)}
-                            value={clientEmail}
-                        />
                     </div>
 
                     <button
@@ -507,10 +550,62 @@ export default function Sales() {
                 isOpen={isPaymentModalOpen}
                 onClose={() => setIsPaymentModalOpen(false)}
                 total={cartTotal}
-                onConfirm={handlePaymentConfirm}
-                saleDetails={lastSaleDetails}
-                initialEmail={clientEmail} // Pass the email
+                onConfirm={handleProcessSale}
             />
+
+            {/* Success Modal (New System) */}
+            {showSuccessModal && lastSaleDetails && (
+                <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/90 backdrop-blur-md p-4 animate-in zoom-in-95">
+                    <div className="bg-slate-900 border border-slate-700 w-full max-w-lg rounded-2xl p-6 shadow-2xl relative text-center">
+                        <div className="w-20 h-20 bg-emerald-500/20 rounded-full flex items-center justify-center mx-auto mb-6">
+                            <Check size={48} className="text-emerald-500" />
+                        </div>
+
+                        <h2 className="text-3xl font-bold text-white mb-2">¡Venta Realizada!</h2>
+                        <p className="text-slate-400 mb-8">Folio: <span className="font-mono text-white">{lastSaleDetails.folio}</span></p>
+
+                        <div className="space-y-4">
+                            <button
+                                onClick={handlePrintTicket}
+                                className="w-full bg-slate-800 hover:bg-slate-700 text-white p-4 rounded-xl flex items-center justify-center gap-3 font-medium transition-colors border border-slate-700"
+                            >
+                                <Printer size={20} />
+                                Imprimir Ticket Físico
+                            </button>
+
+                            <div className="bg-slate-800/50 p-4 rounded-xl border border-slate-700/50 text-left">
+                                <label className="block text-slate-400 text-xs uppercase font-bold mb-2">Enviar por Correo (Opcional)</label>
+                                <div className="flex gap-2">
+                                    <input
+                                        type="email"
+                                        placeholder="cliente@email.com"
+                                        className="flex-1 bg-slate-900 border border-slate-600 rounded-lg px-3 text-white focus:outline-none focus:border-blue-500"
+                                        value={emailForTicket}
+                                        onChange={e => setEmailForTicket(e.target.value)}
+                                    />
+                                    <button
+                                        onClick={handleSendTicketEmail}
+                                        disabled={sendingEmail}
+                                        className="bg-blue-600 hover:bg-blue-500 text-white px-4 py-2 rounded-lg font-bold flex items-center gap-2 disabled:opacity-50"
+                                    >
+                                        {sendingEmail ? <RefreshCw className="animate-spin" size={16} /> : <Mail size={16} />}
+                                        Enviar
+                                    </button>
+                                </div>
+                            </div>
+
+                            <button
+                                onClick={handleNewSale}
+                                className="w-full bg-emerald-600 hover:bg-emerald-500 text-white p-4 rounded-xl font-bold uppercase tracking-wide transition-colors shadow-lg shadow-emerald-900/40 flex items-center justify-center gap-2 mt-6"
+                            >
+                                <RefreshCw size={20} />
+                                Nueva Venta
+                            </button>
+                        </div>
+
+                    </div>
+                </div>
+            )}
         </div>
     )
 }

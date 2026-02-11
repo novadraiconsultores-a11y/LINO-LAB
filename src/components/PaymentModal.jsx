@@ -1,22 +1,16 @@
-import { X, Banknote, CreditCard, Building2, Printer, Mail, CheckCircle } from 'lucide-react'
+import { X, Banknote, CreditCard, Building2, Terminal } from 'lucide-react'
 import { useState, useEffect } from 'react'
 
-export default function PaymentModal({ isOpen, onClose, total, onConfirm, saleDetails }) {
+export default function PaymentModal({ isOpen, onClose, total, onConfirm }) {
     const [method, setMethod] = useState('Efectivo') // Efectivo, Tarjeta, Transferencia
     const [amountReceived, setAmountReceived] = useState('')
-    const [clientEmail, setClientEmail] = useState('')
     const [processing, setProcessing] = useState(false)
-    const [showSuccess, setShowSuccess] = useState(false)
-    const [emailSent, setEmailSent] = useState(false)
 
     useEffect(() => {
         if (isOpen) {
             setMethod('Efectivo')
             setAmountReceived('')
-            setClientEmail('')
             setProcessing(false)
-            setShowSuccess(false)
-            setEmailSent(false)
         }
     }, [isOpen])
 
@@ -29,130 +23,20 @@ export default function PaymentModal({ isOpen, onClose, total, onConfirm, saleDe
 
     const handleConfirm = async () => {
         setProcessing(true)
-
-        // Simulate API call delay
-        await new Promise(resolve => setTimeout(resolve, 800))
-
-        // Handle email simulation
-        if (clientEmail) {
-            setEmailSent(true)
-        }
+        // Simulate small UI delay
+        await new Promise(resolve => setTimeout(resolve, 500))
 
         onConfirm({
             method,
             amountReceived: method === 'Efectivo' ? parseFloat(amountReceived) : currentTotal,
-            change,
-            clientEmail
+            change
         })
-
         setProcessing(false)
-        setShowSuccess(true)
-    }
-
-    const handlePrint = () => {
-        window.print()
-    }
-
-    if (showSuccess) {
-        return (
-            <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4">
-                <div className="w-full max-w-md bg-slate-900 border border-slate-700 rounded-xl shadow-2xl p-8 text-center animate-in fade-in zoom-in duration-300">
-                    <div className="w-20 h-20 bg-emerald-500/20 text-emerald-500 rounded-full flex items-center justify-center mx-auto mb-6">
-                        <CheckCircle size={48} />
-                    </div>
-                    <h2 className="text-3xl font-bold text-white mb-2">¡Venta Exitosa!</h2>
-                    <p className="text-slate-400 mb-6">La transacción se ha registrado correctamente.</p>
-
-                    {emailSent && (
-                        <div className="mb-6 bg-blue-900/30 border border-blue-900/50 rounded-lg p-3 flex items-center gap-3 text-blue-300 text-sm text-left">
-                            <Mail size={16} />
-                            <span>Simulación: Correo enviado (Pendiente integrar servicio real)</span>
-                        </div>
-                    )}
-
-                    <div className="flex flex-col gap-3">
-                        <button
-                            onClick={handlePrint}
-                            className="w-full bg-slate-800 hover:bg-slate-700 text-white p-4 rounded-xl flex items-center justify-center gap-3 font-medium transition-colors"
-                        >
-                            <Printer size={20} />
-                            Imprimir Ticket
-                        </button>
-                        <button
-                            onClick={onClose}
-                            className="w-full bg-blue-600 hover:bg-blue-500 text-white p-4 rounded-xl font-bold uppercase tracking-wide transition-colors"
-                        >
-                            Nueva Venta
-                        </button>
-                    </div>
-                </div>
-
-                {/* Hidden Printable Receipt */}
-                {saleDetails && (
-                    <div className="printable-receipt hidden print:block text-left p-0">
-                        <div className="text-center mb-4">
-                            <h1 className="font-bold text-2xl mb-1 uppercase tracking-wide">LINO LAB</h1>
-                            <p className="text-sm font-medium uppercase tracking-widest text-slate-500">Moda y Estilo</p>
-                        </div>
-                        <p className="text-center text-xs mb-4 font-mono">Ticket de Venta #{saleDetails.id}</p>
-
-                        <div className="border-b border-black mb-2 pb-2">
-                            <p className="flex justify-between text-xs">
-                                <span>Fecha:</span>
-                                <span>{new Date(saleDetails.date).toLocaleDateString()}</span>
-                            </p>
-                            <p className="flex justify-between text-xs">
-                                <span>Hora:</span>
-                                <span>{new Date(saleDetails.date).toLocaleTimeString()}</span>
-                            </p>
-                        </div>
-
-                        <table className="w-full text-xs mb-4">
-                            <thead>
-                                <tr className="border-b border-black text-left">
-                                    <th className="py-1">Prod</th>
-                                    <th className="py-1 text-center">Cant</th>
-                                    <th className="py-1 text-right">Total</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {saleDetails.items.map((item, idx) => (
-                                    <tr key={idx}>
-                                        <td className="py-1">{item.nombre_producto}</td>
-                                        <td className="py-1 text-center">{item.qty}</td>
-                                        <td className="py-1 text-right">${(item.precio_venta * item.qty).toFixed(2)}</td>
-                                    </tr>
-                                ))}
-                            </tbody>
-                        </table>
-
-                        <div className="border-t border-black pt-2 mb-4 space-y-1">
-                            <div className="flex justify-between text-xs">
-                                <span>Subtotal:</span>
-                                <span>${saleDetails.subtotal.toFixed(2)}</span>
-                            </div>
-                            <div className="flex justify-between text-xs">
-                                <span>IVA (16%):</span>
-                                <span>${saleDetails.tax.toFixed(2)}</span>
-                            </div>
-                            <div className="flex justify-between text-sm font-bold mt-2">
-                                <span>TOTAL:</span>
-                                <span>${saleDetails.total.toFixed(2)}</span>
-                            </div>
-                        </div>
-
-                        <div className="text-center text-xs mt-4">
-                            <p>¡Gracias por su compra!</p>
-                        </div>
-                    </div>
-                )}
-            </div>
-        )
     }
 
     return (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4">
-            <div className="w-full max-w-2xl bg-slate-900 border border-slate-700 rounded-xl shadow-2xl p-6 relative animate-in fade-in zoom-in duration-200">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4 animate-in fade-in duration-200">
+            <div className="w-full max-w-2xl bg-slate-900 border border-slate-700 rounded-xl shadow-2xl p-6 relative">
 
                 <button
                     onClick={onClose}
@@ -243,25 +127,12 @@ export default function PaymentModal({ isOpen, onClose, total, onConfirm, saleDe
                             )}
 
                             <div className="mt-8 pt-4 space-y-4 border-t border-slate-700/50">
-                                <div>
-                                    <label className="block text-slate-400 text-xs uppercase font-bold mb-2">Enviar Ticket (Opcional)</label>
-                                    <div className="relative">
-                                        <input
-                                            type="email"
-                                            value={clientEmail}
-                                            onChange={(e) => setClientEmail(e.target.value)}
-                                            className="w-full bg-slate-900 border border-slate-600 rounded-lg py-2 px-3 text-white text-sm focus:outline-none focus:border-blue-500"
-                                            placeholder="cliente@email.com"
-                                        />
-                                    </div>
-                                </div>
-
                                 <button
                                     onClick={handleConfirm}
                                     disabled={!canConfirm || processing}
                                     className="w-full py-4 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white rounded-xl font-bold text-lg uppercase tracking-wide shadow-lg shadow-emerald-900/20 disabled:opacity-50 disabled:cursor-not-allowed transition-all flex items-center justify-center gap-2"
                                 >
-                                    {processing ? 'Procesando...' : 'Confirmar Venta'}
+                                    {processing ? 'Procesando...' : 'Confirmar Cobro'}
                                 </button>
                             </div>
                         </div>
