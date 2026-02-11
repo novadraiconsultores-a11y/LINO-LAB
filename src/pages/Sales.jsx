@@ -585,7 +585,7 @@ export default function Sales() {
                 </div>
 
                 {/* Cuerpo Scrollable */}
-                <div className="flex-1 overflow-y-auto p-4 space-y-3 bg-slate-950/50 custom-scrollbar">
+                <div className="flex-1 min-h-0 overflow-y-auto p-2 md:p-4 space-y-3 bg-slate-950/50 custom-scrollbar">
                     {cart.length === 0 ? (
                         <div className="h-full flex flex-col items-center justify-center text-gray-400 dark:text-slate-600 opacity-60">
                             <ShoppingCart size={48} className="mb-2" />
@@ -640,7 +640,7 @@ export default function Sales() {
                 </div>
 
                 {/* Footer Fijo (Totales + Botón) */}
-                <div className="p-4 md:p-6 bg-white dark:bg-slate-900 border-t border-gray-200 dark:border-slate-800 shadow-[0_-4px_20px_rgba(0,0,0,0.1)] dark:shadow-[0_-4px_20px_rgba(0,0,0,0.4)] relative z-20 shrink-0">
+                <div className="p-2 md:p-6 bg-white dark:bg-slate-900 border-t border-gray-200 dark:border-slate-800 shadow-[0_-4px_20px_rgba(0,0,0,0.1)] dark:shadow-[0_-4px_20px_rgba(0,0,0,0.4)] relative z-20 shrink-0">
                     <div className="space-y-2 mb-4">
                         <div className="flex justify-between text-gray-500 dark:text-slate-400 text-sm">
                             <span>Subtotal (Base)</span>
@@ -698,18 +698,18 @@ export default function Sales() {
 
                             <div className="bg-slate-800/50 p-4 rounded-xl border border-slate-700/50 text-left">
                                 <label className="block text-slate-400 text-xs uppercase font-bold mb-2">Enviar por Correo (Opcional)</label>
-                                <div className="flex gap-2">
+                                <div className="flex flex-col sm:flex-row gap-3">
                                     <input
                                         type="email"
                                         placeholder="cliente@email.com"
-                                        className="flex-1 bg-slate-900 border border-slate-600 rounded-lg px-3 text-white focus:outline-none focus:border-blue-500"
+                                        className="w-full bg-slate-900 border border-slate-600 rounded-lg px-4 py-3 sm:py-2 text-white focus:outline-none focus:border-blue-500"
                                         value={emailForTicket}
                                         onChange={e => setEmailForTicket(e.target.value)}
                                     />
                                     <button
                                         onClick={handleSendTicketEmail}
                                         disabled={sendingEmail}
-                                        className="bg-blue-600 hover:bg-blue-500 text-white px-4 py-2 rounded-lg font-bold flex items-center gap-2 disabled:opacity-50"
+                                        className="w-full sm:w-auto justify-center bg-blue-600 hover:bg-blue-500 text-white px-6 py-3 sm:py-2 rounded-lg font-bold flex items-center gap-2 disabled:opacity-50"
                                     >
                                         {sendingEmail ? <RefreshCw className="animate-spin" size={16} /> : <Mail size={16} />}
                                         Enviar
