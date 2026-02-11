@@ -239,41 +239,104 @@ export default function Sales() {
     const handlePrintTicket = () => {
         if (!lastSaleDetails) return
 
-        // Simple 80mm PDF generation
+        // Ticket 80mm (aprox 226pt) x altura variable
+        // Calculamos altura estimada: header(40) + items(n*15) + totals(40) + footer(20)
+        const estimatedHeight = 100 + (lastSaleDetails.items.length * 15) + 60
         const doc = new jsPDF({
             orientation: 'portrait',
             unit: 'mm',
-            format: [80, 200] // 80mm width, variable height approx
+            format: [80, estimatedHeight]
         })
 
+        const pageWidth = 80
+        const margin = 5
         let y = 10
-        doc.setFontSize(12)
-        doc.text('LINO LAB', 40, y, { align: 'center' })
+
+        // Helper para centrar
+        const centerText = (text, yPos, size = 10, weight = 'normal') => {
+            doc.setFontSize(size)
+            doc.setFont('helvetica', weight)
+            const textWidth = doc.getStringUnitWidth(text) * size / 2.83465 // conversion factor
+            const x = (pageWidth - textWidth) / 2
+            doc.text(text, x > 0 ? x : margin, yPos)
+        }
+
+        // Helper para linea punteada
+        const drawLine = (yPos) => {
+            doc.setLineDash([1, 1], 0)
+            doc.line(margin, yPos, pageWidth - margin, yPos)
+            doc.setLineDash([])
+        }
+
+        // --- HEADER ---
+        centerText('LINO LAB', y, 14, 'bold')
         y += 5
-        doc.setFontSize(8)
-        doc.text('Folio: ' + lastSaleDetails.folio, 40, y, { align: 'center' })
+        centerText('Ticket de Venta', y, 10, 'normal')
         y += 5
-        doc.text(lastSaleDetails.date.toLocaleString(), 40, y, { align: 'center' })
+        centerText(`${new Date(lastSaleDetails.date).toLocaleDateString()} ${new Date(lastSaleDetails.date).toLocaleTimeString()}`, y, 8)
         y += 5
-        doc.text('--------------------------------', 40, y, { align: 'center' })
+        centerText(`Folio: ${lastSaleDetails.folio}`, y, 8)
+        y += 3
+        drawLine(y)
         y += 5
 
+        // --- ITEMS ---
+        doc.setFontSize(9)
         lastSaleDetails.items.forEach(item => {
-            doc.text(`${item.nombre_producto}`, 5, y)
+            // Nombre producto (Izquierda)
+            doc.setFont('helvetica', 'bold')
+            // Cortar nombre si es muy largo
+            const name = item.nombre_producto.length > 25 ? item.nombre_producto.substring(0, 25) + '...' : item.nombre_producto
+            doc.text(name, margin, y)
             y += 4
-            doc.text(`${item.qty} x ${formatCurrency(item.precio_venta)} = ${formatCurrency(item.qty * item.precio_venta)}`, 75, y, { align: 'right' })
+
+            // Detalles (Derecha)
+            doc.setFont('helvetica', 'normal')
+            const detail = `${item.qty} x ${formatCurrency(item.precio_venta)} = ${formatCurrency(item.qty * item.precio_venta)}`
+            doc.text(detail, pageWidth - margin, y, { align: 'right' })
             y += 5
         })
+        y += 2
+        drawLine(y)
+        y += 5
 
-        doc.text('--------------------------------', 40, y, { align: 'center' })
-        y += 5
-        doc.setFontSize(10)
-        doc.text(`TOTAL: ${formatCurrency(lastSaleDetails.total)}`, 75, y, { align: 'right' })
-        y += 5
+        // --- TOTALES ---
+        const rightAlign = pageWidth - margin
+
         doc.setFontSize(8)
-        doc.text(`Pago: ${lastSaleDetails.method}`, 5, y)
-        y += 10
-        doc.text('¡Gracias por su constante preferencia!', 40, y, { align: 'center' })
+        doc.text('Subtotal:', margin, y)
+        doc.text(formatCurrency(lastSaleDetails.subtotal), rightAlign, y, { align: 'right' })
+        y += 4
+
+        doc.text('IVA (16%):', margin, y)
+        doc.text(formatCurrency(lastSaleDetails.tax), rightAlign, y, { align: 'right' })
+        y += 6
+
+        doc.setFontSize(14)
+        doc.setFont('helvetica', 'bold')
+        doc.text('TOTAL:', margin, y)
+        doc.text(formatCurrency(lastSaleDetails.total), rightAlign, y, { align: 'right' })
+        y += 8
+
+        // --- INFO PAGO ---
+        doc.setFontSize(8)
+        doc.setFont('helvetica', 'normal')
+        doc.text(`Método de Pago: ${lastSaleDetails.method}`, margin, y)
+        y += 4
+
+        if (lastSaleDetails.amountReceived > 0) {
+            doc.text(`Recibido: ${formatCurrency(lastSaleDetails.amountReceived)}`, margin, y)
+            y += 4
+            doc.text(`Cambio: ${formatCurrency(lastSaleDetails.change)}`, margin, y)
+            y += 6
+        } else {
+            y += 6
+        }
+
+        // --- FOOTER ---
+        centerText('¡Gracias por su compra!', y, 10, 'italic')
+        y += 5
+        centerText('www.linolab.com', y, 8)
 
         doc.autoPrint()
         doc.output('dataurlnewwindow')
@@ -285,30 +348,84 @@ export default function Sales() {
 
         setSendingEmail(true)
 
-        const rows = lastSaleDetails.items.map(item => `
-            <tr>
-                <td style="padding: 5px; color: #333;">${item.nombre_producto}</td>
-                <td style="padding: 5px; text-align: right; color: #555;">${item.qty}</td>
-                <td style="padding: 5px; text-align: right; color: #333;">${formatCurrency(item.precio_venta * item.qty)}</td>
+        const dateStr = new Date(lastSaleDetails.date).toLocaleDateString('es-MX', { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' })
+
+        // Construir filas
+        const rowsHtml = lastSaleDetails.items.map(item => `
+            <tr style="border-bottom: 1px solid #334155;">
+                <td style="padding: 12px 0; color: #e2e8f0; font-size: 14px;">
+                    <strong style="color: #fff;">${item.nombre_producto}</strong>
+                </td>
+                <td style="padding: 12px 0; text-align: center; color: #cbd5e1; font-size: 14px;">${item.qty}</td>
+                <td style="padding: 12px 0; text-align: right; color: #fff; font-weight: bold; font-size: 14px;">${formatCurrency(item.qty * item.precio_venta)}</td>
             </tr>
         `).join('')
 
-        const html = `
-            <div style="font-family: Arial, sans-serif; padding: 20px; background: #f4f4f5;">
-                <div style="background: white; padding: 20px; border-radius: 10px; max-width: 400px; margin: 0 auto;">
-                    <h2 style="text-align: center; color: #0f172a;">LINO LAB</h2>
-                    <p style="text-align: center; color: #64748b; font-size: 12px;">Folio: ${lastSaleDetails.folio}</p>
-                    <hr style="border: 0; border-top: 1px dashed #ccc; margin: 20px 0;">
-                    <table style="width: 100%; font-size: 14px;">
-                        ${rows}
-                    </table>
-                    <hr style="border: 0; border-top: 1px dashed #ccc; margin: 20px 0;">
-                    <h3 style="text-align: right; color: #0f172a;">Total: ${formatCurrency(lastSaleDetails.total)}</h3>
+        // HTML Estilo "Lino Lab Dark"
+        const emailHtml = `
+            <div style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; background-color: #0f172a; padding: 40px 20px; color: #e2e8f0;">
+                <div style="max-width: 600px; margin: 0 auto; background-color: #1e293b; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);">
+                    
+                    <div style="background-color: #10b981; padding: 24px; text-align: center;">
+                        <h1 style="margin: 0; color: #fff; font-size: 24px; letter-spacing: 1px;">LINO LAB</h1>
+                        <p style="margin: 5px 0 0 0; color: #ecfdf5; font-size: 14px;">Confirmación de Compra</p>
+                    </div>
+
+                    <div style="padding: 32px;">
+                        <div style="text-align: center; margin-bottom: 24px;">
+                            <p style="margin: 0; color: #94a3b8; font-size: 12px; text-transform: uppercase;">Folio de Venta</p>
+                            <p style="margin: 5px 0 0 0; color: #fff; font-size: 20px; font-family: monospace; font-weight: bold;">${lastSaleDetails.folio}</p>
+                            <p style="margin: 5px 0 0 0; color: #64748b; font-size: 12px;">${dateStr}</p>
+                        </div>
+
+                        <div style="background-color: #0f172a; border-radius: 8px; padding: 16px; margin-bottom: 24px;">
+                            <table style="width: 100%; border-collapse: collapse;">
+                                <thead>
+                                    <tr>
+                                        <th style="text-align: left; color: #94a3b8; font-size: 12px; padding-bottom: 8px;">PRODUCTO</th>
+                                        <th style="text-align: center; color: #94a3b8; font-size: 12px; padding-bottom: 8px;">CANT.</th>
+                                        <th style="text-align: right; color: #94a3b8; font-size: 12px; padding-bottom: 8px;">TOTAL</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    ${rowsHtml}
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div style="border-top: 2px dashed #334155; padding-top: 20px;">
+                            <table style="width: 100%;">
+                                <tr>
+                                    <td style="color: #94a3b8; padding: 4px 0;">Subtotal</td>
+                                    <td style="text-align: right; color: #e2e8f0;">${formatCurrency(lastSaleDetails.subtotal)}</td>
+                                </tr>
+                                <tr>
+                                    <td style="color: #94a3b8; padding: 4px 0;">IVA (16%)</td>
+                                    <td style="text-align: right; color: #e2e8f0;">${formatCurrency(lastSaleDetails.tax)}</td>
+                                </tr>
+                                <tr>
+                                    <td style="color: #fff; font-size: 18px; font-weight: bold; padding-top: 12px;">TOTAL</td>
+                                    <td style="text-align: right; color: #10b981; font-size: 24px; font-weight: bold; padding-top: 12px;">${formatCurrency(lastSaleDetails.total)}</td>
+                                </tr>
+                            </table>
+                        </div>
+                        
+                        <div style="margin-top: 24px; text-align: center; background-color: #0f172a; padding: 10px; border-radius: 6px;">
+                            <p style="margin: 0; color: #94a3b8; font-size: 12px;">Método de Pago: <span style="color: #fff;">${lastSaleDetails.method}</span></p>
+                        </div>
+                    </div>
+
+                    <div style="background-color: #0f172a; padding: 20px; text-align: center; border-top: 1px solid #334155;">
+                        <p style="margin: 0; color: #64748b; font-size: 12px;">
+                            © ${new Date().getFullYear()} Lino Lab.<br>
+                            Gracias por tu preferencia.
+                        </p>
+                    </div>
                 </div>
             </div>
         `
 
-        const success = await sendEmailNotification(emailForTicket, `Ticket de Compra #${lastSaleDetails.folio}`, html)
+        const success = await sendEmailNotification(emailForTicket, `Ticket de Compra #${lastSaleDetails.folio} - Lino Lab`, emailHtml)
 
         setSendingEmail(false)
         if (success) {
@@ -318,12 +435,18 @@ export default function Sales() {
                 text: `Ticket enviado a ${emailForTicket}`,
                 background: '#0f172a',
                 color: '#fff',
-                timer: 1500,
+                timer: 2000,
                 showConfirmButton: false
             })
-            setEmailForTicket('') // Clear input only
+            setEmailForTicket('')
         } else {
-            Swal.fire('Error', 'No se pudo enviar el correo', 'error')
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'No se pudo enviar el correo',
+                background: '#0f172a',
+                color: '#fff'
+            })
         }
     }
 
